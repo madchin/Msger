@@ -16,7 +16,7 @@ import com.example.msger.utils.InputType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)) {
+fun SignUpScreen(viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory)) {
     val uiState = viewModel.uiState
     Text(text = "Home")
     Column(
@@ -31,31 +31,13 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Fact
             value = uiState.password,
             onValueChange = { viewModel.onInputChange(InputType.Password, it) }
         )
-        OutlinedButton(onClick = viewModel::signUp) {
+        OutlinedButton(onClick = viewModel::signUpAndSignIn) {
             Text(text = "Sign up")
         }
     }
     if (uiState.isLoading) {
         Text(
             text = "Loading",
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-                fontSize = 40.sp
-            )
-        )
-    }
-    if(uiState.isSignUpSuccess) {
-        Text(
-            text = "Success",
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-                fontSize = 40.sp
-            )
-        )
-    }
-    if(uiState.isError) {
-        Text(
-            text = "ERROR",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 40.sp

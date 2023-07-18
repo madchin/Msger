@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
-import com.example.msger.data.AuthService
+import com.example.msger.data.services.AuthService
 import com.example.msger.utils.InputType
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
