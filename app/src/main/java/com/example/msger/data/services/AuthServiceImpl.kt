@@ -30,4 +30,5 @@ class AuthServiceImpl(
     override suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult =
         auth.signInWithEmailAndPassword(email, password).await()
 
+    override suspend fun signOutUser() = auth.signOut()
 }

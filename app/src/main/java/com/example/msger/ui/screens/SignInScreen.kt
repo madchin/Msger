@@ -13,8 +13,8 @@ import com.example.msger.utils.InputType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
+fun SignInScreen(
+    viewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
 ) {
     val uiState = viewModel.uiState
     Column(

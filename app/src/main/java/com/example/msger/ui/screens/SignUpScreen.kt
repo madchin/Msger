@@ -20,9 +20,12 @@ import com.example.msger.utils.InputType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory)) {
+fun SignUpScreen(
+    viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory),
+
+) {
     val uiState = viewModel.uiState
-    Text(text = "Home")
+    Text(text = "Sign up")
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

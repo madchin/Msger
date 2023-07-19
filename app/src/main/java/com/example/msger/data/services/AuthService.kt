@@ -8,4 +8,6 @@ interface AuthService {
     val user: Flow<User>
     suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthResult
     suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult
+
+    suspend fun signOutUser()
 }

@@ -13,10 +13,9 @@ import com.example.msger.MsgerApplication
 import com.example.msger.data.services.AuthService
 import com.example.msger.utils.InputType
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-data class LoginUiState(
+data class SignInUiState(
     val isLoading: Boolean = false,
     val email: String = "",
     val password: String = "",
@@ -25,14 +24,14 @@ data class LoginUiState(
 )
 
 
-class LoginViewModel(
+class SignInViewModel(
     private val authService: AuthService
 ) : ViewModel() {
-    var uiState by mutableStateOf(LoginUiState())
+    var uiState by mutableStateOf(SignInUiState())
         private set
 
     fun signInWithEmailAndPassword() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             uiState = uiState.copy(isLoading = true)
         }
     }
@@ -49,7 +48,7 @@ class LoginViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = checkNotNull(this[APPLICATION_KEY]) as MsgerApplication
-                LoginViewModel(application.appContainer.authService)
+                SignInViewModel(application.appContainer.authService)
             }
         }
     }
