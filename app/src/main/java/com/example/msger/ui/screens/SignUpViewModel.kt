@@ -15,11 +15,8 @@ import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.data.services.AuthService
 import com.example.msger.utils.InputType
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-private const val TAG = "SIGN_UP"
 
 data class HomeUiState(
     val email: String = "",
@@ -37,37 +34,33 @@ class SignUpViewModel(private val authService: AuthService) : ViewModel() {
     private val password: String
         get() = uiState.password
 
-    fun signUpAndSignIn() {
-        viewModelScope.launch {
-            if (!email.isEmailValid()) {
-                Log.d(TAG, "Email is not valid")
-                uiState = uiState.copy(isEmailValid = false)
-                return@launch
-            }
-            if (!password.isPasswordValid()) {
-                Log.d(TAG, "Password is not valid")
-                uiState = uiState.copy(isPasswordValid = false)
-                return@launch
-            }
-            withContext(Dispatchers.IO) {
-                try {
-                    uiState = uiState.copy(isLoading = true)
-                    authService.createUserWithEmailAndPassword(email, password)
-                    authService.signInWithEmailAndPassword(email, password)
-                    uiState = uiState.copy(isLoading = false)
+    private val isEmailValid: Boolean
+        get() = email.isEmailValid()
+    private val isPasswordValid: Boolean
+        get() = password.isPasswordValid()
 
-                } catch (e: Throwable) {
-                    Log.d("MAIN_ACTIVITY", "Error is: ${e.message}")
-                    uiState = uiState.copy(isLoading = false)
-                }
+    fun signUp(openAndPopUp: (String, String) -> Unit) {
+        viewModelScope.launch {
+            uiState = uiState.copy(isEmailValid = isEmailValid, isPasswordValid = isPasswordValid)
+
+            if(!isEmailValid || !isPasswordValid) {
+                return@launch
             }
+
+            uiState = uiState.copy(isLoading = true)
+            try {
+                authService.createUserWithEmailAndPassword(email, password)
+            } catch (e: Throwable) {
+                Log.d("MAIN_ACTIVITY", "Error is: ${e.message}")
+            }
+            uiState = uiState.copy(isLoading = false)
         }
     }
 
     fun onInputChange(input: InputType, value: String) {
         uiState = when (input) {
-            InputType.Email -> uiState.copy(email = value, isEmailValid = true)
-            InputType.Password -> uiState.copy(password = value, isPasswordValid = true)
+            InputType.Email -> uiState.copy(email = value, isEmailValid = isEmailValid)
+            InputType.Password -> uiState.copy(password = value, isPasswordValid = isPasswordValid)
         }
     }
 
