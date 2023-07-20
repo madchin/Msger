@@ -5,10 +5,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.msger.common.extensions.openAndPopUp
 import com.example.msger.ui.screens.HomeScreen
 import com.example.msger.ui.screens.SignInScreen
 import com.example.msger.ui.screens.SignUpScreen
 import com.example.msger.ui.screens.SplashScreen
+
 
 @Composable
 fun NavigationHost(
@@ -16,16 +18,16 @@ fun NavigationHost(
 ) {
     NavHost(navController = navController, startDestination = SPLASH_SCREEN) {
         composable(SPLASH_SCREEN) {
-            SplashScreen()
+            SplashScreen(openAndPopUp = navController::openAndPopUp)
         }
         composable(SIGN_UP) {
-            SignUpScreen()
+            SignUpScreen(openAndPopUp = navController::openAndPopUp)
         }
         composable(SIGN_IN) {
             SignInScreen()
         }
         composable(HOME) {
-            HomeScreen()
+            HomeScreen(openAndPopUp = navController::openAndPopUp)
         }
     }
 }

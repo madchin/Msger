@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthService {
     val user: Flow<User>
+
+    val isSignedIn: Boolean
     suspend fun createUserWithEmailAndPassword(email: String, password: String): AuthResult
     suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult
 

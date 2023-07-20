@@ -8,19 +8,21 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
 import com.example.msger.data.services.AuthService
+import com.example.msger.ui.navigation.HOME
+import com.example.msger.ui.navigation.SIGN_IN
 import kotlinx.coroutines.launch
 
 private const val TAG = "HOME"
 
 class HomeViewModel(private val authService: AuthService) : ViewModel() {
 
-    fun signOut() {
+    fun signOut(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
-            try{
+            try {
                 authService.signOutUser()
+                openAndPopUp(SIGN_IN, HOME)
                 Log.d(TAG, "$TAG: User signed out")
-            }
-            catch (e: Throwable) {
+            } catch (e: Throwable) {
                 Log.d(TAG, "$TAG: User not signed out")
             }
         }

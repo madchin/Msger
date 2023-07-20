@@ -14,6 +14,8 @@ import com.example.msger.MsgerApplication
 import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.data.services.AuthService
+import com.example.msger.ui.navigation.HOME
+import com.example.msger.ui.navigation.SIGN_UP
 import com.example.msger.utils.InputType
 import kotlinx.coroutines.launch
 
@@ -50,6 +52,7 @@ class SignUpViewModel(private val authService: AuthService) : ViewModel() {
             uiState = uiState.copy(isLoading = true)
             try {
                 authService.createUserWithEmailAndPassword(email, password)
+                openAndPopUp(HOME, SIGN_UP)
             } catch (e: Throwable) {
                 Log.d("MAIN_ACTIVITY", "Error is: ${e.message}")
             }

@@ -21,8 +21,8 @@ import com.example.msger.utils.InputType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory),
-
+    openAndPopUp: (String, String) -> Unit,
+    viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory)
 ) {
     val uiState = viewModel.uiState
     Text(text = "Sign up")
@@ -41,7 +41,7 @@ fun SignUpScreen(
             isError = !uiState.isPasswordValid,
             onValueChange = { viewModel.onInputChange(InputType.Password, it) }
         )
-        OutlinedButton(onClick = { viewModel.signUp{ xd, xd2 -> } }) {
+        OutlinedButton(onClick = { viewModel.signUp(openAndPopUp) }) {
             Text(text = "Sign up")
         }
     }

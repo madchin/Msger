@@ -8,13 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)) {
+fun HomeScreen(
+    openAndPopUp: (String, String) -> Unit,
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "home")
-        OutlinedButton(onClick = viewModel::signOut) {
+        OutlinedButton(onClick = { viewModel.signOut(openAndPopUp) } ) {
             Text(text = "sign out")
         }
     }

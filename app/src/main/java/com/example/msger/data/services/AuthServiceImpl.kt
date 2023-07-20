@@ -22,6 +22,9 @@ class AuthServiceImpl(
             awaitClose { auth.removeAuthStateListener(listener) }
         }
 
+    override val isSignedIn: Boolean
+        get() = auth.currentUser != null
+
     override suspend fun createUserWithEmailAndPassword(
         email: String,
         password: String
