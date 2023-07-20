@@ -10,15 +10,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.msger.utils.InputType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInScreen(
-    openAndPopUp: (String,String) -> Unit,
-    navigateToSignUp: () -> Unit,
-    navigateToForgottenPassword: () -> Unit,
-    viewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
+fun ForgotPasswordScreen(
+    navigateToSignIn: () -> Unit,
+    viewModel: ForgotPasswordViewModel = viewModel(factory = ForgotPasswordViewModel.Factory)
 ) {
     val uiState = viewModel.uiState
     Column(
@@ -28,21 +25,14 @@ fun SignInScreen(
         TextField(
             value = uiState.email,
             isError = !uiState.isEmailValid,
-            onValueChange = { viewModel.onInputChange(InputType.Email, it) }
+            onValueChange = viewModel::onEmailChange
         )
-        TextField(
-            value = uiState.password,
-            isError = !uiState.isPasswordValid,
-            onValueChange = { viewModel.onInputChange(InputType.Password, it) }
-        )
-        OutlinedButton(onClick = { viewModel.signInWithEmailAndPassword(openAndPopUp) }) {
-            Text(text = "Sign in")
+
+        OutlinedButton(onClick = viewModel::resetPassword) {
+            Text(text = "Reset password")
         }
-        OutlinedButton(onClick = navigateToForgottenPassword) {
-            Text(text = "Forgot password")
-        }
-        Button(onClick = navigateToSignUp) {
-            Text(text = "Go to sign up")
+        Button(onClick = navigateToSignIn) {
+            Text(text = "Go to sign in")
         }
     }
 }

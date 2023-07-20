@@ -13,7 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
 import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
-import com.example.msger.data.services.AuthService
+import com.example.msger.data.services.AccountService
 import com.example.msger.ui.navigation.HOME
 import com.example.msger.ui.navigation.SIGN_IN
 import com.example.msger.utils.InputType
@@ -30,7 +30,7 @@ data class SignInUiState(
 private const val TAG = "SIGN_IN"
 
 class SignInViewModel(
-    private val authService: AuthService
+    private val accountService: AccountService
 ) : ViewModel() {
     var uiState by mutableStateOf(SignInUiState())
         private set
@@ -55,7 +55,7 @@ class SignInViewModel(
             uiState = uiState.copy(isLoading = true)
 
             try {
-                authService.signInWithEmailAndPassword(email, password)
+                accountService.signInWithEmailAndPassword(email, password)
                 openAndPopUp(HOME, SIGN_IN)
                 Log.d(TAG, "USER HAS BEEN SIGNED IN")
             } catch (e: Throwable) {
@@ -77,7 +77,7 @@ class SignInViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = checkNotNull(this[APPLICATION_KEY]) as MsgerApplication
-                SignInViewModel(application.appContainer.authService)
+                SignInViewModel(application.appContainer.accountService)
             }
         }
     }

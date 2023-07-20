@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 
-private const val SPLASH_TIMEOUT = 4000L
+private const val SPLASH_TIMEOUT = 500L
 
 @Composable
 fun SplashScreen(

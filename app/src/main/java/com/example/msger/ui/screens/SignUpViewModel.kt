@@ -13,7 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
 import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
-import com.example.msger.data.services.AuthService
+import com.example.msger.data.services.AccountService
 import com.example.msger.ui.navigation.HOME
 import com.example.msger.ui.navigation.SIGN_UP
 import com.example.msger.utils.InputType
@@ -28,7 +28,7 @@ data class HomeUiState(
     val isPasswordValid: Boolean = true
 )
 
-class SignUpViewModel(private val authService: AuthService) : ViewModel() {
+class SignUpViewModel(private val accountService: AccountService) : ViewModel() {
     var uiState: HomeUiState by mutableStateOf(HomeUiState())
         private set
     private val email: String
@@ -51,7 +51,7 @@ class SignUpViewModel(private val authService: AuthService) : ViewModel() {
 
             uiState = uiState.copy(isLoading = true)
             try {
-                authService.createUserWithEmailAndPassword(email, password)
+                accountService.createUserWithEmailAndPassword(email, password)
                 openAndPopUp(HOME, SIGN_UP)
             } catch (e: Throwable) {
                 Log.d("MAIN_ACTIVITY", "Error is: ${e.message}")
@@ -71,7 +71,7 @@ class SignUpViewModel(private val authService: AuthService) : ViewModel() {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = checkNotNull(this[APPLICATION_KEY]) as MsgerApplication
-                SignUpViewModel(application.appContainer.authService)
+                SignUpViewModel(application.appContainer.accountService)
             }
         }
     }
