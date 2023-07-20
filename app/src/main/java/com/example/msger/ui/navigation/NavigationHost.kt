@@ -21,10 +21,16 @@ fun NavigationHost(
             SplashScreen(openAndPopUp = navController::openAndPopUp)
         }
         composable(SIGN_UP) {
-            SignUpScreen(openAndPopUp = navController::openAndPopUp)
+            SignUpScreen(
+                openAndPopUp = navController::openAndPopUp,
+                navigateToSignIn = { navController.navigate(SIGN_IN)}
+            )
         }
         composable(SIGN_IN) {
-            SignInScreen()
+            SignInScreen(
+                openAndPopUp = navController::openAndPopUp,
+                navigateToSignUp = {navController.navigate(SIGN_UP)}
+            )
         }
         composable(HOME) {
             HomeScreen(openAndPopUp = navController::openAndPopUp)

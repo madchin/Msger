@@ -2,6 +2,7 @@ package com.example.msger.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -14,6 +15,8 @@ import com.example.msger.utils.InputType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
+    openAndPopUp: (String,String) -> Unit,
+    navigateToSignUp: () -> Unit,
     viewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
 ) {
     val uiState = viewModel.uiState
@@ -23,14 +26,19 @@ fun SignInScreen(
     ) {
         TextField(
             value = uiState.email,
+            isError = !uiState.isEmailValid,
             onValueChange = { viewModel.onInputChange(InputType.Email, it) }
         )
         TextField(
             value = uiState.password,
+            isError = !uiState.isPasswordValid,
             onValueChange = { viewModel.onInputChange(InputType.Password, it) }
         )
-        OutlinedButton(onClick = viewModel::signInWithEmailAndPassword) {
+        OutlinedButton(onClick = { viewModel.signInWithEmailAndPassword(openAndPopUp) }) {
             Text(text = "Sign in")
+        }
+        Button(onClick = navigateToSignUp) {
+            Text(text = "Go to sign up")
         }
     }
 }

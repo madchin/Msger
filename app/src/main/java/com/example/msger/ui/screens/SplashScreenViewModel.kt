@@ -7,7 +7,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
 import com.example.msger.data.services.AuthService
 import com.example.msger.ui.navigation.HOME
-import com.example.msger.ui.navigation.SIGN_UP
+import com.example.msger.ui.navigation.SIGN_IN
 import com.example.msger.ui.navigation.SPLASH_SCREEN
 
 class SplashScreenViewModel(private val authService: AuthService) : ViewModel() {
@@ -17,7 +17,7 @@ class SplashScreenViewModel(private val authService: AuthService) : ViewModel() 
             openAndPopUp(HOME, SPLASH_SCREEN)
             return
         }
-        openAndPopUp(SIGN_UP, SPLASH_SCREEN)
+        openAndPopUp(SIGN_IN, SPLASH_SCREEN)
     }
 
     companion object {

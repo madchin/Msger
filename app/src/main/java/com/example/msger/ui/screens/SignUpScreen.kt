@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -22,6 +23,7 @@ import com.example.msger.utils.InputType
 @Composable
 fun SignUpScreen(
     openAndPopUp: (String, String) -> Unit,
+    navigateToSignIn: () -> Unit,
     viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory)
 ) {
     val uiState = viewModel.uiState
@@ -43,6 +45,9 @@ fun SignUpScreen(
         )
         OutlinedButton(onClick = { viewModel.signUp(openAndPopUp) }) {
             Text(text = "Sign up")
+        }
+        Button(onClick = navigateToSignIn) {
+            Text(text = "Go to sign in")
         }
     }
     if (uiState.isLoading) {
