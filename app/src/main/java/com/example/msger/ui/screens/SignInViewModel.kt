@@ -16,7 +16,7 @@ import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.data.services.AccountService
 import com.example.msger.ui.navigation.HOME
 import com.example.msger.ui.navigation.SIGN_IN
-import com.example.msger.utils.InputType
+import com.example.msger.common.utils.InputType
 import kotlinx.coroutines.launch
 
 data class SignInUiState(

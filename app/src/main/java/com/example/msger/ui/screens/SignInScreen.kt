@@ -10,7 +10,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.msger.utils.InputType
+import com.example.msger.common.utils.InputType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

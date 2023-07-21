@@ -1,4 +1,4 @@
-package com.example.msger.utils
+package com.example.msger.common.utils
 
 
 sealed interface InputType {
