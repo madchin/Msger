@@ -17,6 +17,7 @@ import com.example.msger.data.services.AccountService
 import com.example.msger.ui.navigation.HOME
 import com.example.msger.ui.navigation.SIGN_IN
 import com.example.msger.common.utils.InputType
+import com.example.msger.ui.navigation.SIGN_IN_DEBUG_TAG
 import kotlinx.coroutines.launch
 
 data class SignInUiState(
@@ -26,8 +27,6 @@ data class SignInUiState(
     val isPasswordValid: Boolean = true,
     val isLoading: Boolean = false
 )
-
-private const val TAG = "SIGN_IN"
 
 class SignInViewModel(
     private val accountService: AccountService
@@ -57,9 +56,9 @@ class SignInViewModel(
             try {
                 accountService.signInWithEmailAndPassword(email, password)
                 openAndPopUp(HOME, SIGN_IN)
-                Log.d(TAG, "USER HAS BEEN SIGNED IN")
+                Log.d(SIGN_IN_DEBUG_TAG, "USER HAS BEEN SIGNED IN")
             } catch (e: Throwable) {
-                Log.d(TAG, "ERROR: USER NOT SIGNED IN")
+                Log.d(SIGN_IN_DEBUG_TAG, "ERROR: USER NOT SIGNED IN")
             }
             uiState = uiState.copy(isLoading = false)
         }

@@ -17,6 +17,7 @@ import com.example.msger.data.services.AccountService
 import com.example.msger.ui.navigation.HOME
 import com.example.msger.ui.navigation.SIGN_UP
 import com.example.msger.common.utils.InputType
+import com.example.msger.ui.navigation.SIGN_UP_DEBUG_TAG
 import kotlinx.coroutines.launch
 
 
@@ -54,7 +55,7 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
                 accountService.createUserWithEmailAndPassword(email, password)
                 openAndPopUp(HOME, SIGN_UP)
             } catch (e: Throwable) {
-                Log.d("MAIN_ACTIVITY", "Error is: ${e.message}")
+                Log.d(SIGN_UP_DEBUG_TAG, "Error is: ${e.message}")
             }
             uiState = uiState.copy(isLoading = false)
         }

@@ -15,7 +15,7 @@ import com.example.msger.ui.screens.authorized.HomeScreen
 
 @Composable
 fun NavigationHost(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
     NavHost(navController = navController, startDestination = SPLASH_SCREEN) {
         composable(SPLASH_SCREEN) {

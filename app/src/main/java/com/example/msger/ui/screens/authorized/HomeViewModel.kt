@@ -9,10 +9,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
 import com.example.msger.data.services.AccountService
 import com.example.msger.ui.navigation.HOME
+import com.example.msger.ui.navigation.HOME_DEBUG_TAG
 import com.example.msger.ui.navigation.SIGN_IN
 import kotlinx.coroutines.launch
-
-private const val TAG = "HOME"
 
 class HomeViewModel(private val accountService: AccountService) : ViewModel() {
 
@@ -21,9 +20,9 @@ class HomeViewModel(private val accountService: AccountService) : ViewModel() {
             try {
                 accountService.signOutUser()
                 openAndPopUp(SIGN_IN, HOME)
-                Log.d(TAG, "$TAG: User signed out")
+                Log.d(HOME_DEBUG_TAG, "$HOME_DEBUG_TAG: User signed out")
             } catch (e: Throwable) {
-                Log.d(TAG, "$TAG: User not signed out")
+                Log.d(HOME_DEBUG_TAG, "$HOME_DEBUG_TAG: User not signed out")
             }
         }
     }

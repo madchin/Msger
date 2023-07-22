@@ -12,10 +12,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
 import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.data.services.AccountService
-import com.google.firebase.auth.ActionCodeSettings
+import com.example.msger.ui.navigation.FORGOT_PASSWORD_DEBUG_TAG
 import kotlinx.coroutines.launch
 
-private const val TAG = "RESET_PASSWORD"
 
 data class ForgotPasswordUiState(
     val email: String = "",
@@ -39,23 +38,17 @@ class ForgotPasswordViewModel(private val accountService: AccountService) : View
     }
 
     fun resetPassword() {
-        val actionCodeSettings = ActionCodeSettings
-            .newBuilder()
-            .setUrl("http://msger.page.link/recover-password")
-            .setAndroidPackageName("com.example.msger", false,null)
-            .build()
-
         viewModelScope.launch {
             uiState = uiState.copy(isEmailValid = isEmailValid)
             if (!isEmailValid) {
                 return@launch
             }
             try {
-                accountService.resetPassword(email,actionCodeSettings)
+                accountService.resetPassword(email)
                 uiState = ForgotPasswordUiState()
-                Log.d(TAG, "Reset password success")
+                Log.d(FORGOT_PASSWORD_DEBUG_TAG, "Reset password success")
             } catch (e: Throwable) {
-                Log.d(TAG, "Reset password failed: $e")
+                Log.d(FORGOT_PASSWORD_DEBUG_TAG, "Reset password failed: $e")
             }
         }
     }
