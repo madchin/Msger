@@ -3,19 +3,17 @@ package com.example.msger.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.msger.common.utils.InputType
+import com.example.msger.ui.components.EmailInput
+import com.example.msger.ui.components.PasswordInput
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    openAndPopUp: (String,String) -> Unit,
+    openAndPopUp: (String, String) -> Unit,
     navigateToSignUp: () -> Unit,
     navigateToForgottenPassword: () -> Unit,
     viewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
@@ -25,15 +23,18 @@ fun SignInScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextField(
-            value = uiState.email,
+        EmailInput(
             isError = !uiState.isEmailValid,
-            onValueChange = { viewModel.onInputChange(InputType.Email, it) }
+            value = uiState.email,
+            onValueChange = viewModel::onEmailValueChange,
+            onValueClear = viewModel::onEmailValueClear,
+            errorText = uiState.emailErrorText
         )
-        TextField(
-            value = uiState.password,
+        PasswordInput(
             isError = !uiState.isPasswordValid,
-            onValueChange = { viewModel.onInputChange(InputType.Password, it) }
+            value = uiState.password,
+            onValueChange = viewModel::onPasswordValueChange,
+            errorText = uiState.passwordErrorText
         )
         OutlinedButton(onClick = { viewModel.signInWithEmailAndPassword(openAndPopUp) }) {
             Text(text = "Sign in")

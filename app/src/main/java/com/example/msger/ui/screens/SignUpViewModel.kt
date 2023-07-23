@@ -1,6 +1,7 @@
 package com.example.msger.ui.screens
 
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,34 +12,43 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
+import com.example.msger.R
+import com.example.msger.common.extensions.emailErrorText
 import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
+import com.example.msger.common.extensions.passwordErrorText
 import com.example.msger.data.services.AccountService
 import com.example.msger.ui.navigation.HOME
 import com.example.msger.ui.navigation.SIGN_UP
-import com.example.msger.common.utils.InputType
 import com.example.msger.ui.navigation.SIGN_UP_DEBUG_TAG
 import kotlinx.coroutines.launch
 
 
-data class HomeUiState(
+data class SignUpUiState(
     val email: String = "",
     val password: String = "",
-    val isLoading: Boolean = false,
     val isEmailValid: Boolean = true,
-    val isPasswordValid: Boolean = true
+    val isPasswordValid: Boolean = true,
+    @StringRes val emailErrorText: Int = R.string.input_required,
+    @StringRes val passwordErrorText: Int = R.string.input_required,
+    val isLoading: Boolean = false
 )
 
 class SignUpViewModel(private val accountService: AccountService) : ViewModel() {
-    var uiState: HomeUiState by mutableStateOf(HomeUiState())
+    var uiState: SignUpUiState by mutableStateOf(SignUpUiState())
         private set
     private val email: String
         get() = uiState.email
+
     private val password: String
         get() = uiState.password
-
+    private val emailErrorText: Int
+        get() = email.emailErrorText()
+    private val passwordErrorText: Int
+        get() = password.passwordErrorText()
     private val isEmailValid: Boolean
         get() = email.isEmailValid()
+
     private val isPasswordValid: Boolean
         get() = password.isPasswordValid()
 
@@ -46,7 +56,7 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
         viewModelScope.launch {
             uiState = uiState.copy(isEmailValid = isEmailValid, isPasswordValid = isPasswordValid)
 
-            if(!isEmailValid || !isPasswordValid) {
+            if (!isEmailValid || !isPasswordValid) {
                 return@launch
             }
 
@@ -61,11 +71,31 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
         }
     }
 
-    fun onInputChange(input: InputType, value: String) {
-        uiState = when (input) {
-            InputType.Email -> uiState.copy(email = value, isEmailValid = isEmailValid)
-            InputType.Password -> uiState.copy(password = value, isPasswordValid = isPasswordValid)
-        }
+
+    fun onEmailValueChange(value: String) {
+        uiState = uiState.copy(email = value)
+        uiState = uiState.copy(
+            isEmailValid = isEmailValid,
+            emailErrorText = emailErrorText
+        )
+    }
+
+    fun onPasswordValueChange(value: String) {
+        uiState = uiState.copy(password = value)
+        uiState = uiState.copy(
+            isPasswordValid = isPasswordValid,
+            passwordErrorText = passwordErrorText
+        )
+    }
+
+    fun onEmailValueClear() {
+        uiState = uiState.copy(
+            email = ""
+        )
+        uiState = uiState.copy(
+            isEmailValid = isEmailValid,
+            emailErrorText = emailErrorText
+        )
     }
 
     companion object {

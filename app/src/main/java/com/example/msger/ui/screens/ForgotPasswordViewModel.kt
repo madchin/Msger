@@ -10,7 +10,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
+import com.example.msger.R
 import com.example.msger.androidPackageName
+import com.example.msger.common.extensions.emailErrorText
 import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.utils.DEEP_LINK_HOST
 import com.example.msger.common.utils.DEEP_LINK_SCHEME
@@ -23,12 +25,13 @@ import kotlinx.coroutines.launch
 data class ForgotPasswordUiState(
     val email: String = "",
     val isEmailValid: Boolean = true,
+    val emailErrorText: Int = R.string.input_required,
     val isLoading: Boolean = false
 )
 
 class ForgotPasswordViewModel(private val accountService: AccountService) : ViewModel() {
 
-    var uiState by mutableStateOf(ForgotPasswordUiState())
+    var uiState: ForgotPasswordUiState by mutableStateOf(ForgotPasswordUiState())
         private set
 
     private val email: String
@@ -36,9 +39,25 @@ class ForgotPasswordViewModel(private val accountService: AccountService) : View
 
     private val isEmailValid: Boolean
         get() = email.isEmailValid()
+    private val emailErrorText: Int
+        get() = email.emailErrorText()
 
-    fun onEmailChange(value: String) {
-        uiState = uiState.copy(email = value, isEmailValid = isEmailValid)
+    fun onEmailValueChange(value: String) {
+        uiState = uiState.copy(email = value)
+        uiState = uiState.copy(
+            isEmailValid = isEmailValid,
+            emailErrorText = emailErrorText
+        )
+    }
+
+    fun onEmailValueClear() {
+        uiState = uiState.copy(
+            email = ""
+        )
+        uiState = uiState.copy(
+            isEmailValid = isEmailValid,
+            emailErrorText = emailErrorText
+        )
     }
 
     fun resetPassword() {

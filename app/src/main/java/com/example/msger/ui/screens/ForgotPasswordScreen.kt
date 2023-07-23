@@ -3,15 +3,13 @@ package com.example.msger.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.msger.ui.components.EmailInput
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordScreen(
     navigateToSignIn: () -> Unit,
@@ -22,10 +20,12 @@ fun ForgotPasswordScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextField(
-            value = uiState.email,
+        EmailInput(
             isError = !uiState.isEmailValid,
-            onValueChange = viewModel::onEmailChange
+            value = uiState.email,
+            onValueChange = viewModel::onEmailValueChange,
+            onValueClear = viewModel::onEmailValueClear,
+            errorText = uiState.emailErrorText
         )
 
         OutlinedButton(onClick = viewModel::resetPassword) {

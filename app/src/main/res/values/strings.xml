@@ -2,4 +2,12 @@
     <string name="app_name">msger</string>
     <string name="https_scheme">https</string>
     <string name="dynamic_link_host">mesager.page.link</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="input_clear_label">Clear Input</string>
+    <string name="input_show_value">Show input value</string>
+    <string name="input_blank_validation">Input can\'t be blank</string>
+    <string name="password_input_length_validation">Password needs at least 12 characters</string>
+    <string name="email_input_format_validation">Email format is invalid</string>
+    <string name="input_required">* Required</string>
 </resources>
