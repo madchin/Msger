@@ -10,4 +10,6 @@
     <string name="password_input_length_validation">Password needs at least 12 characters</string>
     <string name="email_input_format_validation">Email format is invalid</string>
     <string name="input_required">* Required</string>
+    <string name="confirm_password_validation">Confirm password doesn\'t match password</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>

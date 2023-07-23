@@ -65,6 +65,7 @@ fun PasswordInput(
     isError: Boolean,
     value: String,
     onValueChange: (String) -> Unit,
+    @StringRes labelText: Int = R.string.password,
     @StringRes errorText: Int
 ) {
     var isPasswordShown by rememberSaveable { mutableStateOf(false) }
@@ -83,7 +84,7 @@ fun PasswordInput(
                 contentDescription = null
             )
         },
-        label = { Text(text = stringResource(id = R.string.password)) },
+        label = { Text(text = stringResource(id = labelText)) },
         singleLine = true,
         supportingText = { Text(text = stringResource(id = errorText)) },
         visualTransformation = visualTransformation,

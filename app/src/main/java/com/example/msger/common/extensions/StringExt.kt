@@ -7,27 +7,32 @@ private const val PASSWORD_LENGTH: Int = 12
 fun String.isEmailFormatValid(): Boolean = EMAIL_ADDRESS.matcher(this).matches()
 fun String.isPasswordLengthValid(): Boolean = this.length >= PASSWORD_LENGTH
 
-fun String.isEmailValid(): Boolean = when {
-    this.isBlank() && this.isNotEmpty() -> false
-    !this.isEmailFormatValid() && this.isNotEmpty() -> false
+fun String.isEmailValid(): Boolean = if (this.isEmpty()) true else when {
+        this.isBlank() -> false
+        !this.isEmailFormatValid() -> false
+        else -> true
+    }
+
+fun String.isPasswordValid(): Boolean = if (this.isEmpty()) true else when {
+    this.isBlank() -> false
+    !this.isPasswordLengthValid() -> false
     else -> true
 }
 
-fun String.isPasswordValid(): Boolean = when {
-    this.isBlank() && this.isNotEmpty() -> false
-    !this.isPasswordLengthValid() && this.isNotEmpty() -> false
-    else -> true
-}
+fun String.isConfirmPasswordValid(password: String): Boolean = this.isEmpty() || this == password
 
-
-fun String.emailErrorText(): Int = when {
-    this.isBlank() && this.isNotEmpty() -> R.string.input_blank_validation
-    !this.isEmailValid() && this.isNotEmpty() -> R.string.email_input_format_validation
+fun String.emailErrorText(): Int = if(this.isEmpty()) R.string.input_required else when {
+    this.isBlank() -> R.string.input_blank_validation
+    !this.isEmailValid() -> R.string.email_input_format_validation
     else -> R.string.input_required
 }
 
-fun String.passwordErrorText(): Int = when {
-    this.isBlank() && this.isNotEmpty() -> R.string.input_blank_validation
-    !this.isPasswordValid() && this.isNotEmpty() -> R.string.password_input_length_validation
+fun String.passwordErrorText(): Int = if(this.isEmpty()) R.string.input_required else when {
+    this.isBlank() -> R.string.input_blank_validation
+    !this.isPasswordValid() -> R.string.password_input_length_validation
     else -> R.string.input_required
 }
+
+fun String.confirmPasswordErrorText(password: String): Int =
+    if (isConfirmPasswordValid(password = password)) R.string.input_required
+    else R.string.confirm_password_validation

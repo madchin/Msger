@@ -13,7 +13,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
 import com.example.msger.R
+import com.example.msger.common.extensions.confirmPasswordErrorText
 import com.example.msger.common.extensions.emailErrorText
+import com.example.msger.common.extensions.isConfirmPasswordValid
 import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.common.extensions.passwordErrorText
@@ -27,10 +29,13 @@ import kotlinx.coroutines.launch
 data class SignUpUiState(
     val email: String = "",
     val password: String = "",
+    val confirmPassword: String = "",
     val isEmailValid: Boolean = true,
     val isPasswordValid: Boolean = true,
+    val isConfirmPasswordValid: Boolean = true,
     @StringRes val emailErrorText: Int = R.string.input_required,
     @StringRes val passwordErrorText: Int = R.string.input_required,
+    @StringRes val confirmPasswordErrorText: Int = R.string.input_required,
     val isLoading: Boolean = false
 )
 
@@ -42,21 +47,34 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
 
     private val password: String
         get() = uiState.password
+
+    private val confirmPassword: String
+        get() = uiState.confirmPassword
     private val emailErrorText: Int
         get() = email.emailErrorText()
     private val passwordErrorText: Int
         get() = password.passwordErrorText()
+
+    private val confirmPasswordErrorText: Int
+        get() = confirmPassword.confirmPasswordErrorText(password = password)
     private val isEmailValid: Boolean
         get() = email.isEmailValid()
 
     private val isPasswordValid: Boolean
         get() = password.isPasswordValid()
 
+    private val isConfirmPasswordValid: Boolean
+        get() = confirmPassword.isConfirmPasswordValid(password = password)
+
     fun signUp(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
-            uiState = uiState.copy(isEmailValid = isEmailValid, isPasswordValid = isPasswordValid)
+            uiState = uiState.copy(
+                isEmailValid = isEmailValid,
+                isPasswordValid = isPasswordValid,
+                isConfirmPasswordValid = isConfirmPasswordValid
+            )
 
-            if (!isEmailValid || !isPasswordValid) {
+            if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
                 return@launch
             }
 
@@ -85,6 +103,14 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
         uiState = uiState.copy(
             isPasswordValid = isPasswordValid,
             passwordErrorText = passwordErrorText
+        )
+    }
+
+    fun onConfirmPasswordValueChange(value: String) {
+        uiState = uiState.copy(confirmPassword = value)
+        uiState = uiState.copy(
+            isConfirmPasswordValid = isConfirmPasswordValid,
+            confirmPasswordErrorText = confirmPasswordErrorText
         )
     }
 
