@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -13,10 +14,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
 import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
+import com.example.msger.common.utils.FIREBASE_DYNAMIC_LINK
+import com.example.msger.common.utils.InputType
 import com.example.msger.data.services.AccountService
 import com.example.msger.ui.navigation.HOME
 import com.example.msger.ui.navigation.SIGN_IN
-import com.example.msger.common.utils.InputType
 import com.example.msger.ui.navigation.SIGN_IN_DEBUG_TAG
 import kotlinx.coroutines.launch
 
@@ -43,6 +45,19 @@ class SignInViewModel(
         get() = email.isEmailValid()
     private val isPasswordValid: Boolean
         get() = password.isPasswordValid()
+
+    init {
+        viewModelScope.launch {
+            try {
+                val dynamicLink = accountService.getDynamicLink(FIREBASE_DYNAMIC_LINK.toUri())
+                val dynamicLinkData = dynamicLink.link
+                val userEmail: String = dynamicLinkData?.getQueryParameter("email") ?: ""
+                uiState = uiState.copy(email = userEmail)
+            } catch (e: Throwable) {
+                Log.d(SIGN_IN_DEBUG_TAG, "error occured on sign in: ${e.message}")
+            }
+        }
+    }
 
     fun signInWithEmailAndPassword(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {

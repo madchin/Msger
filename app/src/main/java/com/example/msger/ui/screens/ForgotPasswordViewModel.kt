@@ -10,9 +10,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
+import com.example.msger.androidPackageName
 import com.example.msger.common.extensions.isEmailValid
+import com.example.msger.common.utils.DEEP_LINK_HOST
+import com.example.msger.common.utils.DEEP_LINK_SCHEME
 import com.example.msger.data.services.AccountService
 import com.example.msger.ui.navigation.FORGOT_PASSWORD_DEBUG_TAG
+import com.google.firebase.auth.ActionCodeSettings
 import kotlinx.coroutines.launch
 
 
@@ -44,7 +48,13 @@ class ForgotPasswordViewModel(private val accountService: AccountService) : View
                 return@launch
             }
             try {
-                accountService.resetPassword(email)
+                val url = "$DEEP_LINK_SCHEME$DEEP_LINK_HOST/change-password?email=$email"
+                val actionCodeSettings = ActionCodeSettings
+                    .newBuilder()
+                    .setUrl(url)
+                    .setAndroidPackageName(androidPackageName, false, null)
+                    .build()
+                accountService.resetPassword(email, actionCodeSettings)
                 uiState = ForgotPasswordUiState()
                 Log.d(FORGOT_PASSWORD_DEBUG_TAG, "Reset password success")
             } catch (e: Throwable) {
