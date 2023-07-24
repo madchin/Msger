@@ -32,7 +32,8 @@ data class SignInUiState(
     val isPasswordValid: Boolean = true,
     @StringRes val emailErrorText: Int = R.string.input_required,
     @StringRes val passwordErrorText: Int = R.string.input_required,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val responseError: String = ""
 )
 
 class SignInViewModel(
@@ -76,6 +77,7 @@ class SignInViewModel(
                 isPasswordValid = isPasswordValid,
                 passwordErrorText = passwordErrorText,
                 emailErrorText = emailErrorText,
+                responseError = ""
             )
 
             if (!isEmailValid || !isPasswordValid) {
@@ -88,6 +90,7 @@ class SignInViewModel(
                 openAndPopUp(HOME, SIGN_IN)
                 Log.d(SIGN_IN_DEBUG_TAG, "USER HAS BEEN SIGNED IN")
             } catch (e: Throwable) {
+                uiState = uiState.copy(responseError = e.message.toString())
                 Log.d(SIGN_IN_DEBUG_TAG, "ERROR: USER NOT SIGNED IN")
             }
             uiState = uiState.copy(isLoading = false)
