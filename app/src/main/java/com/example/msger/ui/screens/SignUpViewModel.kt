@@ -36,7 +36,8 @@ data class SignUpUiState(
     @StringRes val emailErrorText: Int = R.string.input_required,
     @StringRes val passwordErrorText: Int = R.string.input_required,
     @StringRes val confirmPasswordErrorText: Int = R.string.input_required,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val responseError: String = ""
 )
 
 class SignUpViewModel(private val accountService: AccountService) : ViewModel() {
@@ -71,7 +72,8 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
             uiState = uiState.copy(
                 isEmailValid = isEmailValid,
                 isPasswordValid = isPasswordValid,
-                isConfirmPasswordValid = isConfirmPasswordValid
+                isConfirmPasswordValid = isConfirmPasswordValid,
+                responseError = ""
             )
 
             if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
@@ -83,6 +85,7 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
                 accountService.createUserWithEmailAndPassword(email, password)
                 openAndPopUp(HOME, SIGN_UP)
             } catch (e: Throwable) {
+                uiState = uiState.copy(responseError = e.message.toString())
                 Log.d(SIGN_UP_DEBUG_TAG, "Error is: ${e.message}")
             }
             uiState = uiState.copy(isLoading = false)

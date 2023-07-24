@@ -58,6 +58,7 @@ fun MsgerApp(
             composable(SIGN_UP) {
                 val viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory)
                 val uiState = viewModel.uiState
+                val responseError = uiState.responseError
 
                 Column(modifier = Modifier.padding(innerPadding)) {
                     SignUpScreen(
@@ -66,6 +67,14 @@ fun MsgerApp(
                         uiState = uiState,
                         navigateToSignIn = { navController.navigate(SIGN_IN) },
                     )
+                    if (responseError.isNotEmpty()) {
+                        LaunchedEffect(responseError) {
+                            snackbarHostState.showSnackbar(
+                                message = responseError,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
                 }
             }
 
@@ -97,6 +106,7 @@ fun MsgerApp(
                 val viewModel: ForgotPasswordViewModel =
                     viewModel(factory = ForgotPasswordViewModel.Factory)
                 val uiState: ForgotPasswordUiState = viewModel.uiState
+                val responseError = uiState.responseError
 
                 Column(modifier = Modifier.padding(innerPadding)) {
                     ForgotPasswordScreen(
@@ -104,6 +114,14 @@ fun MsgerApp(
                         viewModel = viewModel,
                         uiState = uiState
                     )
+                    if (responseError.isNotEmpty()) {
+                        LaunchedEffect(responseError) {
+                            snackbarHostState.showSnackbar(
+                                message = responseError,
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
                 }
             }
 

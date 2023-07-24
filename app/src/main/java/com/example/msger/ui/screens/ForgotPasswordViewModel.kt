@@ -26,7 +26,8 @@ data class ForgotPasswordUiState(
     val email: String = "",
     val isEmailValid: Boolean = true,
     val emailErrorText: Int = R.string.input_required,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val responseError: String = ""
 )
 
 class ForgotPasswordViewModel(private val accountService: AccountService) : ViewModel() {
@@ -62,7 +63,7 @@ class ForgotPasswordViewModel(private val accountService: AccountService) : View
 
     fun resetPassword() {
         viewModelScope.launch {
-            uiState = uiState.copy(isEmailValid = isEmailValid)
+            uiState = uiState.copy(isEmailValid = isEmailValid, responseError = "")
             if (!isEmailValid) {
                 return@launch
             }
@@ -77,6 +78,7 @@ class ForgotPasswordViewModel(private val accountService: AccountService) : View
                 uiState = ForgotPasswordUiState()
                 Log.d(FORGOT_PASSWORD_DEBUG_TAG, "Reset password success")
             } catch (e: Throwable) {
+                uiState = uiState.copy(responseError = e.message.toString())
                 Log.d(FORGOT_PASSWORD_DEBUG_TAG, "Reset password failed: $e")
             }
         }
