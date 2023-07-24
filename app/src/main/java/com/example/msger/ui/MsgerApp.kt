@@ -4,11 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -17,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.msger.common.extensions.openAndPopUp
+import com.example.msger.ui.components.Snackbar
 import com.example.msger.ui.screens.ForgotPasswordScreen
 import com.example.msger.ui.screens.ForgotPasswordUiState
 import com.example.msger.ui.screens.ForgotPasswordViewModel
@@ -58,7 +57,6 @@ fun MsgerApp(
             composable(SIGN_UP) {
                 val viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory)
                 val uiState = viewModel.uiState
-                val responseError = uiState.responseError
 
                 Column(modifier = Modifier.padding(innerPadding)) {
                     SignUpScreen(
@@ -67,21 +65,13 @@ fun MsgerApp(
                         uiState = uiState,
                         navigateToSignIn = { navController.navigate(SIGN_IN) },
                     )
-                    if (responseError.isNotEmpty()) {
-                        LaunchedEffect(responseError) {
-                            snackbarHostState.showSnackbar(
-                                message = responseError,
-                                duration = SnackbarDuration.Short
-                            )
-                        }
-                    }
+                    Snackbar(message = uiState.responseError, snackbarHostState = snackbarHostState)
                 }
             }
 
             composable(SIGN_IN) {
                 val viewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
                 val uiState: SignInUiState = viewModel.uiState
-                val responseError = uiState.responseError
 
                 Column(modifier = Modifier.padding(innerPadding)) {
                     SignInScreen(
@@ -91,14 +81,7 @@ fun MsgerApp(
                         navigateToSignUp = { navController.navigate(SIGN_UP) },
                         navigateToForgottenPassword = { navController.navigate(FORGOT_PASSWORD) }
                     )
-                    if (responseError.isNotEmpty()) {
-                        LaunchedEffect(responseError) {
-                            snackbarHostState.showSnackbar(
-                                message = responseError,
-                                duration = SnackbarDuration.Short
-                            )
-                        }
-                    }
+                    Snackbar(message = uiState.responseError, snackbarHostState = snackbarHostState)
                 }
             }
 
@@ -106,7 +89,6 @@ fun MsgerApp(
                 val viewModel: ForgotPasswordViewModel =
                     viewModel(factory = ForgotPasswordViewModel.Factory)
                 val uiState: ForgotPasswordUiState = viewModel.uiState
-                val responseError = uiState.responseError
 
                 Column(modifier = Modifier.padding(innerPadding)) {
                     ForgotPasswordScreen(
@@ -114,14 +96,7 @@ fun MsgerApp(
                         viewModel = viewModel,
                         uiState = uiState
                     )
-                    if (responseError.isNotEmpty()) {
-                        LaunchedEffect(responseError) {
-                            snackbarHostState.showSnackbar(
-                                message = responseError,
-                                duration = SnackbarDuration.Short
-                            )
-                        }
-                    }
+                    Snackbar(message = uiState.responseError, snackbarHostState = snackbarHostState)
                 }
             }
 
