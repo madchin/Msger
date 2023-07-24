@@ -20,9 +20,9 @@ import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.common.extensions.passwordErrorText
 import com.example.msger.common.utils.FIREBASE_DYNAMIC_LINK
 import com.example.msger.data.services.AccountService
-import com.example.msger.ui.navigation.HOME
-import com.example.msger.ui.navigation.SIGN_IN
-import com.example.msger.ui.navigation.SIGN_IN_DEBUG_TAG
+import com.example.msger.ui.HOME
+import com.example.msger.ui.SIGN_IN
+import com.example.msger.ui.SIGN_IN_DEBUG_TAG
 import kotlinx.coroutines.launch
 
 data class SignInUiState(

@@ -6,9 +6,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
 import com.example.msger.data.services.AccountService
-import com.example.msger.ui.navigation.HOME
-import com.example.msger.ui.navigation.SIGN_IN
-import com.example.msger.ui.navigation.SPLASH_SCREEN
+import com.example.msger.ui.HOME
+import com.example.msger.ui.SIGN_IN
+import com.example.msger.ui.SPLASH_SCREEN
 
 class SplashScreenViewModel(private val accountService: AccountService) : ViewModel() {
 

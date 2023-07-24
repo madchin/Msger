@@ -17,7 +17,7 @@ import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.utils.DEEP_LINK_HOST
 import com.example.msger.common.utils.DEEP_LINK_SCHEME
 import com.example.msger.data.services.AccountService
-import com.example.msger.ui.navigation.FORGOT_PASSWORD_DEBUG_TAG
+import com.example.msger.ui.FORGOT_PASSWORD_DEBUG_TAG
 import com.google.firebase.auth.ActionCodeSettings
 import kotlinx.coroutines.launch
 

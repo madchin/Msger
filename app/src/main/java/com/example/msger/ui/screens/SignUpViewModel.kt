@@ -20,9 +20,9 @@ import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.common.extensions.passwordErrorText
 import com.example.msger.data.services.AccountService
-import com.example.msger.ui.navigation.HOME
-import com.example.msger.ui.navigation.SIGN_UP
-import com.example.msger.ui.navigation.SIGN_UP_DEBUG_TAG
+import com.example.msger.ui.HOME
+import com.example.msger.ui.SIGN_UP
+import com.example.msger.ui.SIGN_UP_DEBUG_TAG
 import kotlinx.coroutines.launch
 
 

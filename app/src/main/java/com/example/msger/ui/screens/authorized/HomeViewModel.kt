@@ -8,9 +8,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.MsgerApplication
 import com.example.msger.data.services.AccountService
-import com.example.msger.ui.navigation.HOME
-import com.example.msger.ui.navigation.HOME_DEBUG_TAG
-import com.example.msger.ui.navigation.SIGN_IN
+import com.example.msger.ui.HOME
+import com.example.msger.ui.HOME_DEBUG_TAG
+import com.example.msger.ui.SIGN_IN
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val accountService: AccountService) : ViewModel() {

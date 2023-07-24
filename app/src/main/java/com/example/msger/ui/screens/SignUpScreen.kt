@@ -3,7 +3,6 @@ package com.example.msger.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +16,6 @@ import com.example.msger.R
 import com.example.msger.ui.components.EmailInput
 import com.example.msger.ui.components.PasswordInput
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
     openAndPopUp: (String, String) -> Unit,

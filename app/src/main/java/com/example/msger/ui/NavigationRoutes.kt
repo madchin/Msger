@@ -1,4 +1,4 @@
-package com.example.msger.ui.navigation
+package com.example.msger.ui
 
 const val HOME = "home"
 const val SIGN_UP = "sign-up"
