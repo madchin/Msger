@@ -11,7 +11,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.msger.R
 import com.example.msger.ui.components.EmailInput
 import com.example.msger.ui.components.PasswordInput
@@ -20,9 +19,9 @@ import com.example.msger.ui.components.PasswordInput
 fun SignUpScreen(
     openAndPopUp: (String, String) -> Unit,
     navigateToSignIn: () -> Unit,
-    viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory)
+    viewModel: SignUpViewModel,
+    uiState: SignUpUiState
 ) {
-    val uiState = viewModel.uiState
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

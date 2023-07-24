@@ -2,14 +2,11 @@ package com.example.msger.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import com.example.msger.ui.components.EmailInput
 import com.example.msger.ui.components.PasswordInput
 
@@ -20,10 +17,8 @@ fun SignInScreen(
     navigateToForgottenPassword: () -> Unit,
     viewModel: SignInViewModel,
     uiState: SignInUiState,
-    innerPadding: PaddingValues,
 ) {
     Column(
-        modifier = Modifier.padding(innerPadding),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

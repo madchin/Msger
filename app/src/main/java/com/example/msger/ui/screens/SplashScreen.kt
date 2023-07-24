@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 
 private const val SPLASH_TIMEOUT = 500L
@@ -17,9 +16,7 @@ private const val SPLASH_TIMEOUT = 500L
 @Composable
 fun SplashScreen(
     openAndPopUp: (String, String) -> Unit,
-    viewModel: SplashScreenViewModel = viewModel(
-        factory = SplashScreenViewModel.Factory
-    )
+    viewModel: SplashScreenViewModel
 ) {
     Column(
         verticalArrangement = Arrangement.Center,

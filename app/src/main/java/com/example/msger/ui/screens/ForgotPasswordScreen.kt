@@ -8,15 +8,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.ImeAction
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.msger.ui.components.EmailInput
 
 @Composable
 fun ForgotPasswordScreen(
     navigateToSignIn: () -> Unit,
-    viewModel: ForgotPasswordViewModel = viewModel(factory = ForgotPasswordViewModel.Factory)
+    viewModel: ForgotPasswordViewModel,
+    uiState: ForgotPasswordUiState,
 ) {
-    val uiState = viewModel.uiState
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
