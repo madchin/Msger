@@ -7,6 +7,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.msger.ui.components.EmailInput
 
@@ -25,7 +26,9 @@ fun ForgotPasswordScreen(
             value = uiState.email,
             onValueChange = viewModel::onEmailValueChange,
             onValueClear = viewModel::onEmailValueClear,
-            errorText = uiState.emailErrorText
+            errorText = uiState.emailErrorText,
+            imeAction = ImeAction.Done,
+            onDonePress = viewModel::resetPassword
         )
 
         OutlinedButton(onClick = viewModel::resetPassword) {

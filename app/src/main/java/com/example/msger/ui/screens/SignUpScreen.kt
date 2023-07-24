@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.msger.R
@@ -39,14 +40,16 @@ fun SignUpScreen(
             isError = !uiState.isPasswordValid,
             value = uiState.password,
             onValueChange = viewModel::onPasswordValueChange,
-            errorText = uiState.passwordErrorText
+            errorText = uiState.passwordErrorText,
+            imeAction = ImeAction.Next
         )
         PasswordInput(
             isError = !uiState.isConfirmPasswordValid,
             value = uiState.confirmPassword,
             labelText = R.string.confirm_password,
             onValueChange = viewModel::onConfirmPasswordValueChange,
-            errorText = uiState.confirmPasswordErrorText
+            errorText = uiState.confirmPasswordErrorText,
+            onDonePress = { viewModel.signUp(openAndPopUp) }
         )
         OutlinedButton(onClick = { viewModel.signUp(openAndPopUp) }) {
             Text(text = "Sign up")
