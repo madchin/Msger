@@ -43,7 +43,7 @@ fun MsgerApp(
 
             composable(SPLASH_SCREEN) {
                 val viewModel: SplashScreenViewModel = viewModel(
-                    factory = SplashScreenViewModel.Factory
+                    factory = ViewModelFactoryProvider.Factory
                 )
 
                 Column(modifier = Modifier.padding(innerPadding)) {
@@ -55,7 +55,7 @@ fun MsgerApp(
             }
 
             composable(SIGN_UP) {
-                val viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory)
+                val viewModel: SignUpViewModel = viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState = viewModel.uiState
 
                 Column(modifier = Modifier.padding(innerPadding)) {
@@ -70,7 +70,7 @@ fun MsgerApp(
             }
 
             composable(SIGN_IN) {
-                val viewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
+                val viewModel: SignInViewModel = viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState: SignInUiState = viewModel.uiState
 
                 Column(modifier = Modifier.padding(innerPadding)) {
@@ -87,7 +87,7 @@ fun MsgerApp(
 
             composable(FORGOT_PASSWORD) {
                 val viewModel: ForgotPasswordViewModel =
-                    viewModel(factory = ForgotPasswordViewModel.Factory)
+                    viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState: ForgotPasswordUiState = viewModel.uiState
 
                 Column(modifier = Modifier.padding(innerPadding)) {
@@ -102,7 +102,7 @@ fun MsgerApp(
 
             composable(HOME) {
                 Column(modifier = Modifier.padding(innerPadding)) {
-                    val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
+                    val viewModel: HomeViewModel = viewModel(factory = ViewModelFactoryProvider.Factory)
 
                     HomeScreen(
                         openAndPopUp = navController::openAndPopUp,

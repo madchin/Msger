@@ -6,12 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.msger.MsgerApplication
 import com.example.msger.R
 import com.example.msger.common.extensions.confirmPasswordErrorText
 import com.example.msger.common.extensions.emailErrorText
@@ -126,14 +121,4 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
             emailErrorText = emailErrorText
         )
     }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = checkNotNull(this[APPLICATION_KEY]) as MsgerApplication
-                SignUpViewModel(application.appContainer.accountService)
-            }
-        }
-    }
-
 }
