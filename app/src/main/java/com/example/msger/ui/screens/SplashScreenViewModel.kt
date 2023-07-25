@@ -2,17 +2,15 @@ package com.example.msger.ui.screens
 
 import androidx.lifecycle.ViewModel
 import com.example.msger.data.services.AccountService
-import com.example.msger.ui.HOME
-import com.example.msger.ui.SIGN_IN
-import com.example.msger.ui.SPLASH_SCREEN
+import com.example.msger.ui.NavigationRoute
 
 class SplashScreenViewModel(private val accountService: AccountService) : ViewModel() {
 
     fun onAppStart(openAndPopUp: (String, String) -> Unit) {
         if (accountService.isSignedIn) {
-            openAndPopUp(HOME, SPLASH_SCREEN)
+            openAndPopUp(NavigationRoute.Home.route, NavigationRoute.SplashScreen.route)
             return
         }
-        openAndPopUp(SIGN_IN, SPLASH_SCREEN)
+        openAndPopUp(NavigationRoute.SignIn.route, NavigationRoute.SplashScreen.route)
     }
 }

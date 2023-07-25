@@ -12,4 +12,5 @@
     <string name="input_required">* Required</string>
     <string name="confirm_password_validation">Confirm password doesn\'t match password</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="topbar_up_button_description">Up button</string>
 </resources>

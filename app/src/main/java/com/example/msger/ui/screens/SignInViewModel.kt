@@ -1,6 +1,5 @@
 package com.example.msger.ui.screens
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,9 +14,7 @@ import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.common.extensions.passwordErrorText
 import com.example.msger.common.utils.FIREBASE_DYNAMIC_LINK
 import com.example.msger.data.services.AccountService
-import com.example.msger.ui.HOME
-import com.example.msger.ui.SIGN_IN
-import com.example.msger.ui.SIGN_IN_DEBUG_TAG
+import com.example.msger.ui.NavigationRoute
 import kotlinx.coroutines.launch
 
 data class SignInUiState(
@@ -60,7 +57,7 @@ class SignInViewModel(
                 val userEmail: String = dynamicLinkData?.getQueryParameter("email") ?: ""
                 uiState = uiState.copy(email = userEmail)
             } catch (e: Throwable) {
-                Log.d(SIGN_IN_DEBUG_TAG, "error occured on sign in: ${e.message}")
+                // TODO: catch errors properly
             }
         }
     }
@@ -82,11 +79,9 @@ class SignInViewModel(
 
             try {
                 accountService.signInWithEmailAndPassword(email, password)
-                openAndPopUp(HOME, SIGN_IN)
-                Log.d(SIGN_IN_DEBUG_TAG, "USER HAS BEEN SIGNED IN")
+                openAndPopUp(NavigationRoute.Home.route, NavigationRoute.SignIn.route)
             } catch (e: Throwable) {
                 uiState = uiState.copy(responseError = e.message.toString())
-                Log.d(SIGN_IN_DEBUG_TAG, "ERROR: USER NOT SIGNED IN")
             }
             uiState = uiState.copy(isLoading = false)
         }

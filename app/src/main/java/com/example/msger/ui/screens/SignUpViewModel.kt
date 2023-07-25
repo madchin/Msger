@@ -1,6 +1,5 @@
 package com.example.msger.ui.screens
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,9 +14,7 @@ import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.common.extensions.passwordErrorText
 import com.example.msger.data.services.AccountService
-import com.example.msger.ui.HOME
-import com.example.msger.ui.SIGN_UP
-import com.example.msger.ui.SIGN_UP_DEBUG_TAG
+import com.example.msger.ui.NavigationRoute
 import kotlinx.coroutines.launch
 
 
@@ -78,10 +75,9 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
             uiState = uiState.copy(isLoading = true)
             try {
                 accountService.createUserWithEmailAndPassword(email, password)
-                openAndPopUp(HOME, SIGN_UP)
+                openAndPopUp(NavigationRoute.Home.route, NavigationRoute.SignUp.route)
             } catch (e: Throwable) {
                 uiState = uiState.copy(responseError = e.message.toString())
-                Log.d(SIGN_UP_DEBUG_TAG, "Error is: ${e.message}")
             }
             uiState = uiState.copy(isLoading = false)
         }

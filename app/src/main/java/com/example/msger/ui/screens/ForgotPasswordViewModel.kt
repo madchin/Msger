@@ -1,6 +1,5 @@
 package com.example.msger.ui.screens
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,7 +12,6 @@ import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.utils.DEEP_LINK_HOST
 import com.example.msger.common.utils.DEEP_LINK_SCHEME
 import com.example.msger.data.services.AccountService
-import com.example.msger.ui.FORGOT_PASSWORD_DEBUG_TAG
 import com.google.firebase.auth.ActionCodeSettings
 import kotlinx.coroutines.launch
 
@@ -72,10 +70,8 @@ class ForgotPasswordViewModel(private val accountService: AccountService) : View
                     .build()
                 accountService.resetPassword(email, actionCodeSettings)
                 uiState = ForgotPasswordUiState()
-                Log.d(FORGOT_PASSWORD_DEBUG_TAG, "Reset password success")
             } catch (e: Throwable) {
                 uiState = uiState.copy(responseError = e.message.toString())
-                Log.d(FORGOT_PASSWORD_DEBUG_TAG, "Reset password failed: $e")
             }
         }
     }

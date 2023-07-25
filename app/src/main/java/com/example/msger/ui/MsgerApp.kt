@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.msger.common.extensions.openAndPopUp
+import com.example.msger.ui.components.MsgerTopbar
 import com.example.msger.ui.components.Snackbar
 import com.example.msger.ui.screens.ForgotPasswordScreen
 import com.example.msger.ui.screens.ForgotPasswordUiState
@@ -36,12 +37,20 @@ fun MsgerApp(
     navController: NavHostController = rememberNavController()
 ) {
     Scaffold(
-        topBar = {},
+        topBar = {
+            MsgerTopbar(
+                navController = navController,
+                onUpButtonClick = { navController.navigateUp() }
+            )
+        },
         bottomBar = {},
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { innerPadding ->
-        NavHost(navController = navController, startDestination = SPLASH_SCREEN) {
+        NavHost(
+            navController = navController,
+            startDestination = NavigationRoute.SplashScreen.route
+        ) {
 
-            composable(SPLASH_SCREEN) {
+            composable(NavigationRoute.SplashScreen.route) {
                 val viewModel: SplashScreenViewModel = viewModel(
                     factory = ViewModelFactoryProvider.Factory
                 )
@@ -54,8 +63,9 @@ fun MsgerApp(
                 }
             }
 
-            composable(SIGN_UP) {
-                val viewModel: SignUpViewModel = viewModel(factory = ViewModelFactoryProvider.Factory)
+            composable(NavigationRoute.SignUp.route) {
+                val viewModel: SignUpViewModel =
+                    viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState = viewModel.uiState
 
                 Column(modifier = Modifier.padding(innerPadding)) {
@@ -63,14 +73,15 @@ fun MsgerApp(
                         openAndPopUp = navController::openAndPopUp,
                         viewModel = viewModel,
                         uiState = uiState,
-                        navigateToSignIn = { navController.navigate(SIGN_IN) },
+                        navigateToSignIn = { navController.navigate(NavigationRoute.SignIn.route) },
                     )
                     Snackbar(message = uiState.responseError, snackbarHostState = snackbarHostState)
                 }
             }
 
-            composable(SIGN_IN) {
-                val viewModel: SignInViewModel = viewModel(factory = ViewModelFactoryProvider.Factory)
+            composable(NavigationRoute.SignIn.route) {
+                val viewModel: SignInViewModel =
+                    viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState: SignInUiState = viewModel.uiState
 
                 Column(modifier = Modifier.padding(innerPadding)) {
@@ -78,21 +89,21 @@ fun MsgerApp(
                         viewModel = viewModel,
                         uiState = uiState,
                         openAndPopUp = navController::openAndPopUp,
-                        navigateToSignUp = { navController.navigate(SIGN_UP) },
-                        navigateToForgottenPassword = { navController.navigate(FORGOT_PASSWORD) }
+                        navigateToSignUp = { navController.navigate(NavigationRoute.SignUp.route) },
+                        navigateToForgottenPassword = { navController.navigate(NavigationRoute.ForgotPassword.route) }
                     )
                     Snackbar(message = uiState.responseError, snackbarHostState = snackbarHostState)
                 }
             }
 
-            composable(FORGOT_PASSWORD) {
+            composable(NavigationRoute.ForgotPassword.route) {
                 val viewModel: ForgotPasswordViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState: ForgotPasswordUiState = viewModel.uiState
 
                 Column(modifier = Modifier.padding(innerPadding)) {
                     ForgotPasswordScreen(
-                        navigateToSignIn = { navController.navigate(SIGN_IN) },
+                        navigateToSignIn = { navController.navigate(NavigationRoute.SignIn.route) },
                         viewModel = viewModel,
                         uiState = uiState
                     )
@@ -100,9 +111,10 @@ fun MsgerApp(
                 }
             }
 
-            composable(HOME) {
+            composable(NavigationRoute.Home.route) {
                 Column(modifier = Modifier.padding(innerPadding)) {
-                    val viewModel: HomeViewModel = viewModel(factory = ViewModelFactoryProvider.Factory)
+                    val viewModel: HomeViewModel =
+                        viewModel(factory = ViewModelFactoryProvider.Factory)
 
                     HomeScreen(
                         openAndPopUp = navController::openAndPopUp,
