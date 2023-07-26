@@ -15,7 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.msger.common.extensions.openAndPopUp
-import com.example.msger.ui.components.MsgerTopbar
+import com.example.msger.ui.components.MsgerTopBar
 import com.example.msger.ui.components.Snackbar
 import com.example.msger.ui.screens.ForgotPasswordScreen
 import com.example.msger.ui.screens.ForgotPasswordUiState
@@ -38,7 +38,7 @@ fun MsgerApp(
 ) {
     Scaffold(
         topBar = {
-            MsgerTopbar(
+            MsgerTopBar(
                 navController = navController,
                 onUpButtonClick = { navController.navigateUp() }
             )
