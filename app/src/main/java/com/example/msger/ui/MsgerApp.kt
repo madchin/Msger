@@ -1,22 +1,19 @@
 package com.example.msger.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.msger.common.extensions.openAndPopUp
+import com.example.msger.ui.components.BodyLayout
 import com.example.msger.ui.components.MsgerTopBar
-import com.example.msger.ui.components.Snackbar
 import com.example.msger.ui.screens.ForgotPasswordScreen
 import com.example.msger.ui.screens.ForgotPasswordUiState
 import com.example.msger.ui.screens.ForgotPasswordViewModel
@@ -29,6 +26,7 @@ import com.example.msger.ui.screens.SplashScreen
 import com.example.msger.ui.screens.SplashScreenViewModel
 import com.example.msger.ui.screens.authorized.HomeScreen
 import com.example.msger.ui.screens.authorized.HomeViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,17 +43,21 @@ fun MsgerApp(
         },
         bottomBar = {},
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { innerPadding ->
+
         NavHost(
             navController = navController,
             startDestination = NavigationRoute.SplashScreen.route
         ) {
 
-            composable(NavigationRoute.SplashScreen.route) {
+            composable(route = NavigationRoute.SplashScreen.route) {
                 val viewModel: SplashScreenViewModel = viewModel(
                     factory = ViewModelFactoryProvider.Factory
                 )
 
-                Column(modifier = Modifier.padding(innerPadding)) {
+                BodyLayout(
+                    innerPadding = innerPadding,
+                    route = NavigationRoute.SplashScreen.route
+                ) {
                     SplashScreen(
                         openAndPopUp = navController::openAndPopUp,
                         viewModel = viewModel
@@ -63,28 +65,37 @@ fun MsgerApp(
                 }
             }
 
-            composable(NavigationRoute.SignUp.route) {
+            composable(route = NavigationRoute.SignUp.route) {
                 val viewModel: SignUpViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState = viewModel.uiState
 
-                Column(modifier = Modifier.padding(innerPadding)) {
+                BodyLayout(
+                    innerPadding = innerPadding,
+                    route = NavigationRoute.SignUp.route,
+                    snackbarHostState = snackbarHostState,
+                    errorMessage = uiState.responseError
+                ) {
                     SignUpScreen(
                         openAndPopUp = navController::openAndPopUp,
                         viewModel = viewModel,
                         uiState = uiState,
                         navigateToSignIn = { navController.navigate(NavigationRoute.SignIn.route) },
                     )
-                    Snackbar(message = uiState.responseError, snackbarHostState = snackbarHostState)
                 }
             }
 
-            composable(NavigationRoute.SignIn.route) {
+            composable(route = NavigationRoute.SignIn.route) {
                 val viewModel: SignInViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState: SignInUiState = viewModel.uiState
 
-                Column(modifier = Modifier.padding(innerPadding)) {
+                BodyLayout(
+                    innerPadding = innerPadding,
+                    route = NavigationRoute.SignIn.route,
+                    snackbarHostState = snackbarHostState,
+                    errorMessage = uiState.responseError
+                ) {
                     SignInScreen(
                         viewModel = viewModel,
                         uiState = uiState,
@@ -92,30 +103,33 @@ fun MsgerApp(
                         navigateToSignUp = { navController.navigate(NavigationRoute.SignUp.route) },
                         navigateToForgottenPassword = { navController.navigate(NavigationRoute.ForgotPassword.route) }
                     )
-                    Snackbar(message = uiState.responseError, snackbarHostState = snackbarHostState)
                 }
             }
 
-            composable(NavigationRoute.ForgotPassword.route) {
+            composable(route = NavigationRoute.ForgotPassword.route) {
                 val viewModel: ForgotPasswordViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState: ForgotPasswordUiState = viewModel.uiState
 
-                Column(modifier = Modifier.padding(innerPadding)) {
+                BodyLayout(
+                    innerPadding = innerPadding,
+                    route = NavigationRoute.ForgotPassword.route,
+                    snackbarHostState = snackbarHostState,
+                    errorMessage = uiState.responseError
+                ) {
                     ForgotPasswordScreen(
                         navigateToSignIn = { navController.navigate(NavigationRoute.SignIn.route) },
                         viewModel = viewModel,
                         uiState = uiState
                     )
-                    Snackbar(message = uiState.responseError, snackbarHostState = snackbarHostState)
                 }
             }
 
-            composable(NavigationRoute.Home.route) {
-                Column(modifier = Modifier.padding(innerPadding)) {
-                    val viewModel: HomeViewModel =
-                        viewModel(factory = ViewModelFactoryProvider.Factory)
+            composable(route = NavigationRoute.Home.route) {
+                val viewModel: HomeViewModel =
+                    viewModel(factory = ViewModelFactoryProvider.Factory)
 
+                BodyLayout(innerPadding = innerPadding, route = NavigationRoute.Home.route) {
                     HomeScreen(
                         openAndPopUp = navController::openAndPopUp,
                         viewModel = viewModel
