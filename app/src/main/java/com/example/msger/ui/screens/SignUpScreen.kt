@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.sp
 import com.example.msger.R
+import com.example.msger.ui.components.ButtonLoader
 import com.example.msger.ui.components.EmailInput
 import com.example.msger.ui.components.PasswordInput
 
@@ -54,7 +55,11 @@ fun SignUpScreen(
             enabled = isButtonEnabled,
             onClick = { viewModel.signUp(openAndPopUp) }
         ) {
-            Text(text = "Sign up")
+            if (!uiState.isLoading) {
+                Text(text = "Sign up")
+            } else {
+                ButtonLoader()
+            }
         }
         Button(onClick = navigateToSignIn) {
             Text(text = "Go to sign in")

@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.ImeAction
+import com.example.msger.ui.components.ButtonLoader
 import com.example.msger.ui.components.EmailInput
 
 @Composable
@@ -35,7 +36,11 @@ fun ForgotPasswordScreen(
             enabled = isButtonEnabled,
             onClick = viewModel::resetPassword
         ) {
-            Text(text = "Reset password")
+            if (!uiState.isLoading) {
+                Text(text = "Reset password")
+            } else {
+                ButtonLoader()
+            }
         }
         Button(onClick = navigateToSignIn) {
             Text(text = "Go to sign in")

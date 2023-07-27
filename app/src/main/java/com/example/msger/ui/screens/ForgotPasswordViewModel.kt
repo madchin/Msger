@@ -72,10 +72,10 @@ class ForgotPasswordViewModel(private val accountService: AccountService) : View
                 accountService.resetPassword(email, actionCodeSettings)
                 uiState = ForgotPasswordUiState()
             } catch (e: Throwable) {
-                uiState = uiState.copy(responseError = e.message.toString())
+                uiState = uiState.copy(isLoading = false, responseError = e.message.toString())
                 delay(5000L)
+                uiState = uiState.copy(responseError = "")
             }
-            uiState = uiState.copy(isLoading = false, responseError = "")
         }
     }
 }

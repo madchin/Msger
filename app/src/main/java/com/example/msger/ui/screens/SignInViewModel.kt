@@ -79,12 +79,13 @@ class SignInViewModel(
 
             try {
                 accountService.signInWithEmailAndPassword(email, password)
+                uiState = uiState.copy(isLoading = false)
                 openAndPopUp(NavigationRoute.Home.route, NavigationRoute.SignIn.route)
             } catch (e: Throwable) {
-                uiState = uiState.copy(responseError = e.message.toString())
+                uiState = uiState.copy(isLoading = false, responseError = e.message.toString())
                 delay(5000L)
+                uiState = uiState.copy(responseError = "")
             }
-            uiState = uiState.copy(isLoading = false, responseError = "")
         }
     }
 

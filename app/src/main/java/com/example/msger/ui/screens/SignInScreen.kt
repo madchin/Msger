@@ -7,6 +7,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import com.example.msger.ui.components.ButtonLoader
 import com.example.msger.ui.components.EmailInput
 import com.example.msger.ui.components.PasswordInput
 
@@ -42,7 +43,11 @@ fun SignInScreen(
             enabled = isButtonEnabled,
             onClick = { viewModel.signInWithEmailAndPassword(openAndPopUp) }
         ) {
-            Text(text = "Sign in")
+            if (!uiState.isLoading) {
+                Text(text = "Sign in")
+            } else {
+                ButtonLoader()
+            }
         }
         OutlinedButton(onClick = navigateToForgottenPassword) {
             Text(text = "Forgot password")
