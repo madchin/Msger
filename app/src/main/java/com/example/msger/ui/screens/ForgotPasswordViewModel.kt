@@ -13,6 +13,7 @@ import com.example.msger.common.utils.DEEP_LINK_HOST
 import com.example.msger.common.utils.DEEP_LINK_SCHEME
 import com.example.msger.data.services.AccountService
 import com.google.firebase.auth.ActionCodeSettings
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -57,7 +58,7 @@ class ForgotPasswordViewModel(private val accountService: AccountService) : View
 
     fun resetPassword() {
         viewModelScope.launch {
-            uiState = uiState.copy(isEmailValid = isEmailValid, responseError = "")
+            uiState = uiState.copy(isEmailValid = isEmailValid)
             if (!isEmailValid) {
                 return@launch
             }
@@ -72,7 +73,9 @@ class ForgotPasswordViewModel(private val accountService: AccountService) : View
                 uiState = ForgotPasswordUiState()
             } catch (e: Throwable) {
                 uiState = uiState.copy(responseError = e.message.toString())
+                delay(5000L)
             }
+            uiState = uiState.copy(isLoading = false, responseError = "")
         }
     }
 }

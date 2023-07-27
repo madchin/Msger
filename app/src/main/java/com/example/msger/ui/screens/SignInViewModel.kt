@@ -15,6 +15,7 @@ import com.example.msger.common.extensions.passwordErrorText
 import com.example.msger.common.utils.FIREBASE_DYNAMIC_LINK
 import com.example.msger.data.services.AccountService
 import com.example.msger.ui.NavigationRoute
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 data class SignInUiState(
@@ -82,8 +83,9 @@ class SignInViewModel(
                 openAndPopUp(NavigationRoute.Home.route, NavigationRoute.SignIn.route)
             } catch (e: Throwable) {
                 uiState = uiState.copy(responseError = e.message.toString())
+                delay(5000L)
             }
-            uiState = uiState.copy(isLoading = false)
+            uiState = uiState.copy(isLoading = false, responseError = "")
         }
     }
 

@@ -15,6 +15,7 @@ import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.common.extensions.passwordErrorText
 import com.example.msger.data.services.AccountService
 import com.example.msger.ui.NavigationRoute
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -64,8 +65,7 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
             uiState = uiState.copy(
                 isEmailValid = isEmailValid,
                 isPasswordValid = isPasswordValid,
-                isConfirmPasswordValid = isConfirmPasswordValid,
-                responseError = ""
+                isConfirmPasswordValid = isConfirmPasswordValid
             )
 
             if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
@@ -78,8 +78,9 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
                 openAndPopUp(NavigationRoute.Home.route, NavigationRoute.SignUp.route)
             } catch (e: Throwable) {
                 uiState = uiState.copy(responseError = e.message.toString())
+                delay(5000L)
             }
-            uiState = uiState.copy(isLoading = false)
+            uiState = uiState.copy(isLoading = false, responseError = "")
         }
     }
 
