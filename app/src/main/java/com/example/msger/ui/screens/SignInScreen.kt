@@ -18,7 +18,8 @@ fun SignInScreen(
     viewModel: SignInViewModel,
     uiState: SignInUiState,
 ) {
-    val isButtonEnabled = uiState.isEmailValid && uiState.isPasswordValid && uiState.responseError.isEmpty()
+    val isButtonEnabled =
+        uiState.isEmailValid && uiState.isPasswordValid && !uiState.isLoading
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,

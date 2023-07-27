@@ -16,7 +16,7 @@ fun ForgotPasswordScreen(
     viewModel: ForgotPasswordViewModel,
     uiState: ForgotPasswordUiState,
 ) {
-    val isButtonEnabled = uiState.isEmailValid && uiState.responseError.isEmpty()
+    val isButtonEnabled = uiState.isEmailValid && !uiState.isLoading
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

@@ -27,7 +27,7 @@ fun SignUpScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val isButtonEnabled =
-            uiState.isEmailValid && uiState.isPasswordValid && uiState.isConfirmPasswordValid && uiState.responseError.isEmpty()
+            uiState.isEmailValid && uiState.isPasswordValid && uiState.isConfirmPasswordValid && !uiState.isLoading
         EmailInput(
             isError = !uiState.isEmailValid,
             value = uiState.email,
