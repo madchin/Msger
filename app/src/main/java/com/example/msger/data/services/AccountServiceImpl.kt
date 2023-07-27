@@ -33,17 +33,17 @@ class AccountServiceImpl(
         email: String,
         password: String
     ) {
-        auth.createUserWithEmailAndPassword(email, password).await()
+        auth.createUserWithEmailAndPassword(email.trim(), password).await()
     }
 
     override suspend fun signInWithEmailAndPassword(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password).await()
+        auth.signInWithEmailAndPassword(email.trim(), password).await()
     }
 
     override suspend fun signOutUser() = auth.signOut()
 
     override suspend fun resetPassword(email: String, actionCodeSettings: ActionCodeSettings) {
-        auth.sendPasswordResetEmail(email, actionCodeSettings).await()
+        auth.sendPasswordResetEmail(email.trim(), actionCodeSettings).await()
     }
 
     override suspend fun getDynamicLink(uri: Uri): PendingDynamicLinkData =
