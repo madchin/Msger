@@ -70,7 +70,6 @@ class SignInViewModel(
                 isPasswordValid = isPasswordValid,
                 passwordErrorText = passwordErrorText,
                 emailErrorText = emailErrorText,
-                responseError = ""
             )
 
             if (!isEmailValid || !isPasswordValid) {

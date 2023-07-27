@@ -16,6 +16,7 @@ fun ForgotPasswordScreen(
     viewModel: ForgotPasswordViewModel,
     uiState: ForgotPasswordUiState,
 ) {
+    val isButtonEnabled = uiState.isEmailValid && uiState.responseError.isEmpty()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -30,7 +31,10 @@ fun ForgotPasswordScreen(
             onDonePress = viewModel::resetPassword
         )
 
-        OutlinedButton(onClick = viewModel::resetPassword) {
+        OutlinedButton(
+            enabled = isButtonEnabled,
+            onClick = viewModel::resetPassword
+        ) {
             Text(text = "Reset password")
         }
         Button(onClick = navigateToSignIn) {

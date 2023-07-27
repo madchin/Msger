@@ -26,6 +26,8 @@ fun SignUpScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val isButtonEnabled =
+            uiState.isEmailValid && uiState.isPasswordValid && uiState.isConfirmPasswordValid && uiState.responseError.isEmpty()
         EmailInput(
             isError = !uiState.isEmailValid,
             value = uiState.email,
@@ -48,7 +50,10 @@ fun SignUpScreen(
             errorText = uiState.confirmPasswordErrorText,
             onDonePress = { viewModel.signUp(openAndPopUp) }
         )
-        OutlinedButton(onClick = { viewModel.signUp(openAndPopUp) }) {
+        OutlinedButton(
+            enabled = isButtonEnabled,
+            onClick = { viewModel.signUp(openAndPopUp) }
+        ) {
             Text(text = "Sign up")
         }
         Button(onClick = navigateToSignIn) {

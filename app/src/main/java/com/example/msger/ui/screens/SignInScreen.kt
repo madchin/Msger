@@ -18,6 +18,7 @@ fun SignInScreen(
     viewModel: SignInViewModel,
     uiState: SignInUiState,
 ) {
+    val isButtonEnabled = uiState.isEmailValid && uiState.isPasswordValid && uiState.responseError.isEmpty()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -36,7 +37,10 @@ fun SignInScreen(
             errorText = uiState.passwordErrorText,
             onDonePress = { viewModel.signInWithEmailAndPassword(openAndPopUp) }
         )
-        OutlinedButton(onClick = { viewModel.signInWithEmailAndPassword(openAndPopUp) }) {
+        OutlinedButton(
+            enabled = isButtonEnabled,
+            onClick = { viewModel.signInWithEmailAndPassword(openAndPopUp) }
+        ) {
             Text(text = "Sign in")
         }
         OutlinedButton(onClick = navigateToForgottenPassword) {
