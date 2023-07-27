@@ -2,6 +2,7 @@ package com.example.msger.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -35,6 +36,7 @@ fun EmailInput(
     onValueChange: (String) -> Unit,
     onValueClear: () -> Unit,
     @StringRes errorText: Int,
+    modifier: Modifier = Modifier,
     imeAction: ImeAction = ImeAction.Next,
     onDonePress: () -> Unit = {}
 ) {
@@ -70,7 +72,8 @@ fun EmailInput(
         keyboardActions = KeyboardActions(onDone = {
             defaultKeyboardAction(ImeAction.Done)
             onDonePress()
-        })
+        }),
+        modifier = modifier.fillMaxWidth()
     )
 }
 
@@ -80,8 +83,9 @@ fun PasswordInput(
     isError: Boolean,
     value: String,
     onValueChange: (String) -> Unit,
-    @StringRes labelText: Int = R.string.password,
     @StringRes errorText: Int,
+    modifier: Modifier = Modifier,
+    @StringRes labelText: Int = R.string.password,
     imeAction: ImeAction = ImeAction.Done,
     onDonePress: () -> Unit = {},
 ) {
@@ -124,6 +128,7 @@ fun PasswordInput(
         keyboardActions = KeyboardActions(onDone = {
             defaultKeyboardAction(ImeAction.Done)
             onDonePress()
-        })
+        }),
+        modifier = modifier.fillMaxWidth()
     )
 }
