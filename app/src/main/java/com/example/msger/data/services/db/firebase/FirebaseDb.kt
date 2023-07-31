@@ -41,7 +41,7 @@ class FirebaseDb : Database {
         chatsRef.setValue(
             mapOf(
                 "second" to Chat("xD", created = 123123123, members = listOf("1", "2", "3")),
-                "third" to Chat("third", created = 3333333, members = listOf("2", "3", "4", "5"))
+                "third" to Chat("xD", created = 123123123, members = listOf("1", "2", "3"))
             )
         )
     }

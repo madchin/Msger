@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class DbServiceImpl(private val dbService: Database) : DbService {
     override val chats: Flow<Result<List<Chat>>>
         get() = dbService.chats
+
     override suspend fun createChat() {
         dbService.createChat()
     }

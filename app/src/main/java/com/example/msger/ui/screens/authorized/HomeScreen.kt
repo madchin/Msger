@@ -15,7 +15,7 @@ fun HomeScreen(
     openAndPopUp: (String, String) -> Unit,
     viewModel: HomeViewModel,
 ) {
-    val uiState by viewModel.chats.collectAsState(initial = HomeUiState.Loading)
+    val uiState by viewModel.chats.collectAsState()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -25,7 +25,10 @@ fun HomeScreen(
         }
         when (uiState) {
             is HomeUiState.Loading -> ButtonLoader()
-            is HomeUiState.Failure -> Text(text = (uiState as HomeUiState.Failure).error?.message ?: "generic")
+            is HomeUiState.Failure -> Text(
+                text = (uiState as HomeUiState.Failure).error.message ?: "generic"
+            )
+
             is HomeUiState.Success -> (uiState as HomeUiState.Success).chats.forEach {
                 Column(
                     verticalArrangement = Arrangement.Center,

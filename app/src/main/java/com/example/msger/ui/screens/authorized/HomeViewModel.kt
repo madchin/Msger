@@ -7,13 +7,17 @@ import com.example.msger.data.model.Chat
 import com.example.msger.data.services.auth.AuthService
 import com.example.msger.data.services.db.DbService
 import com.example.msger.ui.NavigationRoute
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 
 sealed interface HomeUiState {
     data class Success(val chats: List<Chat> = listOf(Chat())) : HomeUiState
-    data class Failure(val error: Throwable?) : HomeUiState
+
+    data class Failure(val error: Throwable) : HomeUiState
 
     object Loading : HomeUiState
 }
@@ -22,13 +26,20 @@ class HomeViewModel(
     private val authService: AuthService,
     private val dbService: DbService
 ) : ViewModel() {
-    private val _chats = dbService.chats.map {
-        when {
-            it.isSuccess -> HomeUiState.Success(it.getOrDefault(listOf(Chat())))
-            it.isFailure -> HomeUiState.Failure(it.exceptionOrNull() ?: Exception("generic"))
-            else -> HomeUiState.Loading
+    private val _chats: StateFlow<HomeUiState> = dbService
+        .chats
+        .map {
+            when {
+                it.isSuccess -> HomeUiState.Success(it.getOrDefault(listOf(Chat())))
+                it.isFailure -> HomeUiState.Failure(it.exceptionOrNull() ?: Exception("generic"))
+                else -> HomeUiState.Loading
+            }
         }
-    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = HomeUiState.Loading
+        )
     val chats
         get() = _chats
 
