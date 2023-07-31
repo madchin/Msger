@@ -20,17 +20,17 @@ class AuthServiceImpl(
         email: String,
         password: String
     ) {
-        auth.signUp(email.trim(), password)
+        auth.signUp(email, password)
     }
 
     override suspend fun signIn(email: String, password: String) {
-        auth.signIn(email.trim(), password)
+        auth.signIn(email, password)
     }
 
     override fun signOut() = auth.signOut()
 
     override suspend fun resetPassword(email: String) {
-        auth.resetPassword(email.trim())
+        auth.resetPassword(email)
     }
 
     override suspend fun getUserEmail(): String =

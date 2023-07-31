@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class FirebaseAuthenticator : Authenticator {
-    override val auth: FirebaseAuth
+    private val auth: FirebaseAuth
         get() = Firebase.auth
 
     override val isSignedIn: Boolean
