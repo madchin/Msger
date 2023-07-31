@@ -59,7 +59,7 @@ class SignInViewModel(
         }
     }
 
-    fun signInWithEmailAndPassword(openAndPopUp: (String, String) -> Unit) {
+    fun signInUser(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
             uiState = uiState.copy(
                 isEmailValid = isEmailValid,
@@ -74,7 +74,7 @@ class SignInViewModel(
             uiState = uiState.copy(isLoading = true)
 
             try {
-                authService.signInWithEmailAndPassword(email, password)
+                authService.signIn(email, password)
                 uiState = uiState.copy(isLoading = false)
                 openAndPopUp(NavigationRoute.Home.route, NavigationRoute.SignIn.route)
             } catch (e: Throwable) {

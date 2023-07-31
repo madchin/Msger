@@ -37,11 +37,11 @@ fun SignInScreen(
             value = uiState.password,
             onValueChange = viewModel::onPasswordValueChange,
             errorText = uiState.passwordErrorText,
-            onDonePress = { viewModel.signInWithEmailAndPassword(openAndPopUp) }
+            onDonePress = { viewModel.signInUser(openAndPopUp) }
         )
         OutlinedButton(
             enabled = isButtonEnabled,
-            onClick = { viewModel.signInWithEmailAndPassword(openAndPopUp) }
+            onClick = { viewModel.signInUser(openAndPopUp) }
         ) {
             if (!uiState.isLoading) {
                 Text(text = "Sign in")

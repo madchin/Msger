@@ -16,15 +16,15 @@ class AuthServiceImpl(
     override val isSignedIn: Boolean
         get() = auth.isSignedIn
 
-    override suspend fun createUserWithEmailAndPassword(
+    override suspend fun signUp(
         email: String,
         password: String
     ) {
-        auth.createUserWithEmailAndPassword(email.trim(), password)
+        auth.signUp(email.trim(), password)
     }
 
-    override suspend fun signInWithEmailAndPassword(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email.trim(), password)
+    override suspend fun signIn(email: String, password: String) {
+        auth.signIn(email.trim(), password)
     }
 
     override fun signOut() = auth.signOut()

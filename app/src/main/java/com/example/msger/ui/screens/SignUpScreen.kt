@@ -46,11 +46,11 @@ fun SignUpScreen(
             labelText = R.string.confirm_password,
             onValueChange = viewModel::onConfirmPasswordValueChange,
             errorText = uiState.confirmPasswordErrorText,
-            onDonePress = { viewModel.signUp(openAndPopUp) }
+            onDonePress = { viewModel.signUpUser(openAndPopUp) }
         )
         OutlinedButton(
             enabled = isButtonEnabled,
-            onClick = { viewModel.signUp(openAndPopUp) }
+            onClick = { viewModel.signUpUser(openAndPopUp) }
         ) {
             if (!uiState.isLoading) {
                 Text(text = "Sign up")

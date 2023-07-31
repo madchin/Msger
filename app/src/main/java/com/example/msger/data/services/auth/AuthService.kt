@@ -7,8 +7,8 @@ interface AuthService {
     val user: Flow<User>
 
     val isSignedIn: Boolean
-    suspend fun createUserWithEmailAndPassword(email: String, password: String)
-    suspend fun signInWithEmailAndPassword(email: String, password: String)
+    suspend fun signUp(email: String, password: String)
+    suspend fun signIn(email: String, password: String)
     suspend fun resetPassword(email: String)
 
     suspend fun getUserEmail(): String

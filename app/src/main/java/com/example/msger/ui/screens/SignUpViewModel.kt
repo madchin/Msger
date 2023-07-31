@@ -60,7 +60,7 @@ class SignUpViewModel(private val authService: AuthService) : ViewModel() {
     private val isConfirmPasswordValid: Boolean
         get() = confirmPassword.isConfirmPasswordValid(password = password)
 
-    fun signUp(openAndPopUp: (String, String) -> Unit) {
+    fun signUpUser(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
             uiState = uiState.copy(
                 isEmailValid = isEmailValid,
@@ -74,7 +74,7 @@ class SignUpViewModel(private val authService: AuthService) : ViewModel() {
 
             uiState = uiState.copy(isLoading = true)
             try {
-                authService.createUserWithEmailAndPassword(email, password)
+                authService.signUp(email, password)
                 uiState = uiState.copy(isLoading = false)
                 openAndPopUp(NavigationRoute.Home.route, NavigationRoute.SignUp.route)
             } catch (e: Throwable) {
