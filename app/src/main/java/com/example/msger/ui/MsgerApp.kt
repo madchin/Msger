@@ -57,18 +57,16 @@ fun MsgerApp(
                 val viewModel: SplashScreenViewModel = viewModel(
                     factory = ViewModelFactoryProvider.Factory
                 )
-                val uiState = viewModel.uiState
+
                 BodyLayout(
                     route = NavigationRoute.SplashScreen.route,
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize()
                 ) {
-
                     SplashScreen(
                         openAndPopUp = navController::openAndPopUp,
                         viewModel = viewModel,
-                        uiState = uiState
                     )
                 }
             }
