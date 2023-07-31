@@ -6,13 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.msger.R
-import com.example.msger.androidPackageName
 import com.example.msger.common.extensions.emailErrorText
 import com.example.msger.common.extensions.isEmailValid
-import com.example.msger.common.utils.DEEP_LINK_HOST
-import com.example.msger.common.utils.DEEP_LINK_SCHEME
-import com.example.msger.data.services.AccountService
-import com.google.firebase.auth.ActionCodeSettings
+import com.example.msger.data.services.auth.AuthService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -25,7 +21,7 @@ data class ForgotPasswordUiState(
     val responseError: String = ""
 )
 
-class ForgotPasswordViewModel(private val accountService: AccountService) : ViewModel() {
+class ForgotPasswordViewModel(private val authService: AuthService) : ViewModel() {
 
     var uiState: ForgotPasswordUiState by mutableStateOf(ForgotPasswordUiState())
         private set
@@ -62,14 +58,9 @@ class ForgotPasswordViewModel(private val accountService: AccountService) : View
             if (!isEmailValid) {
                 return@launch
             }
+            uiState = uiState.copy(isLoading = true)
             try {
-                val url = "$DEEP_LINK_SCHEME$DEEP_LINK_HOST/change-password?email=$email"
-                val actionCodeSettings = ActionCodeSettings
-                    .newBuilder()
-                    .setUrl(url)
-                    .setAndroidPackageName(androidPackageName, false, null)
-                    .build()
-                accountService.resetPassword(email, actionCodeSettings)
+                authService.resetPassword(email)
                 uiState = ForgotPasswordUiState()
             } catch (e: Throwable) {
                 uiState = uiState.copy(isLoading = false, responseError = e.message.toString())

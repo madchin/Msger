@@ -13,7 +13,7 @@ import com.example.msger.common.extensions.isConfirmPasswordValid
 import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.common.extensions.passwordErrorText
-import com.example.msger.data.services.AccountService
+import com.example.msger.data.services.auth.AuthService
 import com.example.msger.ui.NavigationRoute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -33,7 +33,7 @@ data class SignUpUiState(
     val responseError: String = ""
 )
 
-class SignUpViewModel(private val accountService: AccountService) : ViewModel() {
+class SignUpViewModel(private val authService: AuthService) : ViewModel() {
     var uiState: SignUpUiState by mutableStateOf(SignUpUiState())
         private set
     private val email: String
@@ -74,7 +74,7 @@ class SignUpViewModel(private val accountService: AccountService) : ViewModel() 
 
             uiState = uiState.copy(isLoading = true)
             try {
-                accountService.createUserWithEmailAndPassword(email, password)
+                authService.createUserWithEmailAndPassword(email, password)
                 uiState = uiState.copy(isLoading = false)
                 openAndPopUp(NavigationRoute.Home.route, NavigationRoute.SignUp.route)
             } catch (e: Throwable) {

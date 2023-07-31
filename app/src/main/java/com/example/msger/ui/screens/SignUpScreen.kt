@@ -7,10 +7,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.sp
 import com.example.msger.R
 import com.example.msger.ui.components.ButtonLoader
 import com.example.msger.ui.components.EmailInput
@@ -64,14 +61,5 @@ fun SignUpScreen(
         Button(onClick = navigateToSignIn) {
             Text(text = "Go to sign in")
         }
-    }
-    if (uiState.isLoading) {
-        Text(
-            text = "Loading",
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-                fontSize = 40.sp
-            )
-        )
     }
 }

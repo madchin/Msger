@@ -1,16 +1,21 @@
 package com.example.msger.data
 
-import com.example.msger.data.services.AccountService
-import com.example.msger.data.services.AccountServiceImpl
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import com.google.firebase.dynamiclinks.ktx.dynamicLinks
-import com.google.firebase.ktx.Firebase
-
+import com.example.msger.data.services.auth.AuthService
+import com.example.msger.data.services.auth.AuthServiceImpl
+import com.example.msger.data.services.auth.firebase.Authenticator
+import com.example.msger.data.services.auth.firebase.CredentialProvider
+import com.example.msger.data.services.auth.firebase.FirebaseAuthenticator
+import com.example.msger.data.services.auth.firebase.FirebaseCredentialProvider
+import com.example.msger.data.services.db.DbService
+import com.example.msger.data.services.db.DbServiceImpl
+import com.example.msger.data.services.db.firebase.Database
+import com.example.msger.data.services.db.firebase.FirebaseDb
 
 class AppContainer {
-    private val firebaseAuth: FirebaseAuth = Firebase.auth
-    private val firebaseDynamicLinks: FirebaseDynamicLinks = Firebase.dynamicLinks
-    val accountService: AccountService = AccountServiceImpl(firebaseAuth,firebaseDynamicLinks)
+    private val auth: Authenticator = FirebaseAuthenticator()
+    private val credentialProvider: CredentialProvider = FirebaseCredentialProvider()
+    private val firebaseDatabase: Database = FirebaseDb()
+
+    val dbService: DbService = DbServiceImpl(firebaseDatabase)
+    val authService: AuthService = AuthServiceImpl(auth, credentialProvider)
 }

@@ -17,19 +17,19 @@ val CreationExtras.application: MsgerApplication
 object ViewModelFactoryProvider {
     val Factory = viewModelFactory {
         initializer {
-            ForgotPasswordViewModel(application.appContainer.accountService)
+            ForgotPasswordViewModel(application.appContainer.authService)
         }
         initializer {
-            SignInViewModel(application.appContainer.accountService)
+            SignInViewModel(application.appContainer.authService)
         }
         initializer {
-            SignUpViewModel(application.appContainer.accountService)
+            SignUpViewModel(application.appContainer.authService)
         }
         initializer {
-            SplashScreenViewModel(application.appContainer.accountService)
+            SplashScreenViewModel(application.appContainer.authService)
         }
         initializer {
-            HomeViewModel(application.appContainer.accountService)
+            HomeViewModel(application.appContainer.authService, application.appContainer.dbService)
         }
     }
 }

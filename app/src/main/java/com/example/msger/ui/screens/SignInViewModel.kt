@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.msger.R
@@ -12,8 +11,7 @@ import com.example.msger.common.extensions.emailErrorText
 import com.example.msger.common.extensions.isEmailValid
 import com.example.msger.common.extensions.isPasswordValid
 import com.example.msger.common.extensions.passwordErrorText
-import com.example.msger.common.utils.FIREBASE_DYNAMIC_LINK
-import com.example.msger.data.services.AccountService
+import com.example.msger.data.services.auth.AuthService
 import com.example.msger.ui.NavigationRoute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -30,7 +28,7 @@ data class SignInUiState(
 )
 
 class SignInViewModel(
-    private val accountService: AccountService
+    private val authService: AuthService
 ) : ViewModel() {
     var uiState: SignInUiState by mutableStateOf(SignInUiState())
         private set
@@ -53,10 +51,8 @@ class SignInViewModel(
     init {
         viewModelScope.launch {
             try {
-                val dynamicLink = accountService.getDynamicLink(FIREBASE_DYNAMIC_LINK.toUri())
-                val dynamicLinkData = dynamicLink.link
-                val userEmail: String = dynamicLinkData?.getQueryParameter("email") ?: ""
-                uiState = uiState.copy(email = userEmail)
+                val email: String = authService.getUserEmail()
+                uiState = uiState.copy(email = email)
             } catch (e: Throwable) {
                 // TODO: catch errors properly
             }
@@ -78,7 +74,7 @@ class SignInViewModel(
             uiState = uiState.copy(isLoading = true)
 
             try {
-                accountService.signInWithEmailAndPassword(email, password)
+                authService.signInWithEmailAndPassword(email, password)
                 uiState = uiState.copy(isLoading = false)
                 openAndPopUp(NavigationRoute.Home.route, NavigationRoute.SignIn.route)
             } catch (e: Throwable) {
