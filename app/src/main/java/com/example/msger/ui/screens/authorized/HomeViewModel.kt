@@ -1,8 +1,8 @@
 package com.example.msger.ui.screens.authorized
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.msger.common.utils.Resource
 import com.example.msger.data.model.Chat
 import com.example.msger.data.services.auth.AuthService
 import com.example.msger.data.services.db.DbService
@@ -14,44 +14,30 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 
-sealed interface HomeUiState {
-    data class Success(val chats: List<Chat> = listOf(Chat())) : HomeUiState
-
-    data class Failure(val error: Throwable) : HomeUiState
-
-    object Loading : HomeUiState
-}
-
 class HomeViewModel(
     private val authService: AuthService,
-    private val dbService: DbService
+    dbService: DbService
 ) : ViewModel() {
-    private val _chats: StateFlow<HomeUiState> = dbService
+    private val _chats: StateFlow<Resource<List<Chat>>> = dbService
         .chats
         .map {
             when {
-                it.isSuccess -> HomeUiState.Success(it.getOrDefault(listOf(Chat())))
-                it.isFailure -> HomeUiState.Failure(it.exceptionOrNull() ?: Exception("generic"))
-                else -> HomeUiState.Loading
+                it.isSuccess -> Resource.Success(it.getOrDefault(listOf(Chat())))
+                it.isFailure -> {
+                    val error = it.exceptionOrNull()
+                    Resource.Error(error?.message.toString())
+                }
+
+                else -> Resource.Loading()
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = HomeUiState.Loading
+            initialValue = Resource.Loading()
         )
     val chats
         get() = _chats
-
-    init {
-        viewModelScope.launch {
-            try {
-                dbService.createChat()
-            } catch (e: Throwable) {
-                Log.d("HOME", e.message.toString())
-            }
-        }
-    }
 
     fun signOut(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {

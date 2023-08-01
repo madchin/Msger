@@ -18,10 +18,10 @@ class FirebaseAuthenticator : Authenticator {
     override val isSignedIn: Boolean
         get() = auth.currentUser != null
 
-    override val user: Flow<User> = callbackFlow {
+    override val user: Flow<User?> = callbackFlow {
         val listener =
             FirebaseAuth.AuthStateListener { auth ->
-                this.trySend(auth.currentUser?.let { User(it.uid) } ?: User())
+                this.trySend(auth.currentUser?.let { User(it.uid) })
             }
         auth.addAuthStateListener(listener)
         awaitClose { auth.removeAuthStateListener(listener) }

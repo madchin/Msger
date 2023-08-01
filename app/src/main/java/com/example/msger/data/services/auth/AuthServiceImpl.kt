@@ -10,7 +10,7 @@ class AuthServiceImpl(
     private val credentialProvider: CredentialProvider
 ) : AuthService {
 
-    override val user: Flow<User>
+    override val user: Flow<User?>
         get() = auth.user
 
     override val isSignedIn: Boolean

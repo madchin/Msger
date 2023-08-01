@@ -7,6 +7,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -15,6 +17,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.msger.common.extensions.openAndPopUp
+import com.example.msger.common.utils.Resource
+import com.example.msger.data.model.Chat
 import com.example.msger.ui.components.BodyLayout
 import com.example.msger.ui.components.MsgerTopBar
 import com.example.msger.ui.screens.ForgotPasswordScreen
@@ -140,16 +144,22 @@ fun MsgerApp(
             composable(route = NavigationRoute.Home.route) {
                 val viewModel: HomeViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
-
+                val uiState: Resource<List<Chat>> by viewModel.chats.collectAsState()
+                
                 BodyLayout(
                     route = NavigationRoute.Home.route,
+                    snackbarHostState = snackbarHostState,
+                    errorMessage = uiState.message,
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize()
                 ) {
                     HomeScreen(
                         openAndPopUp = navController::openAndPopUp,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        uiState = uiState,
+                        navigateToCreateChat = { navController.navigate(NavigationRoute.CreateChat.route) },
+                        navigateToJoinChat = { navController.navigate(NavigationRoute.JoinChat.route) }
                     )
                 }
             }
