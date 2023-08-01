@@ -16,4 +16,6 @@
     <string name="create_chat_button">Create chat</string>
     <string name="join_chat_button">Join chat</string>
     <string name="sign_out_button">Sign out</string>
+    <string name="chat_name">Chat name</string>
+    <string name="user_name">Username</string>
 </resources>

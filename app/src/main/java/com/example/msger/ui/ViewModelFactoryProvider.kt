@@ -9,6 +9,7 @@ import com.example.msger.ui.screens.ForgotPasswordViewModel
 import com.example.msger.ui.screens.SignInViewModel
 import com.example.msger.ui.screens.SignUpViewModel
 import com.example.msger.ui.screens.SplashScreenViewModel
+import com.example.msger.ui.screens.authorized.CreateChatViewModel
 import com.example.msger.ui.screens.authorized.HomeViewModel
 
 val CreationExtras.application: MsgerApplication
@@ -30,6 +31,9 @@ object ViewModelFactoryProvider {
         }
         initializer {
             HomeViewModel(application.appContainer.authService, application.appContainer.dbService)
+        }
+        initializer {
+            CreateChatViewModel(application.appContainer.dbService)
         }
     }
 }

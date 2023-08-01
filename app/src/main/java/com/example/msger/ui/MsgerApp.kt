@@ -31,6 +31,9 @@ import com.example.msger.ui.screens.SignUpScreen
 import com.example.msger.ui.screens.SignUpViewModel
 import com.example.msger.ui.screens.SplashScreen
 import com.example.msger.ui.screens.SplashScreenViewModel
+import com.example.msger.ui.screens.authorized.CreateChatScreen
+import com.example.msger.ui.screens.authorized.CreateChatUiState
+import com.example.msger.ui.screens.authorized.CreateChatViewModel
 import com.example.msger.ui.screens.authorized.HomeScreen
 import com.example.msger.ui.screens.authorized.HomeViewModel
 
@@ -145,11 +148,11 @@ fun MsgerApp(
                 val viewModel: HomeViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState: Resource<List<Chat>> by viewModel.chats.collectAsState()
-                
+
                 BodyLayout(
                     route = NavigationRoute.Home.route,
                     snackbarHostState = snackbarHostState,
-                    errorMessage = uiState.message,
+                    errorMessage = uiState.message ?: "",
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize()
@@ -161,6 +164,19 @@ fun MsgerApp(
                         navigateToCreateChat = { navController.navigate(NavigationRoute.CreateChat.route) },
                         navigateToJoinChat = { navController.navigate(NavigationRoute.JoinChat.route) }
                     )
+                }
+            }
+            composable(route = NavigationRoute.CreateChat.route) {
+                val viewModel: CreateChatViewModel =
+                    viewModel(factory = ViewModelFactoryProvider.Factory)
+                val uiState: CreateChatUiState = viewModel.uiState
+                BodyLayout(
+                    route = NavigationRoute.CreateChat.route,
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                ) {
+                    CreateChatScreen(viewModel = viewModel, uiState = uiState)
                 }
             }
         }

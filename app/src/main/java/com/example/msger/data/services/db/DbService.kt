@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface DbService {
     val chats: Flow<Result<List<Chat>>>
-    suspend fun createChat(chat: Chat)
+    suspend fun createChat(username: String, chat: Chat)
 }

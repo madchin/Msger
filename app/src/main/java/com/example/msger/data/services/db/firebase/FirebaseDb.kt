@@ -1,8 +1,6 @@
 package com.example.msger.data.services.db.firebase
 
 import com.example.msger.data.model.Chat
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -13,13 +11,12 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 
 class FirebaseDb : Database {
     private val dbUrl: String = "https://msger-eb05e-default-rtdb.europe-west1.firebasedatabase.app"
     private val db: FirebaseDatabase
         get() = Firebase.database(dbUrl)
-
-    private val currentUser: FirebaseUser? = Firebase.auth.currentUser
 
     private val chatsRef: DatabaseReference
         get() = db.getReference("chats")
@@ -41,12 +38,11 @@ class FirebaseDb : Database {
         awaitClose { chatsRef.removeEventListener(listener) }
     }
 
-    override suspend fun createChat(chat: Chat) {
+    override suspend fun createChat(username: String, chat: Chat) {
         val chatId = chat.name + super.hashCode()
-        val currentUser = currentUser?.displayName!!
 
-        chat.members?.put(currentUser, true)
+        val chatToAdd = chat.copy(members = mutableMapOf(username to true))
 
-        chatsRef.child(chatId).setValue(chat)
+        chatsRef.child(chatId).setValue(chatToAdd).await()
     }
 }
