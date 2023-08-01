@@ -1,6 +1,7 @@
 package com.example.msger.data.services.db.firebase
 
 import com.example.msger.data.model.Chat
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -18,8 +19,13 @@ class FirebaseDb : Database {
     private val db: FirebaseDatabase
         get() = Firebase.database(dbUrl)
 
+    private val currentUserUid: String?
+        get() = Firebase.auth.currentUser?.uid
+
     private val chatsRef: DatabaseReference
         get() = db.getReference("chats")
+    private val usersRef: DatabaseReference
+        get() = db.getReference("users")
 
     override val chats: Flow<Result<List<Chat>>> = callbackFlow {
         val listener = object : ValueEventListener {
@@ -39,9 +45,13 @@ class FirebaseDb : Database {
     }
 
     override suspend fun createChat(username: String, chat: Chat) {
-        val chatId = chat.name + super.hashCode()
-
+        val chatId = chat.hashCode().toString()
         val chatToAdd = chat.copy(members = mutableMapOf(username to true))
+
+        usersRef
+            .child(currentUserUid!!)
+            .child("chats")
+            .updateChildren(mapOf(chatId to chat))
 
         chatsRef.child(chatId).setValue(chatToAdd).await()
     }
