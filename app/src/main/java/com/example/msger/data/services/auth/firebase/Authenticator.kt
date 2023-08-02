@@ -1,6 +1,6 @@
 package com.example.msger.data.services.auth.firebase
 
-import com.example.msger.data.model.User
+import com.example.msger.data.model.auth.User
 import kotlinx.coroutines.flow.Flow
 
 interface Authenticator {

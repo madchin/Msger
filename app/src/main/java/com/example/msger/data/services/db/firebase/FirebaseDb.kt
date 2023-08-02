@@ -1,6 +1,7 @@
 package com.example.msger.data.services.db.firebase
 
-import com.example.msger.data.model.Chat
+import com.example.msger.data.model.db.ChatEntity
+import com.example.msger.data.model.db.MemberEntity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,21 +20,21 @@ class FirebaseDb : Database {
     private val db: FirebaseDatabase
         get() = Firebase.database(dbUrl)
 
-    private val currentUserUid: String?
+    private val userId: String?
         get() = Firebase.auth.currentUser?.uid
 
     private val chatsRef: DatabaseReference
         get() = db.getReference("chats")
-    private val usersRef: DatabaseReference
-        get() = db.getReference("users")
+    private val membersRef: DatabaseReference
+        get() = db.getReference("members")
 
-    override val chats: Flow<Result<List<Chat>>> = callbackFlow {
+    override val chats: Flow<Result<List<ChatEntity>>> = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val chats = snapshot.children.map { dataSnapshot ->
-                    dataSnapshot.getValue(Chat::class.java) ?: Chat()
+                val chatEntities = snapshot.children.map { dataSnapshot ->
+                    dataSnapshot.getValue(ChatEntity::class.java) ?: ChatEntity()
                 }
-                this@callbackFlow.trySend(Result.success(chats))
+                this@callbackFlow.trySend(Result.success(chatEntities))
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -44,15 +45,16 @@ class FirebaseDb : Database {
         awaitClose { chatsRef.removeEventListener(listener) }
     }
 
-    override suspend fun createChat(username: String, chat: Chat) {
-        val chatId = chat.hashCode().toString()
-        val chatToAdd = chat.copy(members = mutableMapOf(username to true))
+    override suspend fun createChat(username: String, chatEntity: ChatEntity) {
+        val chatId = chatsRef.push().key ?: ""
+        val chatMemberEntity = mapOf(userId to MemberEntity(lastSeen = chatEntity.created, name = username))
 
-        usersRef
-            .child(currentUserUid!!)
-            .child("chats")
-            .updateChildren(mapOf(chatId to chat))
+        chatsRef.child(chatId).setValue(chatEntity).await()
 
-        chatsRef.child(chatId).setValue(chatToAdd).await()
+        membersRef
+            .child(chatId)
+            .updateChildren(chatMemberEntity)
+            .await()
+
     }
 }

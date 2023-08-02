@@ -18,7 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.msger.common.extensions.openAndPopUp
 import com.example.msger.common.utils.Resource
-import com.example.msger.data.model.Chat
+import com.example.msger.data.model.db.ChatEntity
 import com.example.msger.ui.components.BodyLayout
 import com.example.msger.ui.components.MsgerTopBar
 import com.example.msger.ui.screens.ForgotPasswordScreen
@@ -147,7 +147,7 @@ fun MsgerApp(
             composable(route = NavigationRoute.Home.route) {
                 val viewModel: HomeViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
-                val uiState: Resource<List<Chat>> by viewModel.chats.collectAsState()
+                val uiState: Resource<List<ChatEntity>> by viewModel.chats.collectAsState()
 
                 BodyLayout(
                     route = NavigationRoute.Home.route,

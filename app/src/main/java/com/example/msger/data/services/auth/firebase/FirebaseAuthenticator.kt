@@ -1,7 +1,7 @@
 package com.example.msger.data.services.auth.firebase
 
 import com.example.msger.androidPackageName
-import com.example.msger.data.model.User
+import com.example.msger.data.model.auth.User
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth

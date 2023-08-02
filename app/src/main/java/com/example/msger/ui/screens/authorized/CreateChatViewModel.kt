@@ -10,7 +10,7 @@ import com.example.msger.common.extensions.chatNameErrorText
 import com.example.msger.common.extensions.isChatNameValid
 import com.example.msger.common.extensions.isUsernameValid
 import com.example.msger.common.extensions.usernameErrorText
-import com.example.msger.data.model.Chat
+import com.example.msger.data.model.db.ChatEntity
 import com.example.msger.data.services.db.DbService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -61,7 +61,7 @@ class CreateChatViewModel(private val dbService: DbService) : ViewModel() {
             uiState = uiState.copy(isLoading = true)
 
             try {
-                dbService.createChat(username, Chat(name = chatName))
+                dbService.createChat(username = username, chatEntity = ChatEntity(name = chatName))
                 uiState = uiState.copy(isLoading = false)
             } catch (e: Throwable) {
                 uiState = uiState.copy(isLoading = false, responseError = e.message.toString())

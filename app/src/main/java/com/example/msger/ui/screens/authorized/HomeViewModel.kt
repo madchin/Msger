@@ -3,7 +3,7 @@ package com.example.msger.ui.screens.authorized
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.msger.common.utils.Resource
-import com.example.msger.data.model.Chat
+import com.example.msger.data.model.db.ChatEntity
 import com.example.msger.data.services.auth.AuthService
 import com.example.msger.data.services.db.DbService
 import com.example.msger.ui.NavigationRoute
@@ -18,11 +18,11 @@ class HomeViewModel(
     private val authService: AuthService,
     dbService: DbService
 ) : ViewModel() {
-    private val _chats: StateFlow<Resource<List<Chat>>> = dbService
+    private val _chats: StateFlow<Resource<List<ChatEntity>>> = dbService
         .chats
         .map {
             when {
-                it.isSuccess -> Resource.Success(it.getOrDefault(listOf(Chat())))
+                it.isSuccess -> Resource.Success(it.getOrDefault(listOf(ChatEntity())))
                 it.isFailure -> {
                     val error = it.exceptionOrNull()
                     Resource.Error(error?.message.toString())

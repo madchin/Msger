@@ -1,6 +1,6 @@
 package com.example.msger.data.services.auth
 
-import com.example.msger.data.model.User
+import com.example.msger.data.model.auth.User
 import com.example.msger.data.services.auth.firebase.Authenticator
 import com.example.msger.data.services.auth.firebase.CredentialProvider
 import kotlinx.coroutines.flow.Flow
