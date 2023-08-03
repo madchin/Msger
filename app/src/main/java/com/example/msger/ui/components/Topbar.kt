@@ -13,20 +13,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.msger.R
-import com.example.msger.common.extensions.toNavigationRoute
 import com.example.msger.ui.NavigationRoute
 
-fun getTopBarTitle(route: NavigationRoute?): String = when (route) {
-    is NavigationRoute.Home -> "Home"
-    is NavigationRoute.ForgotPassword -> "Forgot Password"
-    is NavigationRoute.SignIn -> "Sign in"
-    is NavigationRoute.SignUp -> "Sign up"
-    is NavigationRoute.SplashScreen -> "Splash Screen"
+fun getTopBarTitle(route: String?): String = when (route) {
+    NavigationRoute.Home.route -> "Home"
+    NavigationRoute.ForgotPassword.route -> "Forgot Password"
+    NavigationRoute.SignIn.route -> "Sign in"
+    NavigationRoute.SignUp.route -> "Sign up"
+    NavigationRoute.SplashScreen.route -> "Splash Screen"
+    NavigationRoute.CreateChat.route -> "Create chat"
+    NavigationRoute.Chat.route -> "Chat"
     else -> "App bar"
 }
-fun shouldUpButtonBeVisible(route: NavigationRoute?): Boolean = when(route) {
-    is NavigationRoute.SignIn -> false
-    is NavigationRoute.Home -> false
+fun shouldUpButtonBeVisible(route: String?): Boolean = when(route) {
+    NavigationRoute.SignIn.route -> false
+    NavigationRoute.Home.route -> false
     else -> true
 }
 
@@ -37,11 +38,11 @@ fun MsgerTopBar(
     onUpButtonClick: () -> Unit,
 ) {
     val navState by navController.currentBackStackEntryAsState()
-    val actualRoute = navState?.destination?.route?.toNavigationRoute()
+    val actualRoute = navState?.destination?.route
     val topBarTitle = getTopBarTitle(actualRoute)
     val isUpButtonVisible = shouldUpButtonBeVisible(actualRoute)
 
-    if (actualRoute != NavigationRoute.SplashScreen) {
+    if (actualRoute != NavigationRoute.SplashScreen.route) {
         TopAppBar(
             title = { Text(text = topBarTitle) },
             navigationIcon = {

@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.msger.common.extensions.toNavigationRoute
 import com.example.msger.ui.NavigationRoute
 
 @Composable
@@ -21,8 +20,8 @@ fun BodyLayout(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     content: @Composable (ColumnScope.() -> Unit)
 ) {
-    val shouldSnackbarBeShown = when (route.toNavigationRoute()) {
-        is NavigationRoute.SplashScreen -> false
+    val shouldSnackbarBeShown = when (route) {
+        NavigationRoute.SplashScreen.route -> false
         else -> true
     }
     Column(

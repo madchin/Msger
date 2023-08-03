@@ -10,4 +10,13 @@ sealed class NavigationRoute(val route: String) {
     object CreateChat : NavigationRoute(route = "create-chat")
 
     object JoinChat : NavigationRoute(route = "join-chat")
+
+    object Chat : NavigationRoute(route = "chat/{chatId}")
+
+    fun withArgs(vararg args: String): String {
+        return buildString {
+            append(route)
+            args.forEach { arg -> append(arg) }
+        }
+    }
 }
