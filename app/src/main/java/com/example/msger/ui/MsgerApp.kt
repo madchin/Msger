@@ -7,10 +7,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -153,7 +153,7 @@ fun MsgerApp(
             composable(route = NavigationRoute.Home.route) {
                 val viewModel: HomeViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
-                val uiState: Resource<HomeUiState> by viewModel.uiState.collectAsState()
+                val uiState: Resource<HomeUiState> by viewModel.uiState.collectAsStateWithLifecycle()
 
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
@@ -209,7 +209,7 @@ fun MsgerApp(
             ) {
                 val viewModel: ParticipantsViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
-                val uiState: Resource<ParticipantsUiState> by viewModel.uiState.collectAsState()
+                val uiState: Resource<ParticipantsUiState> by viewModel.uiState.collectAsStateWithLifecycle()
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
                     modifier = bodyLayoutModifier
