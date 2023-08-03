@@ -12,6 +12,7 @@ import com.example.msger.common.extensions.isUsernameValid
 import com.example.msger.common.extensions.usernameErrorText
 import com.example.msger.data.model.db.ChatEntity
 import com.example.msger.data.services.db.DbService
+import com.example.msger.ui.NavigationRoute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -46,7 +47,7 @@ class CreateChatViewModel(private val dbService: DbService) : ViewModel() {
     private val isUsernameValid: Boolean
         get() = username.isUsernameValid()
 
-    fun createChat() {
+    fun createChat(openAndPopUp: (String,String) -> Unit) {
         viewModelScope.launch {
             uiState = uiState.copy(
                 isChatNameValid = isChatNameValid,
@@ -61,8 +62,9 @@ class CreateChatViewModel(private val dbService: DbService) : ViewModel() {
             uiState = uiState.copy(isLoading = true)
 
             try {
-                dbService.createChat(username = username, chatEntity = ChatEntity(name = chatName))
+                val chatId = dbService.createChat(username = username, chatEntity = ChatEntity(name = chatName))
                 uiState = uiState.copy(isLoading = false)
+                openAndPopUp(NavigationRoute.Chat.withArgs(chatId), NavigationRoute.CreateChat.route)
             } catch (e: Throwable) {
                 uiState = uiState.copy(isLoading = false, responseError = e.message.toString())
                 delay(5000L)

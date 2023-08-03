@@ -11,7 +11,7 @@ class DbServiceImpl(
         get() = database.chats
 
 
-    override suspend fun createChat(username: String, chatEntity: ChatEntity) {
+    override suspend fun createChat(username: String, chatEntity: ChatEntity): String =
         database.createChat(username, chatEntity)
-    }
+
 }

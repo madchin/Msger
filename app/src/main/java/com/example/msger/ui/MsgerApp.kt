@@ -13,9 +13,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.msger.common.extensions.openAndPopUp
 import com.example.msger.common.utils.Resource
 import com.example.msger.data.model.db.ChatEntity
@@ -31,12 +33,17 @@ import com.example.msger.ui.screens.SignUpScreen
 import com.example.msger.ui.screens.SignUpViewModel
 import com.example.msger.ui.screens.SplashScreen
 import com.example.msger.ui.screens.SplashScreenViewModel
+import com.example.msger.ui.screens.authorized.ChatScreen
 import com.example.msger.ui.screens.authorized.CreateChatScreen
 import com.example.msger.ui.screens.authorized.CreateChatUiState
 import com.example.msger.ui.screens.authorized.CreateChatViewModel
 import com.example.msger.ui.screens.authorized.HomeScreen
 import com.example.msger.ui.screens.authorized.HomeViewModel
 
+fun shouldSnackbarBeShown(route: String?) = when (route) {
+    NavigationRoute.SplashScreen.route -> false
+    else -> true
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,17 +66,17 @@ fun MsgerApp(
             startDestination = NavigationRoute.SplashScreen.route,
             modifier = Modifier.fillMaxSize()
         ) {
-
+            val bodyLayoutModifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
             composable(route = NavigationRoute.SplashScreen.route) {
                 val viewModel: SplashScreenViewModel = viewModel(
                     factory = ViewModelFactoryProvider.Factory
                 )
 
                 BodyLayout(
-                    route = NavigationRoute.SplashScreen.route,
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
+                    shouldShowSnackbar = shouldSnackbarBeShown(route),
+                    modifier = bodyLayoutModifier
                 ) {
                     SplashScreen(
                         openAndPopUp = navController::openAndPopUp,
@@ -84,12 +91,10 @@ fun MsgerApp(
                 val uiState = viewModel.uiState
 
                 BodyLayout(
-                    route = NavigationRoute.SignUp.route,
+                    shouldShowSnackbar = shouldSnackbarBeShown(route),
                     snackbarHostState = snackbarHostState,
                     errorMessage = uiState.responseError,
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
+                    modifier = bodyLayoutModifier
                 ) {
                     SignUpScreen(
                         openAndPopUp = navController::openAndPopUp,
@@ -106,12 +111,10 @@ fun MsgerApp(
                 val uiState: SignInUiState = viewModel.uiState
 
                 BodyLayout(
-                    route = NavigationRoute.SignIn.route,
+                    shouldShowSnackbar = shouldSnackbarBeShown(route),
                     snackbarHostState = snackbarHostState,
                     errorMessage = uiState.responseError,
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
+                    modifier = bodyLayoutModifier
                 ) {
                     SignInScreen(
                         viewModel = viewModel,
@@ -129,12 +132,10 @@ fun MsgerApp(
                 val uiState: ForgotPasswordUiState = viewModel.uiState
 
                 BodyLayout(
-                    route = NavigationRoute.ForgotPassword.route,
+                    shouldShowSnackbar = shouldSnackbarBeShown(route),
                     snackbarHostState = snackbarHostState,
                     errorMessage = uiState.responseError,
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
+                    modifier = bodyLayoutModifier
                 ) {
                     ForgotPasswordScreen(
                         navigateToSignIn = { navController.navigate(NavigationRoute.SignIn.route) },
@@ -150,12 +151,10 @@ fun MsgerApp(
                 val uiState: Resource<List<ChatEntity>> by viewModel.chats.collectAsState()
 
                 BodyLayout(
-                    route = NavigationRoute.Home.route,
+                    shouldShowSnackbar = shouldSnackbarBeShown(route),
                     snackbarHostState = snackbarHostState,
                     errorMessage = uiState.message ?: "",
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
+                    modifier = bodyLayoutModifier
                 ) {
                     HomeScreen(
                         openAndPopUp = navController::openAndPopUp,
@@ -171,12 +170,27 @@ fun MsgerApp(
                     viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState: CreateChatUiState = viewModel.uiState
                 BodyLayout(
-                    route = NavigationRoute.CreateChat.route,
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
+                    shouldShowSnackbar = shouldSnackbarBeShown(route),
+                    modifier = bodyLayoutModifier
                 ) {
-                    CreateChatScreen(viewModel = viewModel, uiState = uiState)
+                    CreateChatScreen(
+                        viewModel = viewModel,
+                        uiState = uiState,
+                        openAndPopUp = navController::openAndPopUp
+                    )
+                }
+            }
+            composable(
+                route = NavigationRoute.Chat.route + "/{chatId}",
+                arguments = listOf(
+                    navArgument("chatId") { type = NavType.StringType }
+                )
+            ) {
+                BodyLayout(
+                    shouldShowSnackbar = shouldSnackbarBeShown(route),
+                    modifier = bodyLayoutModifier
+                ) {
+                    ChatScreen()
                 }
             }
         }

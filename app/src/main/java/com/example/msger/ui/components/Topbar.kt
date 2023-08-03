@@ -1,7 +1,10 @@
 package com.example.msger.ui.components
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,7 +25,7 @@ fun getTopBarTitle(route: String?): String = when (route) {
     NavigationRoute.SignUp.route -> "Sign up"
     NavigationRoute.SplashScreen.route -> "Splash Screen"
     NavigationRoute.CreateChat.route -> "Create chat"
-    NavigationRoute.Chat.route -> "Chat"
+    NavigationRoute.Chat.withArgs("{chatId}") -> "Chat"
     else -> "App bar"
 }
 fun shouldUpButtonBeVisible(route: String?): Boolean = when(route) {
@@ -41,7 +44,7 @@ fun MsgerTopBar(
     val actualRoute = navState?.destination?.route
     val topBarTitle = getTopBarTitle(actualRoute)
     val isUpButtonVisible = shouldUpButtonBeVisible(actualRoute)
-
+    Log.d("NAVSTATE", navState?.arguments.toString())
     if (actualRoute != NavigationRoute.SplashScreen.route) {
         TopAppBar(
             title = { Text(text = topBarTitle) },
@@ -52,6 +55,16 @@ fun MsgerTopBar(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = stringResource(id = R.string.topbar_up_button_description)
                         )
+                    }
+                }
+            },
+            actions = {
+                if(actualRoute == NavigationRoute.Chat.withArgs("{chatId}")) {
+                    IconButton(onClick = {}) {
+                        Icon(imageVector = Icons.Default.Person, contentDescription = "Participants")
+                    }
+                    IconButton(onClick = {}) {
+                        Icon(imageVector = Icons.Default.Email, contentDescription = "check")
                     }
                 }
             }

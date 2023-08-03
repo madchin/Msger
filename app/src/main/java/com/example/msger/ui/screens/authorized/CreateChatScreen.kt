@@ -14,7 +14,8 @@ import com.example.msger.ui.components.UsernameInput
 @Composable
 fun CreateChatScreen(
     viewModel: CreateChatViewModel,
-    uiState: CreateChatUiState
+    uiState: CreateChatUiState,
+    openAndPopUp: (String,String) -> Unit
 ) {
     Column() {
         ChatNameInput(
@@ -31,9 +32,9 @@ fun CreateChatScreen(
             onValueChange = viewModel::onUsernameInputChange,
             onValueClear = viewModel::onUsernameValueClear,
             errorText = uiState.usernameInputErrorText,
-            onDonePress = viewModel::createChat,
+            onDonePress = { viewModel.createChat(openAndPopUp) },
         )
-        OutlinedButton(onClick = viewModel::createChat) {
+        OutlinedButton(onClick = { viewModel.createChat(openAndPopUp) }) {
             Text(text = stringResource(id = R.string.create_chat_button))
         }
     }

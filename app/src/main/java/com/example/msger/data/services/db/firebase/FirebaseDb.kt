@@ -45,7 +45,7 @@ class FirebaseDb : Database {
         awaitClose { chatsRef.removeEventListener(listener) }
     }
 
-    override suspend fun createChat(username: String, chatEntity: ChatEntity) {
+    override suspend fun createChat(username: String, chatEntity: ChatEntity): String {
         val chatId = chatsRef.push().key ?: ""
         val chatMemberEntity = mapOf(userId to MemberEntity(lastSeen = chatEntity.created, name = username))
 
@@ -56,5 +56,6 @@ class FirebaseDb : Database {
             .updateChildren(chatMemberEntity)
             .await()
 
+        return chatId
     }
 }

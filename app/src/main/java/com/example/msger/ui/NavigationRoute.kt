@@ -11,12 +11,12 @@ sealed class NavigationRoute(val route: String) {
 
     object JoinChat : NavigationRoute(route = "join-chat")
 
-    object Chat : NavigationRoute(route = "chat/{chatId}")
+    object Chat : NavigationRoute(route = "chat")
 
-    fun withArgs(vararg args: String): String {
+    fun withArgs(vararg args: String?): String {
         return buildString {
             append(route)
-            args.forEach { arg -> append(arg) }
+            args.forEach { arg -> append("/$arg") }
         }
     }
 }

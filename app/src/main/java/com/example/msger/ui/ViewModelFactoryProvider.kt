@@ -1,6 +1,7 @@
 package com.example.msger.ui
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -9,6 +10,7 @@ import com.example.msger.ui.screens.ForgotPasswordViewModel
 import com.example.msger.ui.screens.SignInViewModel
 import com.example.msger.ui.screens.SignUpViewModel
 import com.example.msger.ui.screens.SplashScreenViewModel
+import com.example.msger.ui.screens.authorized.ChatViewModel
 import com.example.msger.ui.screens.authorized.CreateChatViewModel
 import com.example.msger.ui.screens.authorized.HomeViewModel
 
@@ -34,6 +36,9 @@ object ViewModelFactoryProvider {
         }
         initializer {
             CreateChatViewModel(application.appContainer.dbService)
+        }
+        initializer {
+            ChatViewModel(this.createSavedStateHandle(), application.appContainer.dbService)
         }
     }
 }
