@@ -20,7 +20,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.msger.common.extensions.openAndPopUp
 import com.example.msger.common.utils.Resource
-import com.example.msger.data.model.db.ChatEntity
 import com.example.msger.ui.components.BodyLayout
 import com.example.msger.ui.components.MsgerTopBar
 import com.example.msger.ui.screens.ForgotPasswordScreen
@@ -34,11 +33,16 @@ import com.example.msger.ui.screens.SignUpViewModel
 import com.example.msger.ui.screens.SplashScreen
 import com.example.msger.ui.screens.SplashScreenViewModel
 import com.example.msger.ui.screens.authorized.ChatScreen
+import com.example.msger.ui.screens.authorized.ChatViewModel
 import com.example.msger.ui.screens.authorized.CreateChatScreen
 import com.example.msger.ui.screens.authorized.CreateChatUiState
 import com.example.msger.ui.screens.authorized.CreateChatViewModel
 import com.example.msger.ui.screens.authorized.HomeScreen
+import com.example.msger.ui.screens.authorized.HomeUiState
 import com.example.msger.ui.screens.authorized.HomeViewModel
+import com.example.msger.ui.screens.authorized.ParticipantsScreen
+import com.example.msger.ui.screens.authorized.ParticipantsUiState
+import com.example.msger.ui.screens.authorized.ParticipantsViewModel
 
 fun shouldSnackbarBeShown(route: String?) = when (route) {
     NavigationRoute.SplashScreen.route -> false
@@ -55,7 +59,8 @@ fun MsgerApp(
         topBar = {
             MsgerTopBar(
                 navController = navController,
-                onUpButtonClick = { navController.navigateUp() }
+                onUpButtonClick = { navController.navigateUp() },
+                onPersonActionClick = { navController.navigate(NavigationRoute.Participants.route + "/{chatId}") }
             )
         },
         bottomBar = {},
@@ -148,7 +153,7 @@ fun MsgerApp(
             composable(route = NavigationRoute.Home.route) {
                 val viewModel: HomeViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
-                val uiState: Resource<List<ChatEntity>> by viewModel.chats.collectAsState()
+                val uiState: Resource<HomeUiState> by viewModel.uiState.collectAsState()
 
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
@@ -186,11 +191,32 @@ fun MsgerApp(
                     navArgument("chatId") { type = NavType.StringType }
                 )
             ) {
+                val viewModel: ChatViewModel = viewModel(factory = ViewModelFactoryProvider.Factory)
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
                     modifier = bodyLayoutModifier
                 ) {
-                    ChatScreen()
+                    ChatScreen(
+                        viewModel = viewModel
+                    )
+                }
+            }
+            composable(
+                route = NavigationRoute.Participants.route + "/{chatId}",
+                arguments = listOf(
+                    navArgument("chatId") { type = NavType.StringType }
+                )
+            ) {
+                val viewModel: ParticipantsViewModel =
+                    viewModel(factory = ViewModelFactoryProvider.Factory)
+                val uiState: Resource<ParticipantsUiState> by viewModel.uiState.collectAsState()
+                BodyLayout(
+                    shouldShowSnackbar = shouldSnackbarBeShown(route),
+                    modifier = bodyLayoutModifier
+                ) {
+                    ParticipantsScreen(
+                        uiState = uiState
+                    )
                 }
             }
         }

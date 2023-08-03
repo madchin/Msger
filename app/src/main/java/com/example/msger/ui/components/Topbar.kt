@@ -26,9 +26,11 @@ fun getTopBarTitle(route: String?): String = when (route) {
     NavigationRoute.SplashScreen.route -> "Splash Screen"
     NavigationRoute.CreateChat.route -> "Create chat"
     NavigationRoute.Chat.withArgs("{chatId}") -> "Chat"
+    NavigationRoute.Participants.withArgs("{chatId}") -> "Participants"
     else -> "App bar"
 }
-fun shouldUpButtonBeVisible(route: String?): Boolean = when(route) {
+
+fun shouldUpButtonBeVisible(route: String?): Boolean = when (route) {
     NavigationRoute.SignIn.route -> false
     NavigationRoute.Home.route -> false
     else -> true
@@ -39,6 +41,7 @@ fun shouldUpButtonBeVisible(route: String?): Boolean = when(route) {
 fun MsgerTopBar(
     navController: NavHostController,
     onUpButtonClick: () -> Unit,
+    onPersonActionClick: () -> Unit,
 ) {
     val navState by navController.currentBackStackEntryAsState()
     val actualRoute = navState?.destination?.route
@@ -59,9 +62,12 @@ fun MsgerTopBar(
                 }
             },
             actions = {
-                if(actualRoute == NavigationRoute.Chat.withArgs("{chatId}")) {
-                    IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Default.Person, contentDescription = "Participants")
+                if (actualRoute == NavigationRoute.Chat.withArgs("{chatId}")) {
+                    IconButton(onClick = onPersonActionClick) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Participants"
+                        )
                     }
                     IconButton(onClick = {}) {
                         Icon(imageVector = Icons.Default.Email, contentDescription = "check")

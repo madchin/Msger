@@ -45,9 +45,27 @@ class FirebaseDb : Database {
         awaitClose { chatsRef.removeEventListener(listener) }
     }
 
+    override val members: Flow<Result<List<MemberEntity>>> = callbackFlow {
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val memberEntities = snapshot.children.map { dataSnapshot ->
+                    dataSnapshot.getValue(MemberEntity::class.java) ?: MemberEntity()
+                }
+                this@callbackFlow.trySend(Result.success(memberEntities))
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                this@callbackFlow.trySend(Result.failure(error.toException()))
+            }
+        }
+        membersRef.addValueEventListener(listener)
+        awaitClose { membersRef.removeEventListener(listener) }
+    }
+
     override suspend fun createChat(username: String, chatEntity: ChatEntity): String {
         val chatId = chatsRef.push().key ?: ""
-        val chatMemberEntity = mapOf(userId to MemberEntity(lastSeen = chatEntity.created, name = username))
+        val chatMemberEntity =
+            mapOf(userId to MemberEntity(lastSeen = chatEntity.created, name = username))
 
         chatsRef.child(chatId).setValue(chatEntity).await()
 

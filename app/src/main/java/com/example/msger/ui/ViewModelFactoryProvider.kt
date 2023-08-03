@@ -13,6 +13,7 @@ import com.example.msger.ui.screens.SplashScreenViewModel
 import com.example.msger.ui.screens.authorized.ChatViewModel
 import com.example.msger.ui.screens.authorized.CreateChatViewModel
 import com.example.msger.ui.screens.authorized.HomeViewModel
+import com.example.msger.ui.screens.authorized.ParticipantsViewModel
 
 val CreationExtras.application: MsgerApplication
     get() = checkNotNull(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MsgerApplication)
@@ -39,6 +40,9 @@ object ViewModelFactoryProvider {
         }
         initializer {
             ChatViewModel(this.createSavedStateHandle(), application.appContainer.dbService)
+        }
+        initializer {
+            ParticipantsViewModel(this.createSavedStateHandle(), application.appContainer.dbService)
         }
     }
 }

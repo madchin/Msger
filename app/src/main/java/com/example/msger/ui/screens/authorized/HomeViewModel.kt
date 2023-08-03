@@ -14,20 +14,20 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 
+data class HomeUiState(val chats: List<ChatEntity>)
 class HomeViewModel(
     private val authService: AuthService,
     dbService: DbService
 ) : ViewModel() {
-    private val _chats: StateFlow<Resource<List<ChatEntity>>> = dbService
+    private val _uiState: StateFlow<Resource<HomeUiState>> = dbService
         .chats
         .map {
             when {
-                it.isSuccess -> Resource.Success(it.getOrDefault(listOf(ChatEntity())))
+                it.isSuccess -> Resource.Success(HomeUiState(it.getOrDefault(listOf())))
                 it.isFailure -> {
                     val error = it.exceptionOrNull()
                     Resource.Error(error?.message.toString())
                 }
-
                 else -> Resource.Loading()
             }
         }
@@ -36,8 +36,8 @@ class HomeViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = Resource.Loading()
         )
-    val chats
-        get() = _chats
+    val uiState:StateFlow<Resource<HomeUiState>>
+        get() = _uiState
 
     fun signOut(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {

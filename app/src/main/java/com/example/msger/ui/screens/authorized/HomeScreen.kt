@@ -9,14 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import com.example.msger.R
 import com.example.msger.common.utils.Resource
-import com.example.msger.data.model.db.ChatEntity
 import com.example.msger.ui.components.ButtonLoader
 
 @Composable
 fun HomeScreen(
     openAndPopUp: (String, String) -> Unit,
     viewModel: HomeViewModel,
-    uiState: Resource<List<ChatEntity>>,
+    uiState: Resource<HomeUiState>,
     navigateToCreateChat: () -> Unit,
     navigateToJoinChat: () -> Unit
 ) {
@@ -31,7 +30,7 @@ fun HomeScreen(
             )
 
             is Resource.Success -> {
-                uiState.data?.forEach {
+                uiState.data?.chats?.forEach {
                     Text(text = it.name ?: "")
                 }
             }
