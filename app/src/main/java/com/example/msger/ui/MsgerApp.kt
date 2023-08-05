@@ -60,7 +60,7 @@ fun MsgerApp(
             MsgerTopBar(
                 navController = navController,
                 onUpButtonClick = { navController.navigateUp() },
-                onPersonActionClick = { navController.navigate(NavigationRoute.Participants.route + "/{chatId}") }
+                onPersonActionClick = navController::navigate
             )
         },
         bottomBar = {},

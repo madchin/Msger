@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -20,13 +21,13 @@ class FirebaseDb : Database {
     private val db: FirebaseDatabase
         get() = Firebase.database(dbUrl)
 
-    private val userId: String?
-        get() = Firebase.auth.currentUser?.uid
-
     private val chatsRef: DatabaseReference
         get() = db.getReference("chats")
     private val membersRef: DatabaseReference
         get() = db.getReference("members")
+
+    override val currentUserId: String?
+        get() = Firebase.auth.currentUser?.uid
 
     override val chats: Flow<Result<List<ChatEntity>>> = callbackFlow {
         val listener = object : ValueEventListener {
@@ -45,27 +46,33 @@ class FirebaseDb : Database {
         awaitClose { chatsRef.removeEventListener(listener) }
     }
 
-    override val members: Flow<Result<List<MemberEntity>>> = callbackFlow {
-        val listener = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val memberEntities = snapshot.children.map { dataSnapshot ->
-                    dataSnapshot.getValue(MemberEntity::class.java) ?: MemberEntity()
-                }
-                this@callbackFlow.trySend(Result.success(memberEntities))
-            }
+    override fun getChatMembers(chatId: String): Flow<Result<List<Map<String, MemberEntity>?>>> =
+        callbackFlow {
+            val listener = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val memberEntities = snapshot
+                        .children
+                        .filter { it.key == chatId }
+                        .map { dataSnapshot ->
+                            dataSnapshot
+                                .getValue<Map<String, MemberEntity>>()
+                        }
 
-            override fun onCancelled(error: DatabaseError) {
-                this@callbackFlow.trySend(Result.failure(error.toException()))
+                    this@callbackFlow.trySend(Result.success(memberEntities))
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    this@callbackFlow.trySend(Result.failure(error.toException()))
+                }
             }
+            membersRef.addValueEventListener(listener)
+            awaitClose { membersRef.removeEventListener(listener) }
         }
-        membersRef.addValueEventListener(listener)
-        awaitClose { membersRef.removeEventListener(listener) }
-    }
 
     override suspend fun createChat(username: String, chatEntity: ChatEntity): String {
         val chatId = chatsRef.push().key ?: ""
         val chatMemberEntity =
-            mapOf(userId to MemberEntity(lastSeen = chatEntity.created, name = username))
+            mapOf(currentUserId to MemberEntity(lastSeen = chatEntity.created, name = username))
 
         chatsRef.child(chatId).setValue(chatEntity).await()
 

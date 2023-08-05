@@ -11,8 +11,10 @@ class DbServiceImpl(
     override val chats: Flow<Result<List<ChatEntity>>>
         get() = database.chats
 
-    override val members: Flow<Result<List<MemberEntity>>>
-        get() = database.members
+    override val currentUserId: String?
+        get() = database.currentUserId
+    override fun getChatMembers(chatId: String): Flow<Result<List<Map<String, MemberEntity>?>>> =
+        database.getChatMembers(chatId)
 
     override suspend fun createChat(username: String, chatEntity: ChatEntity): String =
         database.createChat(username, chatEntity)

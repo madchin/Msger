@@ -28,6 +28,7 @@ class HomeViewModel(
                     val error = it.exceptionOrNull()
                     Resource.Error(error?.message.toString())
                 }
+
                 else -> Resource.Loading()
             }
         }
@@ -36,7 +37,7 @@ class HomeViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = Resource.Loading()
         )
-    val uiState:StateFlow<Resource<HomeUiState>>
+    val uiState: StateFlow<Resource<HomeUiState>>
         get() = _uiState
 
     fun signOut(openAndPopUp: (String, String) -> Unit) {

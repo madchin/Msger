@@ -11,27 +11,40 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-data class ParticipantsUiState(val participants: List<MemberEntity>? = listOf())
+data class ParticipantsUiState(val participants: List<MemberEntity> = listOf())
 class ParticipantsViewModel(savedStateHandle: SavedStateHandle, dbService: DbService) :
     ViewModel() {
 
-    val chatId: String = checkNotNull(savedStateHandle["chatId"])
+    private val chatId: String = checkNotNull(savedStateHandle["chatId"])
 
-    private val _uiState: StateFlow<Resource<ParticipantsUiState>> = dbService.members.map {
-        when {
-            it.isSuccess -> Resource.Success(ParticipantsUiState(it.getOrDefault(listOf())))
-            it.isFailure -> {
-                val error = it.exceptionOrNull()
-                Resource.Error(error?.message.toString())
+    private val _uiState: StateFlow<Resource<ParticipantsUiState>> = dbService
+        .getChatMembers(chatId)
+        .map {
+            when {
+                it.isSuccess -> {
+                    val chatMembers = it.getOrDefault(listOf())
+                        .filterNotNull()
+                        .map { members ->
+                            members.values.sortedBy { member ->
+                                member.lastSeen
+                            }
+                        }
+                    Resource.Success(ParticipantsUiState(chatMembers.flatten()))
+                }
+
+                it.isFailure -> {
+                    val error = it.exceptionOrNull()
+                    Resource.Error(error?.message.toString())
+                }
+
+                else -> Resource.Loading()
             }
-
-            else -> Resource.Loading()
         }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = Resource.Loading()
-    )
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = Resource.Loading()
+        )
     val uiState: StateFlow<Resource<ParticipantsUiState>>
         get() = _uiState
 

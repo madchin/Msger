@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 interface Database {
 
     val chats: Flow<Result<List<ChatEntity>>>
-
-    val members: Flow<Result<List<MemberEntity>>>
+    val currentUserId: String?
+    fun getChatMembers(chatId: String): Flow<Result<List<Map<String, MemberEntity>?>>>
     suspend fun createChat(username: String, chatEntity: ChatEntity): String
 
 }

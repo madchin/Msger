@@ -1,6 +1,5 @@
 package com.example.msger.ui.components
 
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
@@ -13,6 +12,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.msger.R
@@ -41,13 +41,13 @@ fun shouldUpButtonBeVisible(route: String?): Boolean = when (route) {
 fun MsgerTopBar(
     navController: NavHostController,
     onUpButtonClick: () -> Unit,
-    onPersonActionClick: () -> Unit,
+    onPersonActionClick: (String) -> Unit,
 ) {
-    val navState by navController.currentBackStackEntryAsState()
-    val actualRoute = navState?.destination?.route
-    val topBarTitle = getTopBarTitle(actualRoute)
+    val navState: NavBackStackEntry? by navController.currentBackStackEntryAsState()
+    val actualRoute: String = navState?.destination?.route ?: ""
+    val topBarTitle: String = getTopBarTitle(actualRoute)
     val isUpButtonVisible = shouldUpButtonBeVisible(actualRoute)
-    Log.d("NAVSTATE", navState?.arguments.toString())
+
     if (actualRoute != NavigationRoute.SplashScreen.route) {
         TopAppBar(
             title = { Text(text = topBarTitle) },
@@ -63,7 +63,9 @@ fun MsgerTopBar(
             },
             actions = {
                 if (actualRoute == NavigationRoute.Chat.withArgs("{chatId}")) {
-                    IconButton(onClick = onPersonActionClick) {
+                    val chatId: String = navState?.arguments?.getString("chatId") ?: ""
+                    val participantsRoute: String = NavigationRoute.Participants.withArgs(chatId)
+                    IconButton(onClick = { onPersonActionClick(participantsRoute) }) {
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Participants"
