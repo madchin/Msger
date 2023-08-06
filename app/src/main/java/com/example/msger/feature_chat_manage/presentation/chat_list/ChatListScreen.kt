@@ -1,4 +1,4 @@
-package com.example.msger.core.presentation.screens.authorized
+package com.example.msger.feature_chat_manage.presentation.chat_list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,12 +10,13 @@ import androidx.compose.ui.res.stringResource
 import com.example.msger.R
 import com.example.msger.core.util.Resource
 import com.example.msger.core.presentation.component.ButtonLoader
+import com.example.msger.feature_chat_manage.domain.model.Chat
 
 @Composable
 fun HomeScreen(
     openAndPopUp: (String, String) -> Unit,
-    viewModel: HomeViewModel,
-    uiState: Resource<HomeUiState>,
+    viewModel: ChatListViewModel,
+    uiState: Resource<List<Chat>>,
     navigateToCreateChat: () -> Unit,
     navigateToJoinChat: () -> Unit
 ) {
@@ -28,9 +29,8 @@ fun HomeScreen(
             is Resource.Error -> Text(
                 text = uiState.message ?: "generic"
             )
-
             is Resource.Success -> {
-                uiState.data?.chats?.forEach {
+                uiState.data?.forEach {
                     Text(text = it.name ?: "")
                 }
             }

@@ -1,12 +1,7 @@
 package com.example.msger.core.presentation.navigation
 
 sealed class NavigationRoute(val route: String) {
-    object Home : NavigationRoute(route = "home")
     object SplashScreen : NavigationRoute(route = "splash-screen")
-    object CreateChat : NavigationRoute(route = "create-chat")
-
-    object JoinChat : NavigationRoute(route = "join-chat")
-
     object Chat : NavigationRoute(route = "chat")
 
     object Participants : NavigationRoute(route = "participants/chat")

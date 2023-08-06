@@ -1,7 +1,7 @@
 package com.example.msger.data.services.db.firebase
 
-import com.example.msger.data.model.db.ChatEntity
-import com.example.msger.data.model.db.MemberEntity
+import com.example.msger.feature_chat_manage.domain.model.Chat
+import com.example.msger.core.data.model.Member
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
-class FirebaseDb : Database {
+class DatabaseImpl : Database {
     private val dbUrl: String = "https://msger-eb05e-default-rtdb.europe-west1.firebasedatabase.app"
     private val db: FirebaseDatabase
         get() = Firebase.database(dbUrl)
@@ -29,11 +29,11 @@ class FirebaseDb : Database {
     override val currentUserId: String?
         get() = Firebase.auth.currentUser?.uid
 
-    override val chats: Flow<Result<List<ChatEntity>>> = callbackFlow {
+    override val chats: Flow<Result<List<Chat>>> = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val chatEntities = snapshot.children.map { dataSnapshot ->
-                    dataSnapshot.getValue(ChatEntity::class.java) ?: ChatEntity()
+                    dataSnapshot.getValue(Chat::class.java) ?: Chat()
                 }
                 this@callbackFlow.trySend(Result.success(chatEntities))
             }
@@ -46,7 +46,7 @@ class FirebaseDb : Database {
         awaitClose { chatsRef.removeEventListener(listener) }
     }
 
-    override fun getChatMembers(chatId: String): Flow<Result<List<Map<String, MemberEntity>?>>> =
+    override fun getChatMembers(chatId: String): Flow<Result<List<Map<String, Member>?>>> =
         callbackFlow {
             val listener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -55,7 +55,7 @@ class FirebaseDb : Database {
                         .filter { it.key == chatId }
                         .map { dataSnapshot ->
                             dataSnapshot
-                                .getValue<Map<String, MemberEntity>>()
+                                .getValue<Map<String, Member>>()
                         }
 
                     this@callbackFlow.trySend(Result.success(memberEntities))
@@ -69,16 +69,16 @@ class FirebaseDb : Database {
             awaitClose { membersRef.removeEventListener(listener) }
         }
 
-    override suspend fun createChat(username: String, chatEntity: ChatEntity): String {
+    override suspend fun createChat(username: String, chat: Chat): String {
         val chatId = chatsRef.push().key ?: ""
-        val chatMemberEntity =
-            mapOf(currentUserId to MemberEntity(lastSeen = chatEntity.created, name = username))
+        val chatMember =
+            mapOf(currentUserId to Member(lastSeen = chat.created, name = username))
 
-        chatsRef.child(chatId).setValue(chatEntity).await()
+        chatsRef.child(chatId).setValue(chat).await()
 
         membersRef
             .child(chatId)
-            .updateChildren(chatMemberEntity)
+            .updateChildren(chatMember)
             .await()
 
         return chatId

@@ -9,8 +9,8 @@ import com.example.msger.feature_authentication.domain.use_case.SignUpUseCase
 import com.example.msger.feature_authentication.presentation.util.isConfirmPasswordValid
 import com.example.msger.feature_authentication.presentation.util.isEmailValid
 import com.example.msger.feature_authentication.presentation.util.isPasswordValid
-import com.example.msger.core.presentation.navigation.NavigationRoute
 import com.example.msger.feature_authentication.presentation.util.NavigationAuthentication
+import com.example.msger.feature_chat_manage.presentation.util.NavigationChatManage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -57,7 +57,7 @@ class SignUpViewModel(
             try {
                 signUpUseCase.invoke(email = email, password = password)
                 isLoading = false
-                openAndPopUp(NavigationRoute.Home.route, NavigationAuthentication.SignUp.route)
+                openAndPopUp(NavigationChatManage.ChatList.route, NavigationAuthentication.SignUp.route)
             } catch (e: Throwable) {
                 isLoading = false
                 responseError = e.message.toString()

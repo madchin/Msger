@@ -4,14 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.msger.core.util.Resource
-import com.example.msger.data.model.db.MemberEntity
+import com.example.msger.core.data.model.Member
 import com.example.msger.data.services.db.DbService
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-data class ParticipantsUiState(val participants: List<MemberEntity> = listOf())
+data class ParticipantsUiState(val participants: List<Member> = listOf())
 class ParticipantsViewModel(savedStateHandle: SavedStateHandle, dbService: DbService) :
     ViewModel() {
 

@@ -1,22 +1,19 @@
-package com.example.msger.data.services.db
+package com.example.msger.feature_chat_manage.data.repository
 
+import com.example.msger.feature_chat_manage.data.data_source.db.DatabaseChatManage
 import com.example.msger.feature_chat_manage.domain.model.Chat
-import com.example.msger.core.data.model.Member
-import com.example.msger.data.services.db.firebase.Database
+import com.example.msger.feature_chat_manage.domain.repository.DatabaseChatManageRepository
 import kotlinx.coroutines.flow.Flow
 
-class DbServiceImpl(
-    private val database: Database
-) : DbService {
+class DatabaseChatManageRepositoryImpl(
+    private val database: DatabaseChatManage
+) : DatabaseChatManageRepository {
     override val chats: Flow<Result<List<Chat>>>
         get() = database.chats
 
     override val currentUserId: String?
         get() = database.currentUserId
-    override fun getChatMembers(chatId: String): Flow<Result<List<Map<String, Member>?>>> =
-        database.getChatMembers(chatId)
 
     override suspend fun createChat(username: String, chat: Chat): String =
         database.createChat(username, chat)
-
 }

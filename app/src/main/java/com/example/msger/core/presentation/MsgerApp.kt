@@ -35,15 +35,14 @@ import com.example.msger.core.presentation.screens.SplashScreen
 import com.example.msger.core.presentation.screens.SplashScreenViewModel
 import com.example.msger.core.presentation.screens.authorized.ChatScreen
 import com.example.msger.core.presentation.screens.authorized.ChatViewModel
-import com.example.msger.core.presentation.screens.authorized.CreateChatScreen
-import com.example.msger.core.presentation.screens.authorized.CreateChatUiState
-import com.example.msger.core.presentation.screens.authorized.CreateChatViewModel
-import com.example.msger.core.presentation.screens.authorized.HomeScreen
-import com.example.msger.core.presentation.screens.authorized.HomeUiState
-import com.example.msger.core.presentation.screens.authorized.HomeViewModel
+import com.example.msger.feature_chat_manage.presentation.chat_create.CreateChatScreen
+import com.example.msger.feature_chat_manage.presentation.chat_create.CreateChatViewModel
+import com.example.msger.feature_chat_manage.presentation.chat_list.HomeScreen
+import com.example.msger.feature_chat_manage.presentation.chat_list.ChatListViewModel
 import com.example.msger.core.presentation.screens.authorized.ParticipantsScreen
 import com.example.msger.core.presentation.screens.authorized.ParticipantsUiState
 import com.example.msger.core.presentation.screens.authorized.ParticipantsViewModel
+import com.example.msger.feature_chat_manage.presentation.util.NavigationChatManage
 
 fun shouldSnackbarBeShown(route: String?) = when (route) {
     NavigationRoute.SplashScreen.route -> false
@@ -145,10 +144,10 @@ fun MsgerApp(
                 }
             }
 
-            composable(route = NavigationRoute.Home.route) {
-                val viewModel: HomeViewModel =
+            composable(route = NavigationChatManage.ChatList.route) {
+                val viewModel: ChatListViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
-                val uiState: Resource<HomeUiState> by viewModel.uiState.collectAsStateWithLifecycle()
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
@@ -160,22 +159,20 @@ fun MsgerApp(
                         openAndPopUp = navController::openAndPopUp,
                         viewModel = viewModel,
                         uiState = uiState,
-                        navigateToCreateChat = { navController.navigate(NavigationRoute.CreateChat.route) },
-                        navigateToJoinChat = { navController.navigate(NavigationRoute.JoinChat.route) }
+                        navigateToCreateChat = { navController.navigate(NavigationChatManage.CreateChat.route) },
+                        navigateToJoinChat = { navController.navigate(NavigationChatManage.JoinChat.route) }
                     )
                 }
             }
-            composable(route = NavigationRoute.CreateChat.route) {
+            composable(route = NavigationChatManage.CreateChat.route) {
                 val viewModel: CreateChatViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
-                val uiState: CreateChatUiState = viewModel.uiState
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
                     modifier = bodyLayoutModifier
                 ) {
                     CreateChatScreen(
                         viewModel = viewModel,
-                        uiState = uiState,
                         openAndPopUp = navController::openAndPopUp
                     )
                 }
@@ -187,6 +184,7 @@ fun MsgerApp(
                 )
             ) {
                 val viewModel: ChatViewModel = viewModel(factory = ViewModelFactoryProvider.Factory)
+
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
                     modifier = bodyLayoutModifier

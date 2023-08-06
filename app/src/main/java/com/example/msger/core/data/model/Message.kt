@@ -1,8 +1,8 @@
-package com.example.msger.data.model.db
+package com.example.msger.core.data.model
 
 import com.google.firebase.Timestamp
 
-data class MessageEntity(
+data class Message(
     val content: String,
     val sender: String,
     val timestamp: Long = Timestamp.now().seconds

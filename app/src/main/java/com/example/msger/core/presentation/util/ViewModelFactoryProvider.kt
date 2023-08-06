@@ -11,8 +11,8 @@ import com.example.msger.feature_authentication.presentation.sign_in.SignInViewM
 import com.example.msger.feature_authentication.presentation.sign_up.SignUpViewModel
 import com.example.msger.core.presentation.screens.SplashScreenViewModel
 import com.example.msger.core.presentation.screens.authorized.ChatViewModel
-import com.example.msger.core.presentation.screens.authorized.CreateChatViewModel
-import com.example.msger.core.presentation.screens.authorized.HomeViewModel
+import com.example.msger.feature_chat_manage.presentation.chat_create.CreateChatViewModel
+import com.example.msger.feature_chat_manage.presentation.chat_list.ChatListViewModel
 import com.example.msger.core.presentation.screens.authorized.ParticipantsViewModel
 
 val CreationExtras.application: MsgerApplication
@@ -36,13 +36,16 @@ object ViewModelFactoryProvider {
             SplashScreenViewModel(application.appContainer.authRepository)
         }
         initializer {
-            HomeViewModel(application.appContainer.authRepository, application.appContainer.dbService)
+            ChatListViewModel(
+                signOutUseCase = application.appContainer.signOutUseCase,
+                getChatsUseCase = application.appContainer.getChatsUseCase
+            )
         }
         initializer {
-            CreateChatViewModel(application.appContainer.dbService)
+            CreateChatViewModel(application.appContainer.createChatUseCase)
         }
         initializer {
-            ChatViewModel(this.createSavedStateHandle(), application.appContainer.dbService)
+            ChatViewModel(this.createSavedStateHandle(), application.appContainer.databaseChatManageRepository)
         }
         initializer {
             ParticipantsViewModel(this.createSavedStateHandle(), application.appContainer.dbService)
