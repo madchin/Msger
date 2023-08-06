@@ -1,4 +1,4 @@
-package com.example.msger.core.presentation.screens.authorized
+package com.example.msger.feature_chat.presentation.chat
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

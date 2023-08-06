@@ -43,7 +43,7 @@ class ResetPasswordViewModel(
             }
             isLoading = true
             try {
-                resetPasswordUseCase.invoke(email = email)
+                resetPasswordUseCase(email = email)
                 email = ""
                 isEmailValid = true
             } catch (e: Throwable) {

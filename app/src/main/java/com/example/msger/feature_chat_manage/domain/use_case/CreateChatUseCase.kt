@@ -6,6 +6,6 @@ import com.example.msger.feature_chat_manage.domain.repository.DatabaseChatManag
 class CreateChatUseCase(
     private val dbRepository: DatabaseChatManageRepository
 ) {
-    suspend fun invoke(username: String, chat: Chat): String =
+    suspend operator fun invoke(username: String, chat: Chat): String =
         dbRepository.createChat(username = username, chat = chat)
 }

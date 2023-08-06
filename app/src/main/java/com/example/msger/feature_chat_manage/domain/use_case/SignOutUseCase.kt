@@ -5,7 +5,7 @@ import com.example.msger.feature_authentication.domain.repository.AuthRepository
 class SignOutUseCase(
     private val authRepository: AuthRepository
 ){
-    fun invoke() {
+    operator fun invoke() {
         authRepository.signOut()
     }
 }

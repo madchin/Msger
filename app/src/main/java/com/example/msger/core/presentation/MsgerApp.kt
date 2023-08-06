@@ -18,8 +18,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.msger.core.presentation.component.BodyLayout
+import com.example.msger.core.presentation.component.MsgerTopBar
+import com.example.msger.core.presentation.navigation.NavigationRoute
+import com.example.msger.core.presentation.screen.SplashScreen
+import com.example.msger.core.presentation.screen.SplashScreenViewModel
 import com.example.msger.core.presentation.util.ViewModelFactoryProvider
-import com.example.msger.core.util.Resource
 import com.example.msger.core.util.extension.openAndPopUp
 import com.example.msger.feature_authentication.presentation.reset_password.RecoverPasswordScreen
 import com.example.msger.feature_authentication.presentation.reset_password.ResetPasswordViewModel
@@ -27,22 +31,14 @@ import com.example.msger.feature_authentication.presentation.sign_in.SignInScree
 import com.example.msger.feature_authentication.presentation.sign_in.SignInViewModel
 import com.example.msger.feature_authentication.presentation.sign_up.SignUpScreen
 import com.example.msger.feature_authentication.presentation.sign_up.SignUpViewModel
-import com.example.msger.feature_authentication.presentation.util.NavigationAuthentication
-import com.example.msger.core.presentation.navigation.NavigationRoute
-import com.example.msger.core.presentation.component.BodyLayout
-import com.example.msger.core.presentation.component.MsgerTopBar
-import com.example.msger.core.presentation.screens.SplashScreen
-import com.example.msger.core.presentation.screens.SplashScreenViewModel
-import com.example.msger.core.presentation.screens.authorized.ChatScreen
-import com.example.msger.core.presentation.screens.authorized.ChatViewModel
+import com.example.msger.feature_chat.presentation.chat.ChatScreen
+import com.example.msger.feature_chat.presentation.chat.ChatViewModel
+import com.example.msger.feature_chat.presentation.participant.ParticipantsScreen
+import com.example.msger.feature_chat.presentation.participant.ParticipantsViewModel
 import com.example.msger.feature_chat_manage.presentation.chat_create.CreateChatScreen
 import com.example.msger.feature_chat_manage.presentation.chat_create.CreateChatViewModel
-import com.example.msger.feature_chat_manage.presentation.chat_list.HomeScreen
 import com.example.msger.feature_chat_manage.presentation.chat_list.ChatListViewModel
-import com.example.msger.core.presentation.screens.authorized.ParticipantsScreen
-import com.example.msger.core.presentation.screens.authorized.ParticipantsUiState
-import com.example.msger.core.presentation.screens.authorized.ParticipantsViewModel
-import com.example.msger.feature_chat_manage.presentation.util.NavigationChatManage
+import com.example.msger.feature_chat_manage.presentation.chat_list.HomeScreen
 
 fun shouldSnackbarBeShown(route: String?) = when (route) {
     NavigationRoute.SplashScreen.route -> false
@@ -90,7 +86,7 @@ fun MsgerApp(
                 }
             }
 
-            composable(route = NavigationAuthentication.SignUp.route) {
+            composable(route = NavigationRoute.SignUp.route) {
                 val viewModel: SignUpViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
 
@@ -103,12 +99,12 @@ fun MsgerApp(
                     SignUpScreen(
                         openAndPopUp = navController::openAndPopUp,
                         viewModel = viewModel,
-                        navigateToSignIn = { navController.navigate(NavigationAuthentication.SignIn.route) },
+                        navigateToSignIn = { navController.navigate(NavigationRoute.SignIn.route) },
                     )
                 }
             }
 
-            composable(route = NavigationAuthentication.SignIn.route) {
+            composable(route = NavigationRoute.SignIn.route) {
                 val viewModel: SignInViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
 
@@ -121,13 +117,13 @@ fun MsgerApp(
                     SignInScreen(
                         viewModel = viewModel,
                         openAndPopUp = navController::openAndPopUp,
-                        navigateToSignUp = { navController.navigate(NavigationAuthentication.SignUp.route) },
-                        navigateToForgottenPassword = { navController.navigate(NavigationAuthentication.ResetPassword.route) }
+                        navigateToSignUp = { navController.navigate(NavigationRoute.SignUp.route) },
+                        navigateToForgottenPassword = { navController.navigate(NavigationRoute.ResetPassword.route) }
                     )
                 }
             }
 
-            composable(route = NavigationAuthentication.ResetPassword.route) {
+            composable(route = NavigationRoute.ResetPassword.route) {
                 val viewModel: ResetPasswordViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
 
@@ -138,13 +134,13 @@ fun MsgerApp(
                     modifier = bodyLayoutModifier
                 ) {
                     RecoverPasswordScreen(
-                        navigateToSignIn = { navController.navigate(NavigationAuthentication.SignIn.route) },
+                        navigateToSignIn = { navController.navigate(NavigationRoute.SignIn.route) },
                         viewModel = viewModel
                     )
                 }
             }
 
-            composable(route = NavigationChatManage.ChatList.route) {
+            composable(route = NavigationRoute.ChatList.route) {
                 val viewModel: ChatListViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -159,12 +155,12 @@ fun MsgerApp(
                         openAndPopUp = navController::openAndPopUp,
                         viewModel = viewModel,
                         uiState = uiState,
-                        navigateToCreateChat = { navController.navigate(NavigationChatManage.CreateChat.route) },
-                        navigateToJoinChat = { navController.navigate(NavigationChatManage.JoinChat.route) }
+                        navigateToCreateChat = { navController.navigate(NavigationRoute.CreateChat.route) },
+                        navigateToJoinChat = { navController.navigate(NavigationRoute.JoinChat.route) }
                     )
                 }
             }
-            composable(route = NavigationChatManage.CreateChat.route) {
+            composable(route = NavigationRoute.CreateChat.route) {
                 val viewModel: CreateChatViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
                 BodyLayout(
@@ -202,13 +198,12 @@ fun MsgerApp(
             ) {
                 val viewModel: ParticipantsViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
-                val uiState: Resource<ParticipantsUiState> by viewModel.uiState.collectAsStateWithLifecycle()
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
                     modifier = bodyLayoutModifier
                 ) {
                     ParticipantsScreen(
-                        uiState = uiState
+                        viewModel = viewModel
                     )
                 }
             }

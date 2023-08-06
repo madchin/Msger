@@ -1,4 +1,4 @@
-package com.example.msger.core.presentation.screens
+package com.example.msger.core.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

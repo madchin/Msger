@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.map
 class GetChatsUseCase(
     private val dbRepository: DatabaseChatManageRepository
 ) {
-    fun invoke() = dbRepository.chats.map {
+    operator fun invoke() = dbRepository.chats.map {
         when {
             it.isSuccess -> Resource.Success(it.getOrDefault(listOf()))
             it.isFailure -> {

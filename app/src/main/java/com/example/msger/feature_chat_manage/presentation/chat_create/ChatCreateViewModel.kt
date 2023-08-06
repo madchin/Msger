@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.msger.core.presentation.navigation.NavigationRoute
 import com.example.msger.feature_chat_manage.domain.model.Chat
 import com.example.msger.feature_chat_manage.domain.use_case.CreateChatUseCase
-import com.example.msger.feature_chat_manage.presentation.util.NavigationChatManage
 import com.example.msger.feature_chat_manage.presentation.util.isChatNameValid
 import com.example.msger.feature_chat_manage.presentation.util.isUsernameValid
 import kotlinx.coroutines.delay
@@ -48,13 +47,13 @@ class CreateChatViewModel(
 
             try {
                 val chatId: String =
-                    createChatUseCase.invoke(username = username, chat = Chat(name = chatName))
+                    createChatUseCase(username = username, chat = Chat(name = chatName))
                 isLoading = false
                 chatName = ""
                 username = ""
                 openAndPopUp(
                     NavigationRoute.Chat.withArgs(chatId),
-                    NavigationChatManage.CreateChat.route
+                    NavigationRoute.CreateChat.route
                 )
             } catch (e: Throwable) {
                 isLoading = false

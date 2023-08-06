@@ -9,11 +9,11 @@ import com.example.msger.core.data.MsgerApplication
 import com.example.msger.feature_authentication.presentation.reset_password.ResetPasswordViewModel
 import com.example.msger.feature_authentication.presentation.sign_in.SignInViewModel
 import com.example.msger.feature_authentication.presentation.sign_up.SignUpViewModel
-import com.example.msger.core.presentation.screens.SplashScreenViewModel
-import com.example.msger.core.presentation.screens.authorized.ChatViewModel
+import com.example.msger.core.presentation.screen.SplashScreenViewModel
+import com.example.msger.feature_chat.presentation.chat.ChatViewModel
 import com.example.msger.feature_chat_manage.presentation.chat_create.CreateChatViewModel
 import com.example.msger.feature_chat_manage.presentation.chat_list.ChatListViewModel
-import com.example.msger.core.presentation.screens.authorized.ParticipantsViewModel
+import com.example.msger.feature_chat.presentation.participant.ParticipantsViewModel
 
 val CreationExtras.application: MsgerApplication
     get() = checkNotNull(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MsgerApplication)
@@ -45,10 +45,15 @@ object ViewModelFactoryProvider {
             CreateChatViewModel(application.appContainer.createChatUseCase)
         }
         initializer {
-            ChatViewModel(this.createSavedStateHandle(), application.appContainer.databaseChatManageRepository)
+            ChatViewModel(
+                this.createSavedStateHandle()
+            )
         }
         initializer {
-            ParticipantsViewModel(this.createSavedStateHandle(), application.appContainer.dbService)
+            ParticipantsViewModel(
+                this.createSavedStateHandle(),
+                application.appContainer.getChatMembersUseCase
+            )
         }
     }
 }

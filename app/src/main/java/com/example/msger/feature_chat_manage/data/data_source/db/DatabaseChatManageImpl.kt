@@ -2,7 +2,7 @@ package com.example.msger.feature_chat_manage.data.data_source.db
 
 import com.example.msger.feature_chat_manage.data.data_source.dto.MemberDto
 import com.example.msger.feature_chat_manage.domain.model.Chat
-import com.example.msger.core.data.model.Member
+import com.example.msger.feature_chat.domain.model.Member
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

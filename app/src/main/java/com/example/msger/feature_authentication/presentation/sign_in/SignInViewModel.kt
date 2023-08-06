@@ -5,12 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.msger.core.presentation.navigation.NavigationRoute
 import com.example.msger.feature_authentication.domain.use_case.GetEmailFromRecoverPasswordRedirectionUseCase
 import com.example.msger.feature_authentication.domain.use_case.SignInUseCase
 import com.example.msger.feature_authentication.presentation.util.isEmailValid
 import com.example.msger.feature_authentication.presentation.util.isPasswordValid
-import com.example.msger.feature_authentication.presentation.util.NavigationAuthentication
-import com.example.msger.feature_chat_manage.presentation.util.NavigationChatManage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -53,11 +52,11 @@ class SignInViewModel(
             isLoading = true
 
             try {
-                signInUseCase.invoke(email, password)
+                signInUseCase(email, password)
                 isLoading = false
                 email = ""
                 password = ""
-                openAndPopUp(NavigationChatManage.ChatList.route, NavigationAuthentication.SignIn.route)
+                openAndPopUp(NavigationRoute.ChatList.route, NavigationRoute.SignIn.route)
             } catch (e: Throwable) {
                 isLoading = false
                 responseError = e.message.toString()

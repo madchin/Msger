@@ -1,9 +1,5 @@
 package com.example.msger.core.data
 
-import com.example.msger.data.services.db.DbService
-import com.example.msger.data.services.db.DbServiceImpl
-import com.example.msger.data.services.db.firebase.Database
-import com.example.msger.data.services.db.firebase.DatabaseImpl
 import com.example.msger.feature_authentication.data.data_source.Authenticator
 import com.example.msger.feature_authentication.data.data_source.AuthenticatorImpl
 import com.example.msger.feature_authentication.data.data_source.CredentialProvider
@@ -14,6 +10,11 @@ import com.example.msger.feature_authentication.domain.use_case.GetEmailFromReco
 import com.example.msger.feature_authentication.domain.use_case.ResetPasswordUseCase
 import com.example.msger.feature_authentication.domain.use_case.SignInUseCase
 import com.example.msger.feature_authentication.domain.use_case.SignUpUseCase
+import com.example.msger.feature_chat.data.data_source.DatabaseChat
+import com.example.msger.feature_chat.data.data_source.DatabaseChatImpl
+import com.example.msger.feature_chat.data.repository.DatabaseChatRepositoryImpl
+import com.example.msger.feature_chat.domain.repository.DatabaseChatRepository
+import com.example.msger.feature_chat.domain.use_case.GetChatMembersUseCase
 import com.example.msger.feature_chat_manage.data.data_source.db.DatabaseChatManage
 import com.example.msger.feature_chat_manage.data.data_source.db.DatabaseChatManageImpl
 import com.example.msger.feature_chat_manage.data.repository.DatabaseChatManageRepositoryImpl
@@ -25,11 +26,11 @@ import com.example.msger.feature_chat_manage.domain.use_case.SignOutUseCase
 class AppContainer {
     private val auth: Authenticator = AuthenticatorImpl()
     private val credentialProvider: CredentialProvider = CredentialProviderImpl()
-    private val firebaseDatabase: Database = DatabaseImpl()
     private val databaseChatManage: DatabaseChatManage = DatabaseChatManageImpl()
+    private val databaseChat: DatabaseChat = DatabaseChatImpl()
 
     val databaseChatManageRepository: DatabaseChatManageRepository = DatabaseChatManageRepositoryImpl(databaseChatManage)
-    val dbService: DbService = DbServiceImpl(database = firebaseDatabase)
+    val databaseChatRepository: DatabaseChatRepository = DatabaseChatRepositoryImpl(dbRepository = databaseChat)
     val authRepository: AuthRepository = AuthRepositoryImpl(auth, credentialProvider)
     val resetPasswordUseCase: ResetPasswordUseCase = ResetPasswordUseCase(authRepository = authRepository)
     val signInUseCase: SignInUseCase = SignInUseCase(authRepository = authRepository)
@@ -39,4 +40,5 @@ class AppContainer {
     val signOutUseCase: SignOutUseCase = SignOutUseCase(authRepository = authRepository)
     val getChatsUseCase: GetChatsUseCase = GetChatsUseCase(dbRepository = databaseChatManageRepository)
     val createChatUseCase: CreateChatUseCase = CreateChatUseCase(dbRepository = databaseChatManageRepository)
+    val getChatMembersUseCase: GetChatMembersUseCase = GetChatMembersUseCase(dbRepository = databaseChatRepository)
 }

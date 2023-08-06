@@ -1,4 +1,4 @@
-package com.example.msger.core.data.model
+package com.example.msger.feature_chat.domain.model
 
 import com.google.firebase.Timestamp
 

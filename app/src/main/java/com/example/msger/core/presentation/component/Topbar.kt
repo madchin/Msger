@@ -17,24 +17,22 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.msger.R
 import com.example.msger.core.presentation.navigation.NavigationRoute
-import com.example.msger.feature_authentication.presentation.util.NavigationAuthentication
-import com.example.msger.feature_chat_manage.presentation.util.NavigationChatManage
 
 fun getTopBarTitle(route: String?): String = when (route) {
-    NavigationChatManage.ChatList.route -> "Home"
-    NavigationAuthentication.ResetPassword.route -> "Forgot Password"
-    NavigationAuthentication.SignIn.route -> "Sign in"
-    NavigationAuthentication.SignUp.route -> "Sign up"
+    NavigationRoute.ChatList.route -> "Home"
+    NavigationRoute.ResetPassword.route -> "Forgot Password"
+    NavigationRoute.SignIn.route -> "Sign in"
+    NavigationRoute.SignUp.route -> "Sign up"
     NavigationRoute.SplashScreen.route -> "Splash Screen"
-    NavigationChatManage.CreateChat.route -> "Create chat"
+    NavigationRoute.CreateChat.route -> "Create chat"
     NavigationRoute.Chat.withArgs("{chatId}") -> "Chat"
     NavigationRoute.Participants.withArgs("{chatId}") -> "Participants"
     else -> "App bar"
 }
 
 fun shouldUpButtonBeVisible(route: String?): Boolean = when (route) {
-    NavigationAuthentication.SignIn.route -> false
-    NavigationChatManage.ChatList.route -> false
+    NavigationRoute.SignIn.route -> false
+    NavigationRoute.ChatList.route -> false
     else -> true
 }
 
