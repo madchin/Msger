@@ -1,4 +1,4 @@
-package com.example.msger.core.presentation.screen
+package com.example.msger.feature_onboarding.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,13 +1,15 @@
-package com.example.msger.core.presentation.screen
+package com.example.msger.feature_onboarding.presentation
 
 import androidx.lifecycle.ViewModel
-import com.example.msger.feature_authentication.domain.repository.AuthRepository
 import com.example.msger.core.presentation.navigation.NavigationRoute
+import com.example.msger.feature_onboarding.domain.use_case.IsUserSignedInUseCase
 
-class SplashScreenViewModel(private val authRepository: AuthRepository) : ViewModel() {
+class SplashScreenViewModel(
+    private val isUserSignedInUseCase: IsUserSignedInUseCase
+    ) : ViewModel() {
 
     fun onAppStart(openAndPopUp: (String, String) -> Unit) {
-        if (authRepository.isSignedIn) {
+        if (isUserSignedInUseCase()) {
             openAndPopUp(NavigationRoute.ChatList.route, NavigationRoute.SplashScreen.route)
             return
         }

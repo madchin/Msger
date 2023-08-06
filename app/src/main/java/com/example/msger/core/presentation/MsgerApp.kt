@@ -21,8 +21,8 @@ import androidx.navigation.navArgument
 import com.example.msger.core.presentation.component.BodyLayout
 import com.example.msger.core.presentation.component.MsgerTopBar
 import com.example.msger.core.presentation.navigation.NavigationRoute
-import com.example.msger.core.presentation.screen.SplashScreen
-import com.example.msger.core.presentation.screen.SplashScreenViewModel
+import com.example.msger.feature_onboarding.presentation.SplashScreen
+import com.example.msger.feature_onboarding.presentation.SplashScreenViewModel
 import com.example.msger.core.presentation.util.ViewModelFactoryProvider
 import com.example.msger.core.util.extension.openAndPopUp
 import com.example.msger.feature_authentication.presentation.reset_password.RecoverPasswordScreen

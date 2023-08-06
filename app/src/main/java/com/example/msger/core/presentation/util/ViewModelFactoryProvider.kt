@@ -9,7 +9,7 @@ import com.example.msger.core.data.MsgerApplication
 import com.example.msger.feature_authentication.presentation.reset_password.ResetPasswordViewModel
 import com.example.msger.feature_authentication.presentation.sign_in.SignInViewModel
 import com.example.msger.feature_authentication.presentation.sign_up.SignUpViewModel
-import com.example.msger.core.presentation.screen.SplashScreenViewModel
+import com.example.msger.feature_onboarding.presentation.SplashScreenViewModel
 import com.example.msger.feature_chat.presentation.chat.ChatViewModel
 import com.example.msger.feature_chat_manage.presentation.chat_create.CreateChatViewModel
 import com.example.msger.feature_chat_manage.presentation.chat_list.ChatListViewModel
@@ -33,7 +33,7 @@ object ViewModelFactoryProvider {
             SignUpViewModel(application.appContainer.signUpUseCase)
         }
         initializer {
-            SplashScreenViewModel(application.appContainer.authRepository)
+            SplashScreenViewModel(application.appContainer.isUserSignedInUseCase)
         }
         initializer {
             ChatListViewModel(

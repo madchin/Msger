@@ -22,16 +22,23 @@ import com.example.msger.feature_chat_manage.domain.repository.DatabaseChatManag
 import com.example.msger.feature_chat_manage.domain.use_case.CreateChatUseCase
 import com.example.msger.feature_chat_manage.domain.use_case.GetChatsUseCase
 import com.example.msger.feature_chat_manage.domain.use_case.SignOutUseCase
+import com.example.msger.feature_onboarding.data.data_source.AuthenticatorOnboarding
+import com.example.msger.feature_onboarding.data.data_source.AuthenticatorOnboardingImpl
+import com.example.msger.feature_onboarding.data.repository.AuthOnboardingRepositoryImpl
+import com.example.msger.feature_onboarding.domain.repository.AuthOnboardingRepository
+import com.example.msger.feature_onboarding.domain.use_case.IsUserSignedInUseCase
 
 class AppContainer {
     private val auth: Authenticator = AuthenticatorImpl()
     private val credentialProvider: CredentialProvider = CredentialProviderImpl()
     private val databaseChatManage: DatabaseChatManage = DatabaseChatManageImpl()
     private val databaseChat: DatabaseChat = DatabaseChatImpl()
+    private val authOnboarding: AuthenticatorOnboarding = AuthenticatorOnboardingImpl()
+    private val authOnboardingRepository: AuthOnboardingRepository = AuthOnboardingRepositoryImpl(auth = authOnboarding)
+    private val databaseChatManageRepository: DatabaseChatManageRepository = DatabaseChatManageRepositoryImpl(databaseChatManage)
+    private val databaseChatRepository: DatabaseChatRepository = DatabaseChatRepositoryImpl(dbRepository = databaseChat)
+    private val authRepository: AuthRepository = AuthRepositoryImpl(auth, credentialProvider)
 
-    val databaseChatManageRepository: DatabaseChatManageRepository = DatabaseChatManageRepositoryImpl(databaseChatManage)
-    val databaseChatRepository: DatabaseChatRepository = DatabaseChatRepositoryImpl(dbRepository = databaseChat)
-    val authRepository: AuthRepository = AuthRepositoryImpl(auth, credentialProvider)
     val resetPasswordUseCase: ResetPasswordUseCase = ResetPasswordUseCase(authRepository = authRepository)
     val signInUseCase: SignInUseCase = SignInUseCase(authRepository = authRepository)
     val getEmailFromRecoverPasswordRedirectionUseCase: GetEmailFromRecoverPasswordRedirectionUseCase =
@@ -41,4 +48,5 @@ class AppContainer {
     val getChatsUseCase: GetChatsUseCase = GetChatsUseCase(dbRepository = databaseChatManageRepository)
     val createChatUseCase: CreateChatUseCase = CreateChatUseCase(dbRepository = databaseChatManageRepository)
     val getChatMembersUseCase: GetChatMembersUseCase = GetChatMembersUseCase(dbRepository = databaseChatRepository)
+    val isUserSignedInUseCase: IsUserSignedInUseCase = IsUserSignedInUseCase(authOnboardingRepository = authOnboardingRepository)
 }
