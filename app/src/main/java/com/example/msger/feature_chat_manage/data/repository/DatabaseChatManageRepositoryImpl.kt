@@ -16,4 +16,8 @@ class DatabaseChatManageRepositoryImpl(
 
     override suspend fun createChat(username: String, chat: Chat): String =
         database.createChat(username, chat)
+
+    override suspend fun joinChat(username: String, chatId: String) {
+        database.joinChat(username, chatId)
+    }
 }

@@ -2,7 +2,6 @@ package com.example.msger.feature_chat_manage.data.data_source.db
 
 import com.example.msger.feature_chat_manage.data.data_source.dto.MemberDto
 import com.example.msger.feature_chat_manage.domain.model.Chat
-import com.example.msger.feature_chat.domain.model.Member
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -49,22 +48,25 @@ class DatabaseChatManageImpl : DatabaseChatManage {
 
     override suspend fun createChat(username: String, chat: Chat): String {
         val chatId: String = chatsRef.push().key ?: ""
-        val chatMember = MemberDto(
-            member = mapOf(
-                currentUserId to Member(
-                    lastSeen = chat.created,
-                    name = username
-                )
-            )
-        )
+        val chatMember: Map<String?, MemberDto> = mapOf(currentUserId to MemberDto(name = username))
 
         chatsRef.child(chatId).setValue(chat).await()
 
         membersRef
             .child(chatId)
-            .updateChildren(chatMember.member)
+            .updateChildren(chatMember)
             .await()
 
         return chatId
+    }
+
+    override suspend fun joinChat(username: String, chatId: String) {
+        val chatMember: Map<String?, MemberDto> = mapOf(currentUserId to MemberDto(name = username))
+
+        membersRef
+            .child(chatId)
+            .updateChildren(chatMember)
+            .await()
+
     }
 }

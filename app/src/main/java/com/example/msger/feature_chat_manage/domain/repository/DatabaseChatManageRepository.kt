@@ -8,4 +8,5 @@ interface DatabaseChatManageRepository {
     val currentUserId: String?
 
     suspend fun createChat(username: String, chat: Chat): String
+    suspend fun joinChat(username: String, chatId: String)
 }
