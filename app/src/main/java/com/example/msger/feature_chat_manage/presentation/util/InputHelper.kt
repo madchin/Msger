@@ -8,3 +8,6 @@ fun usernameInputSupportText(username: String): Int =
 
 fun chatNameInputSupportText(chatName: String): Int =
     if (isChatNameValid(chatName = chatName)) R.string.input_required else R.string.input_blank_validation
+
+fun chatIdInputSupportText(chatId: String): Int =
+    if (isChatIdValid(chatId = chatId)) R.string.input_required else R.string.input_blank_validation

@@ -11,9 +11,10 @@ import com.example.msger.feature_authentication.presentation.sign_in.SignInViewM
 import com.example.msger.feature_authentication.presentation.sign_up.SignUpViewModel
 import com.example.msger.feature_onboarding.presentation.SplashScreenViewModel
 import com.example.msger.feature_chat.presentation.chat.ChatViewModel
-import com.example.msger.feature_chat_manage.presentation.chat_create.CreateChatViewModel
+import com.example.msger.feature_chat_manage.presentation.chat_create.ChatCreateViewModel
 import com.example.msger.feature_chat_manage.presentation.chat_list.ChatListViewModel
 import com.example.msger.feature_chat.presentation.participant.ParticipantsViewModel
+import com.example.msger.feature_chat_manage.presentation.chat_join.ChatJoinViewModel
 
 val CreationExtras.application: MsgerApplication
     get() = checkNotNull(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MsgerApplication)
@@ -42,7 +43,10 @@ object ViewModelFactoryProvider {
             )
         }
         initializer {
-            CreateChatViewModel(application.appContainer.createChatUseCase)
+            ChatCreateViewModel(application.appContainer.createChatUseCase)
+        }
+        initializer {
+            ChatJoinViewModel(application.appContainer.joinChatUseCase)
         }
         initializer {
             ChatViewModel(

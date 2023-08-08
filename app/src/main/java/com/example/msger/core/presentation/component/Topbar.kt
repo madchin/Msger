@@ -27,6 +27,7 @@ fun getTopBarTitle(route: String?): String = when (route) {
     NavigationRoute.CreateChat.route -> "Create chat"
     NavigationRoute.Chat.withArgs("{chatId}") -> "Chat"
     NavigationRoute.Participants.withArgs("{chatId}") -> "Participants"
+    NavigationRoute.JoinChat.route -> "Join chat"
     else -> "App bar"
 }
 

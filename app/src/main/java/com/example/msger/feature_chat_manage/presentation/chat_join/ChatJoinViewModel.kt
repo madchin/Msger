@@ -50,7 +50,7 @@ class ChatJoinViewModel(
                 username = ""
                 openAndPopUp(
                     NavigationRoute.Chat.withArgs(chatId),
-                    NavigationRoute.CreateChat.route
+                    NavigationRoute.JoinChat.route
                 )
             } catch (e: Throwable) {
                 isLoading = false

@@ -21,8 +21,6 @@ import androidx.navigation.navArgument
 import com.example.msger.core.presentation.component.BodyLayout
 import com.example.msger.core.presentation.component.MsgerTopBar
 import com.example.msger.core.presentation.navigation.NavigationRoute
-import com.example.msger.feature_onboarding.presentation.SplashScreen
-import com.example.msger.feature_onboarding.presentation.SplashScreenViewModel
 import com.example.msger.core.presentation.util.ViewModelFactoryProvider
 import com.example.msger.core.util.extension.openAndPopUp
 import com.example.msger.feature_authentication.presentation.reset_password.RecoverPasswordScreen
@@ -35,10 +33,14 @@ import com.example.msger.feature_chat.presentation.chat.ChatScreen
 import com.example.msger.feature_chat.presentation.chat.ChatViewModel
 import com.example.msger.feature_chat.presentation.participant.ParticipantsScreen
 import com.example.msger.feature_chat.presentation.participant.ParticipantsViewModel
-import com.example.msger.feature_chat_manage.presentation.chat_create.CreateChatScreen
-import com.example.msger.feature_chat_manage.presentation.chat_create.CreateChatViewModel
+import com.example.msger.feature_chat_manage.presentation.chat_create.ChatCreateScreen
+import com.example.msger.feature_chat_manage.presentation.chat_create.ChatCreateViewModel
+import com.example.msger.feature_chat_manage.presentation.chat_join.ChatJoinScreen
+import com.example.msger.feature_chat_manage.presentation.chat_join.ChatJoinViewModel
 import com.example.msger.feature_chat_manage.presentation.chat_list.ChatListViewModel
 import com.example.msger.feature_chat_manage.presentation.chat_list.HomeScreen
+import com.example.msger.feature_onboarding.presentation.SplashScreen
+import com.example.msger.feature_onboarding.presentation.SplashScreenViewModel
 
 fun shouldSnackbarBeShown(route: String?) = when (route) {
     NavigationRoute.SplashScreen.route -> false
@@ -161,13 +163,32 @@ fun MsgerApp(
                 }
             }
             composable(route = NavigationRoute.CreateChat.route) {
-                val viewModel: CreateChatViewModel =
+                val viewModel: ChatCreateViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
+
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
+                    snackbarHostState = snackbarHostState,
+                    errorMessage = viewModel.responseError,
                     modifier = bodyLayoutModifier
                 ) {
-                    CreateChatScreen(
+                    ChatCreateScreen(
+                        viewModel = viewModel,
+                        openAndPopUp = navController::openAndPopUp
+                    )
+                }
+            }
+            composable(route = NavigationRoute.JoinChat.route) {
+                val viewModel: ChatJoinViewModel =
+                    viewModel(factory = ViewModelFactoryProvider.Factory)
+
+                BodyLayout(
+                    shouldShowSnackbar = shouldSnackbarBeShown(route),
+                    snackbarHostState = snackbarHostState,
+                    errorMessage = viewModel.responseError,
+                    modifier = bodyLayoutModifier
+                ) {
+                    ChatJoinScreen(
                         viewModel = viewModel,
                         openAndPopUp = navController::openAndPopUp
                     )
@@ -207,6 +228,7 @@ fun MsgerApp(
                     )
                 }
             }
+
         }
     }
 }

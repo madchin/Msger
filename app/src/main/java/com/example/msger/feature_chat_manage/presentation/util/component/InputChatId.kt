@@ -22,7 +22,7 @@ import com.example.msger.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputChatName(
+fun InputChatId(
     isError: Boolean,
     value: String,
     onValueChange: (String) -> Unit,

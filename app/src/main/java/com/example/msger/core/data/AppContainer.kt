@@ -21,6 +21,7 @@ import com.example.msger.feature_chat_manage.data.repository.DatabaseChatManageR
 import com.example.msger.feature_chat_manage.domain.repository.DatabaseChatManageRepository
 import com.example.msger.feature_chat_manage.domain.use_case.CreateChatUseCase
 import com.example.msger.feature_chat_manage.domain.use_case.GetChatsUseCase
+import com.example.msger.feature_chat_manage.domain.use_case.JoinChatUseCase
 import com.example.msger.feature_chat_manage.domain.use_case.SignOutUseCase
 import com.example.msger.feature_onboarding.data.data_source.AuthenticatorOnboarding
 import com.example.msger.feature_onboarding.data.data_source.AuthenticatorOnboardingImpl
@@ -49,4 +50,5 @@ class AppContainer {
     val createChatUseCase: CreateChatUseCase = CreateChatUseCase(dbRepository = databaseChatManageRepository)
     val getChatMembersUseCase: GetChatMembersUseCase = GetChatMembersUseCase(dbRepository = databaseChatRepository)
     val isUserSignedInUseCase: IsUserSignedInUseCase = IsUserSignedInUseCase(authOnboardingRepository = authOnboardingRepository)
+    val joinChatUseCase: JoinChatUseCase = JoinChatUseCase(dbRepository = databaseChatManageRepository)
 }
