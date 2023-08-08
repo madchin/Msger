@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class CreateChatViewModel(
+class ChatCreateViewModel(
     private val createChatUseCase: CreateChatUseCase
 ) : ViewModel() {
 
