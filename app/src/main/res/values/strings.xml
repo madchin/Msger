@@ -18,4 +18,5 @@
     <string name="sign_out_button">Sign out</string>
     <string name="chat_name">Chat name</string>
     <string name="user_name">Username</string>
+    <string name="chat_id">Chat ID</string>
 </resources>

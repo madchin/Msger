@@ -29,7 +29,7 @@ fun InputChatId(
     onValueClear: () -> Unit,
     @StringRes supportText: Int,
     modifier: Modifier = Modifier,
-    @StringRes labelText: Int = R.string.chat_name,
+    @StringRes labelText: Int = R.string.chat_id,
     imeAction: ImeAction = ImeAction.Next,
     onDonePress: () -> Unit = {},
 ) {
@@ -39,7 +39,7 @@ fun InputChatId(
         isError = isError,
         leadingIcon = {
             Icon(
-                painter = painterResource(id = R.drawable.chat_icon),
+                painter = painterResource(id = R.drawable.key_icon),
                 contentDescription = null
             )
         },

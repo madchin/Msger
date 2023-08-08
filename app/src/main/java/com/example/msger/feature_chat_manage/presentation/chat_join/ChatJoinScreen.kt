@@ -21,13 +21,14 @@ fun ChatJoinScreen(
 ) {
     val chatIdInputSupportText: Int = chatIdInputSupportText(chatId = viewModel.chatId)
     val usernameInputSupportText: Int = usernameInputSupportText(username = viewModel.username)
+    val isButtonDisabled: Boolean = !viewModel.isChatIdInputValid || !viewModel.isUsernameInputValid
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         InputChatId(
-            isError = !viewModel.isChatIdValid,
+            isError = !viewModel.isChatIdInputValid,
             value = viewModel.chatId,
             onValueChange = viewModel::onChatIdInputChange,
             onValueClear = viewModel::onChatIdValueClear,
@@ -35,14 +36,17 @@ fun ChatJoinScreen(
             supportText = chatIdInputSupportText,
         )
         InputUsername(
-            isError = !viewModel.isUsernameValid,
+            isError = !viewModel.isUsernameInputValid,
             value = viewModel.username,
             onValueChange = viewModel::onUsernameInputChange,
             onValueClear = viewModel::onUsernameValueClear,
             supportText = usernameInputSupportText,
             onDonePress = { viewModel.joinChat(openAndPopUp) },
         )
-        OutlinedButton(onClick = { viewModel.joinChat(openAndPopUp) }) {
+        OutlinedButton(
+            onClick = { viewModel.joinChat(openAndPopUp) },
+            enabled = !isButtonDisabled
+        ) {
             Text(text = stringResource(id = R.string.join_chat_button))
         }
     }

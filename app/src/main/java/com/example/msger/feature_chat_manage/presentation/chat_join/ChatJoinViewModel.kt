@@ -22,10 +22,10 @@ class ChatJoinViewModel(
     var username: String by mutableStateOf("")
         private set
 
-    var isChatIdValid: Boolean by mutableStateOf(true)
+    var isChatIdInputValid: Boolean by mutableStateOf(true)
         private set
 
-    var isUsernameValid: Boolean by mutableStateOf(true)
+    var isUsernameInputValid: Boolean by mutableStateOf(true)
         private set
 
     var isLoading: Boolean by mutableStateOf(false)
@@ -36,9 +36,9 @@ class ChatJoinViewModel(
 
     fun joinChat(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
-            isChatIdValid = isChatIdValid(chatId = chatId)
-            isUsernameValid = isUsernameValid(username = username)
-            if (!isChatIdValid || !isUsernameValid) {
+            isChatIdInputValid = isChatIdValid(chatId = chatId)
+            isUsernameInputValid = isUsernameValid(username = username)
+            if (!isChatIdInputValid || !isUsernameInputValid) {
                 return@launch
             }
             isLoading = true
@@ -55,6 +55,7 @@ class ChatJoinViewModel(
             } catch (e: Throwable) {
                 isLoading = false
                 responseError = e.message.toString()
+                isChatIdInputValid = false
                 delay(5000L)
                 responseError = ""
             }
@@ -63,21 +64,21 @@ class ChatJoinViewModel(
 
     fun onChatIdInputChange(value: String) {
         chatId = value
-        isChatIdValid = isChatIdValid(chatId = chatId)
+        isChatIdInputValid = isChatIdValid(chatId = chatId)
     }
 
     fun onUsernameInputChange(value: String) {
         username = value
-        isUsernameValid = isUsernameValid(username = username)
+        isUsernameInputValid = isUsernameValid(username = username)
     }
 
     fun onChatIdValueClear() {
         chatId = ""
-        isChatIdValid = true
+        isChatIdInputValid = true
     }
 
     fun onUsernameValueClear() {
         username = ""
-        isUsernameValid = true
+        isUsernameInputValid = true
     }
 }

@@ -4,5 +4,3 @@ fun isChatNameValid(chatName: String): Boolean = chatName.isEmpty() || chatName.
 fun isUsernameValid(username: String): Boolean = username.isEmpty() || username.isNotBlank()
 
 fun isChatIdValid(chatId: String): Boolean = chatId.isEmpty() || chatId.isNotBlank()
-
-//FIX VALIDATION .isEmpty()
