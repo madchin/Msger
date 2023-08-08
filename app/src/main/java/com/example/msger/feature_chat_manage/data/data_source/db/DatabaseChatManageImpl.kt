@@ -48,6 +48,11 @@ class DatabaseChatManageImpl : DatabaseChatManage {
 
     override suspend fun createChat(username: String, chat: Chat): String {
         val chatId: String = chatsRef.push().key ?: ""
+
+        if (chatId.isEmpty()) {
+            throw UnsupportedOperationException("Chat id key in database has not been generated. Unable to proceed further")
+        }
+
         val chatMember: Map<String?, MemberDto> = mapOf(currentUserId to MemberDto(name = username))
 
         chatsRef.child(chatId).setValue(chat).await()
@@ -61,6 +66,9 @@ class DatabaseChatManageImpl : DatabaseChatManage {
     }
 
     override suspend fun joinChat(username: String, chatId: String) {
+        if (chatsRef.key != chatId) {
+            throw IllegalArgumentException("Given chat id: $chatId not exists in database")
+        }
         val chatMember: Map<String?, MemberDto> = mapOf(currentUserId to MemberDto(name = username))
 
         membersRef
