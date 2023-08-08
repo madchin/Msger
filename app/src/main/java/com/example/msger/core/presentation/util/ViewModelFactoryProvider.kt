@@ -39,7 +39,8 @@ object ViewModelFactoryProvider {
         initializer {
             ChatListViewModel(
                 signOutUseCase = application.appContainer.signOutUseCase,
-                getChatsUseCase = application.appContainer.getChatsUseCase
+                getChatsUseCase = application.appContainer.getChatsUseCase,
+                joinChatUseCase = application.appContainer.joinChatUseCase
             )
         }
         initializer {
