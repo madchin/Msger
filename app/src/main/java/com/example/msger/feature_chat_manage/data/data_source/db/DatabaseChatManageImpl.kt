@@ -1,7 +1,7 @@
 package com.example.msger.feature_chat_manage.data.data_source.db
 
+import com.example.msger.feature_chat_manage.data.data_source.dto.ChatDto
 import com.example.msger.feature_chat_manage.data.data_source.dto.MemberDto
-import com.example.msger.feature_chat_manage.domain.model.Chat
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -29,11 +29,11 @@ class DatabaseChatManageImpl : DatabaseChatManage {
     override val currentUserId: String?
         get() = Firebase.auth.currentUser?.uid
 
-    override val chats: Flow<Result<List<Chat>>> = callbackFlow {
+    override val chats: Flow<Result<List<ChatDto>>> = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val chatEntities = snapshot.children.map { dataSnapshot ->
-                    dataSnapshot.getValue(Chat::class.java) ?: Chat()
+                    dataSnapshot.getValue(ChatDto::class.java) ?: ChatDto()
                 }
                 this@callbackFlow.trySend(Result.success(chatEntities))
             }
@@ -46,30 +46,23 @@ class DatabaseChatManageImpl : DatabaseChatManage {
         awaitClose { chatsRef.removeEventListener(listener) }
     }
 
-    override suspend fun createChat(username: String, chat: Chat): String {
+    override suspend fun addChat(chat: ChatDto): String {
         val chatId: String = chatsRef.push().key ?: ""
 
         if (chatId.isEmpty()) {
             throw UnsupportedOperationException("Chat id has not been generated.")
         }
 
-        val chatMember: Map<String?, MemberDto> = mapOf(chatId to MemberDto(name = username))
-
         chatsRef.child(chatId).setValue(chat).await()
-
-        membersRef
-            .child(currentUserId!!)
-            .updateChildren(chatMember)
-            .await()
 
         return chatId
     }
 
-    override suspend fun joinChat(username: String, chatId: String) {
+    override suspend fun updateMemberChats(chatId: String, member: MemberDto) {
         if (chatsRef.key != chatId) {
             throw IllegalArgumentException("Given chat id: $chatId not exists in database")
         }
-        val chatMember: Map<String?, MemberDto> = mapOf(chatId to MemberDto(name = username))
+        val chatMember: Map<String?, MemberDto> = mapOf(chatId to member)
 
         membersRef
             .child(currentUserId!!)

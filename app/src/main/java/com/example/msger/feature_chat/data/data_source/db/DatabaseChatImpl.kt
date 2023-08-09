@@ -1,6 +1,6 @@
-package com.example.msger.feature_chat.data.data_source
+package com.example.msger.feature_chat.data.data_source.db
 
-import com.example.msger.feature_chat.domain.model.Member
+import com.example.msger.feature_chat.data.data_source.dto.MemberDto
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -23,7 +23,7 @@ class DatabaseChatImpl : DatabaseChat {
     private val membersRef: DatabaseReference
         get() = db.getReference("members")
 
-    override fun getChatMembers(chatId: String): Flow<Result<List<Map<String, Member>?>>> =
+    override fun getChatMembers(chatId: String): Flow<Result<List<Map<String, MemberDto>?>>> =
         callbackFlow {
             val listener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -32,7 +32,7 @@ class DatabaseChatImpl : DatabaseChat {
                         .filter { it.key == chatId }
                         .map { dataSnapshot ->
                             dataSnapshot
-                                .getValue<Map<String, Member>>()
+                                .getValue<Map<String, MemberDto>>()
                         }
 
                     this@callbackFlow.trySend(Result.success(memberEntities))

@@ -3,7 +3,7 @@ package com.example.msger.feature_authentication.data.data_source
 import com.example.msger.feature_authentication.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
-interface Authenticator {
+interface Auth {
     val isSignedIn: Boolean
     val user: Flow<User?>
 

@@ -26,7 +26,7 @@ object ViewModelFactoryProvider {
         }
         initializer {
             SignInViewModel(
-                application.appContainer.getEmailFromRecoverPasswordRedirectionUseCase,
+                application.appContainer.getEmailFromDeepLinkUseCase,
                 application.appContainer.signInUseCase
             )
         }

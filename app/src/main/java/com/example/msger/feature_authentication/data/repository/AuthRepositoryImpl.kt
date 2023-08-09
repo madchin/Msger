@@ -1,14 +1,14 @@
 package com.example.msger.feature_authentication.data.repository
 
-import com.example.msger.feature_authentication.data.data_source.Authenticator
-import com.example.msger.feature_authentication.data.data_source.CredentialProvider
+import com.example.msger.feature_authentication.data.data_source.Auth
+import com.example.msger.feature_authentication.data.data_source.DeepLinkHandler
 import com.example.msger.feature_authentication.domain.model.User
 import com.example.msger.feature_authentication.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
 
 class AuthRepositoryImpl(
-    private val auth: Authenticator,
-    private val credentialProvider: CredentialProvider
+    private val auth: Auth,
+    private val deepLinkHandler: DeepLinkHandler
 ) : AuthRepository {
 
     override val user: Flow<User?>
@@ -34,6 +34,6 @@ class AuthRepositoryImpl(
         auth.resetPassword(email)
     }
 
-    override suspend fun getUserEmail(): String =
-        credentialProvider.getUserEmailAfterPasswordRecover()
+    override suspend fun getUserEmail(): String? =
+        deepLinkHandler.getDynamicLink()?.getQueryParameter("email")
 }

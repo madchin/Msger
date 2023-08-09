@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.msger.core.presentation.navigation.NavigationRoute
-import com.example.msger.feature_authentication.domain.use_case.GetEmailFromRecoverPasswordRedirectionUseCase
+import com.example.msger.feature_authentication.domain.use_case.GetEmailFromDeepLinkUseCase
 import com.example.msger.feature_authentication.domain.use_case.SignInUseCase
 import com.example.msger.feature_authentication.presentation.util.isEmailValid
 import com.example.msger.feature_authentication.presentation.util.isPasswordValid
@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val getEmailFromRecoverPasswordRedirectionUseCase: GetEmailFromRecoverPasswordRedirectionUseCase,
+    private val getEmailFromDeepLinkUseCase: GetEmailFromDeepLinkUseCase,
     private val signInUseCase: SignInUseCase
 ) : ViewModel() {
     var email: String by mutableStateOf("")
@@ -33,7 +33,7 @@ class SignInViewModel(
     init {
         viewModelScope.launch {
             try {
-                val userEmail: String = getEmailFromRecoverPasswordRedirectionUseCase.invoke()
+                val userEmail: String = getEmailFromDeepLinkUseCase() ?: ""
                 email = userEmail
             } catch (e: Throwable) {
                 // TODO: catch errors properly

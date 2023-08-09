@@ -11,10 +11,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
-class AuthenticatorImpl : Authenticator {
+class AuthImpl : Auth {
     private val auth: FirebaseAuth
         get() = Firebase.auth
-
     override val isSignedIn: Boolean
         get() = auth.currentUser != null
 
@@ -41,15 +40,18 @@ class AuthenticatorImpl : Authenticator {
     override fun signOut() = auth.signOut()
 
     override suspend fun resetPassword(email: String) {
-        val scheme = "https://"
-        val host = "msger.example.com"
-        val url = "$scheme$host/change-password?email=$email"
-        val actionCodeSettings = ActionCodeSettings
+        val url = "$DEEP_LINK_SCHEME$DEEP_LINK_HOST/change-password?email=$email"
+        val actionCodeSettings: ActionCodeSettings = ActionCodeSettings
             .newBuilder()
             .setUrl(url)
             .setAndroidPackageName(androidPackageName, false, null)
             .build()
 
         auth.sendPasswordResetEmail(email.trim(), actionCodeSettings).await()
+    }
+
+    companion object {
+        const val DEEP_LINK_SCHEME = "https://"
+        const val DEEP_LINK_HOST = "msger.example.com"
     }
 }
