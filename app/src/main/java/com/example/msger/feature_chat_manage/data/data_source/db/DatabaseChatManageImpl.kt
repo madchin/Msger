@@ -50,15 +50,15 @@ class DatabaseChatManageImpl : DatabaseChatManage {
         val chatId: String = chatsRef.push().key ?: ""
 
         if (chatId.isEmpty()) {
-            throw UnsupportedOperationException("Chat id key in database has not been generated. Unable to proceed further")
+            throw UnsupportedOperationException("Chat id has not been generated.")
         }
 
-        val chatMember: Map<String?, MemberDto> = mapOf(currentUserId to MemberDto(name = username))
+        val chatMember: Map<String?, MemberDto> = mapOf(chatId to MemberDto(name = username))
 
         chatsRef.child(chatId).setValue(chat).await()
 
         membersRef
-            .child(chatId)
+            .child(currentUserId!!)
             .updateChildren(chatMember)
             .await()
 
@@ -69,12 +69,11 @@ class DatabaseChatManageImpl : DatabaseChatManage {
         if (chatsRef.key != chatId) {
             throw IllegalArgumentException("Given chat id: $chatId not exists in database")
         }
-        val chatMember: Map<String?, MemberDto> = mapOf(currentUserId to MemberDto(name = username))
+        val chatMember: Map<String?, MemberDto> = mapOf(chatId to MemberDto(name = username))
 
         membersRef
-            .child(chatId)
+            .child(currentUserId!!)
             .updateChildren(chatMember)
             .await()
-
     }
 }
