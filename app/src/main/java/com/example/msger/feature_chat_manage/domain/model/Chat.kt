@@ -4,7 +4,7 @@ import com.example.msger.feature_chat_manage.data.data_source.dto.ChatDto
 
 data class Chat(
     val name: String,
-    val created: Long
+    val created: Long? = null
 )
 
 fun Chat.toChatDto() = ChatDto(name = name)
