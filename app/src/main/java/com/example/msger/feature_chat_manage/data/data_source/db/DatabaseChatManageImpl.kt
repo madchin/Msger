@@ -26,6 +26,8 @@ class DatabaseChatManageImpl : DatabaseChatManage {
     private val membersRef: DatabaseReference
         get() = db.getReference("members")
 
+    private suspend fun isChatExist(chatId: String): Boolean = chatsRef.get().await().hasChild(chatId)
+
     override val currentUserId: String?
         get() = Firebase.auth.currentUser?.uid
 
@@ -61,7 +63,9 @@ class DatabaseChatManageImpl : DatabaseChatManage {
     }
 
     override suspend fun updateMemberChat(chatId: String, member: MemberDto) {
-        // check if db contains chatId record
+        if(!isChatExist(chatId = chatId)) {
+            throw IllegalArgumentException("Given chat id: $chatId not exists in database")
+        }
         val chatMember: Map<String, MemberDto> = mapOf(chatId to member)
 
         membersRef

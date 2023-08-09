@@ -45,13 +45,13 @@ class ChatJoinViewModel(
 
             try {
                 joinChatUseCase(username = username, chatId = chatId)
-                isLoading = false
-                chatId = ""
-                username = ""
                 openAndPopUp(
                     NavigationRoute.Chat.withArgs(chatId),
                     NavigationRoute.JoinChat.route
                 )
+                chatId = ""
+                isLoading = false
+                username = ""
             } catch (e: Throwable) {
                 isLoading = false
                 responseError = e.message.toString()
