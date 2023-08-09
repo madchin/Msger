@@ -51,7 +51,7 @@ class AuthImpl : Auth {
     }
 
     companion object {
-        const val DEEP_LINK_SCHEME = "https://"
-        const val DEEP_LINK_HOST = "msger.example.com"
+        private const val DEEP_LINK_SCHEME = "https://"
+        private const val DEEP_LINK_HOST = "msger.example.com"
     }
 }

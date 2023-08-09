@@ -46,7 +46,7 @@ class DatabaseChatManageImpl : DatabaseChatManage {
         awaitClose { chatsRef.removeEventListener(listener) }
     }
 
-    override suspend fun addChat(chat: ChatDto): String {
+    override suspend fun addChat(chat: ChatDto, member: MemberDto): String {
         val chatId: String = chatsRef.push().key ?: ""
 
         if (chatId.isEmpty()) {
@@ -55,14 +55,23 @@ class DatabaseChatManageImpl : DatabaseChatManage {
 
         chatsRef.child(chatId).setValue(chat).await()
 
+        addMemberChat(chatId = chatId, member = member)
+
         return chatId
     }
 
-    override suspend fun updateMemberChats(chatId: String, member: MemberDto) {
-        if (chatsRef.key != chatId) {
-            throw IllegalArgumentException("Given chat id: $chatId not exists in database")
-        }
-        val chatMember: Map<String?, MemberDto> = mapOf(chatId to member)
+    override suspend fun updateMemberChat(chatId: String, member: MemberDto) {
+        // check if db contains chatId record
+        val chatMember: Map<String, MemberDto> = mapOf(chatId to member)
+
+        membersRef
+            .child(currentUserId!!)
+            .updateChildren(chatMember)
+            .await()
+    }
+
+    override suspend fun addMemberChat(chatId: String, member: MemberDto) {
+        val chatMember: Map<String, MemberDto> = mapOf(chatId to member)
 
         membersRef
             .child(currentUserId!!)

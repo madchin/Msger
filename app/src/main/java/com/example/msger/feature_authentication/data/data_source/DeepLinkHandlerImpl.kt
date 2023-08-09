@@ -15,7 +15,7 @@ class DeepLinkHandlerImpl : DeepLinkHandler {
         return dynamicLink.link
     }
     companion object {
-        const val FIREBASE_DYNAMIC_LINK = "mesager.page.link"
+        private const val FIREBASE_DYNAMIC_LINK = "mesager.page.link"
     }
 }
 

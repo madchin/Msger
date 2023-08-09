@@ -8,6 +8,8 @@ interface DatabaseChatManage {
 
     val chats: Flow<Result<List<ChatDto>>>
     val currentUserId: String?
-    suspend fun addChat(chat: ChatDto): String
-    suspend fun updateMemberChats(chatId: String, member: MemberDto)
+    suspend fun addChat(chat: ChatDto, member: MemberDto): String
+    suspend fun updateMemberChat(chatId: String, member: MemberDto)
+
+    suspend fun addMemberChat(chatId: String, member: MemberDto)
 }

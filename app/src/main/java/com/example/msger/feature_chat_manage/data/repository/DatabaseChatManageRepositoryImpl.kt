@@ -33,15 +33,12 @@ class DatabaseChatManageRepositoryImpl(
     override val currentUserId: String?
         get() = database.currentUserId
 
-    override suspend fun createChat(username: String, chat: Chat): String {
-        val chatId: String = database.addChat(chat = chat.toChatDto())
-
-        database.updateMemberChats(chatId = chatId, member = MemberDto(name = username))
-
-        return chatId
-    }
+    override suspend fun createChat(username: String, chat: Chat): String = database.addChat(
+        chat = chat.toChatDto(),
+        member = MemberDto(name = username)
+    )
 
     override suspend fun joinChat(username: String, chatId: String) {
-        database.updateMemberChats(chatId = chatId, member = MemberDto(name = username))
+        database.updateMemberChat(chatId = chatId, member = MemberDto(name = username))
     }
 }
