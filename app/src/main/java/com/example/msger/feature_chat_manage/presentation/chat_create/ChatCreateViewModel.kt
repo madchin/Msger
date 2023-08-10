@@ -15,9 +15,8 @@ import kotlinx.coroutines.launch
 
 
 class ChatCreateViewModel(
-    private val createChatUseCase: CreateChatUseCase
+    private val createChatUseCase: CreateChatUseCase,
 ) : ViewModel() {
-
     var chatName: String by mutableStateOf("")
         private set
 

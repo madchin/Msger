@@ -1,9 +1,9 @@
 package com.example.msger.feature_chat_manage.data.repository
 
 import com.example.msger.core.util.Resource
-import com.example.msger.feature_chat_manage.data.data_source.db.DatabaseChatManage
-import com.example.msger.feature_chat_manage.data.data_source.dto.MemberDto
-import com.example.msger.feature_chat_manage.data.data_source.dto.toChat
+import com.example.msger.feature_chat_manage.data.data_source.remote.db.DatabaseChatManage
+import com.example.msger.feature_chat_manage.data.data_source.remote.dto.MemberDto
+import com.example.msger.feature_chat_manage.data.data_source.remote.dto.toChat
 import com.example.msger.feature_chat_manage.domain.model.Chat
 import com.example.msger.feature_chat_manage.domain.model.toChatDto
 import com.example.msger.feature_chat_manage.domain.repository.DatabaseChatManageRepository

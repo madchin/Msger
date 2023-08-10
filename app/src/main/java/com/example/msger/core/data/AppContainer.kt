@@ -1,5 +1,7 @@
 package com.example.msger.core.data
 
+import android.content.Context
+import com.example.msger.core.data.data_source.local.AppDatabase
 import com.example.msger.feature_authentication.data.data_source.Auth
 import com.example.msger.feature_authentication.data.data_source.AuthImpl
 import com.example.msger.feature_authentication.data.data_source.DeepLinkHandler
@@ -15,10 +17,10 @@ import com.example.msger.feature_chat.data.data_source.db.DatabaseChatImpl
 import com.example.msger.feature_chat.data.repository.DatabaseChatRepositoryImpl
 import com.example.msger.feature_chat.domain.repository.DatabaseChatRepository
 import com.example.msger.feature_chat.domain.use_case.GetChatMembersUseCase
-import com.example.msger.feature_chat_manage.data.data_source.auth.AuthChatManage
-import com.example.msger.feature_chat_manage.data.data_source.auth.AuthChatManageImpl
-import com.example.msger.feature_chat_manage.data.data_source.db.DatabaseChatManage
-import com.example.msger.feature_chat_manage.data.data_source.db.DatabaseChatManageImpl
+import com.example.msger.feature_chat_manage.data.data_source.remote.auth.AuthChatManage
+import com.example.msger.feature_chat_manage.data.data_source.remote.auth.AuthChatManageImpl
+import com.example.msger.feature_chat_manage.data.data_source.remote.db.DatabaseChatManage
+import com.example.msger.feature_chat_manage.data.data_source.remote.db.DatabaseChatManageImpl
 import com.example.msger.feature_chat_manage.data.repository.AuthChatManageRepositoryImpl
 import com.example.msger.feature_chat_manage.data.repository.DatabaseChatManageRepositoryImpl
 import com.example.msger.feature_chat_manage.domain.repository.AuthChatManageRepository
@@ -58,4 +60,7 @@ class AppContainer {
     val getChatMembersUseCase: GetChatMembersUseCase = GetChatMembersUseCase(dbRepository = databaseChatRepository)
     val isUserSignedInUseCase: IsUserSignedInUseCase = IsUserSignedInUseCase(authOnboardingRepository = authOnboardingRepository)
     val joinChatUseCase: JoinChatUseCase = JoinChatUseCase(dbRepository = databaseChatManageRepository)
+
+    fun provideAppDatabase(context: Context): AppDatabase = AppDatabase.getInstance(context = context)
+
 }

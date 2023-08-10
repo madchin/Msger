@@ -1,7 +1,7 @@
-package com.example.msger.feature_chat_manage.data.data_source.db
+package com.example.msger.feature_chat_manage.data.data_source.remote.db
 
-import com.example.msger.feature_chat_manage.data.data_source.dto.ChatDto
-import com.example.msger.feature_chat_manage.data.data_source.dto.MemberDto
+import com.example.msger.feature_chat_manage.data.data_source.remote.dto.ChatDto
+import com.example.msger.feature_chat_manage.data.data_source.remote.dto.MemberDto
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

@@ -21,7 +21,6 @@ fun ChatCreateScreen(
     Column() {
         val chatNameInputSupportText: Int = chatNameInputSupportText(chatName = viewModel.chatName)
         val usernameInputSupportText: Int = usernameInputSupportText(username = viewModel.username)
-
         InputChatName(
             isError = !viewModel.isChatNameValid,
             value = viewModel.chatName,
