@@ -12,15 +12,16 @@ import com.example.msger.feature_authentication.domain.use_case.GetEmailFromDeep
 import com.example.msger.feature_authentication.domain.use_case.ResetPasswordUseCase
 import com.example.msger.feature_authentication.domain.use_case.SignInUseCase
 import com.example.msger.feature_authentication.domain.use_case.SignUpUseCase
-import com.example.msger.feature_chat.data.data_source.db.DatabaseChat
-import com.example.msger.feature_chat.data.data_source.db.DatabaseChatImpl
+import com.example.msger.feature_chat.data.data_source.db.RemoteDatabaseChat
+import com.example.msger.feature_chat.data.data_source.db.RemoteDatabaseChatImpl
 import com.example.msger.feature_chat.data.repository.DatabaseChatRepositoryImpl
 import com.example.msger.feature_chat.domain.repository.DatabaseChatRepository
 import com.example.msger.feature_chat.domain.use_case.GetChatMembersUseCase
+import com.example.msger.feature_chat_manage.data.data_source.local.db.ChatDao
 import com.example.msger.feature_chat_manage.data.data_source.remote.auth.AuthChatManage
 import com.example.msger.feature_chat_manage.data.data_source.remote.auth.AuthChatManageImpl
-import com.example.msger.feature_chat_manage.data.data_source.remote.db.DatabaseChatManage
-import com.example.msger.feature_chat_manage.data.data_source.remote.db.DatabaseChatManageImpl
+import com.example.msger.feature_chat_manage.data.data_source.remote.db.RemoteDatabaseChatManage
+import com.example.msger.feature_chat_manage.data.data_source.remote.db.RemoteDatabaseChatManageImpl
 import com.example.msger.feature_chat_manage.data.repository.AuthChatManageRepositoryImpl
 import com.example.msger.feature_chat_manage.data.repository.DatabaseChatManageRepositoryImpl
 import com.example.msger.feature_chat_manage.domain.repository.AuthChatManageRepository
@@ -35,15 +36,16 @@ import com.example.msger.feature_onboarding.data.repository.AuthOnboardingReposi
 import com.example.msger.feature_onboarding.domain.repository.AuthOnboardingRepository
 import com.example.msger.feature_onboarding.domain.use_case.IsUserSignedInUseCase
 
-class AppContainer {
+class AppContainer(context: Context) {
     private val auth: Auth = AuthImpl()
     private val deepLinkHandler: DeepLinkHandler = DeepLinkHandlerImpl()
-    private val databaseChatManage: DatabaseChatManage = DatabaseChatManageImpl()
-    private val databaseChat: DatabaseChat = DatabaseChatImpl()
+    private val localDatabaseChatManage: ChatDao = AppDatabase.getInstance(context = context).chatDao()
+    private val remoteDatabaseChatManage: RemoteDatabaseChatManage = RemoteDatabaseChatManageImpl()
+    private val remoteDatabaseChat: RemoteDatabaseChat = RemoteDatabaseChatImpl()
     private val authOnboarding: AuthenticatorOnboarding = AuthenticatorOnboardingImpl()
     private val authOnboardingRepository: AuthOnboardingRepository = AuthOnboardingRepositoryImpl(auth = authOnboarding)
-    private val databaseChatManageRepository: DatabaseChatManageRepository = DatabaseChatManageRepositoryImpl(databaseChatManage)
-    private val databaseChatRepository: DatabaseChatRepository = DatabaseChatRepositoryImpl(dbRepository = databaseChat)
+    private val databaseChatManageRepository: DatabaseChatManageRepository = DatabaseChatManageRepositoryImpl(remoteDatabase = remoteDatabaseChatManage, localDatabase = localDatabaseChatManage)
+    private val databaseChatRepository: DatabaseChatRepository = DatabaseChatRepositoryImpl(dbRepository = remoteDatabaseChat)
     private val authRepository: AuthRepository = AuthRepositoryImpl(auth, deepLinkHandler)
 
     private val authChatManage: AuthChatManage = AuthChatManageImpl()
@@ -61,6 +63,5 @@ class AppContainer {
     val isUserSignedInUseCase: IsUserSignedInUseCase = IsUserSignedInUseCase(authOnboardingRepository = authOnboardingRepository)
     val joinChatUseCase: JoinChatUseCase = JoinChatUseCase(dbRepository = databaseChatManageRepository)
 
-    fun provideAppDatabase(context: Context): AppDatabase = AppDatabase.getInstance(context = context)
 
 }

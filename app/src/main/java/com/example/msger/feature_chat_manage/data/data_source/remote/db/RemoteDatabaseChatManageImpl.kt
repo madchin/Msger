@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
-class DatabaseChatManageImpl : DatabaseChatManage {
+class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
     private val dbUrl: String = "https://msger-eb05e-default-rtdb.europe-west1.firebasedatabase.app"
     private val db: FirebaseDatabase
         get() = Firebase.database(dbUrl)
@@ -26,7 +26,8 @@ class DatabaseChatManageImpl : DatabaseChatManage {
     private val membersRef: DatabaseReference
         get() = db.getReference("members")
 
-    private suspend fun isChatExist(chatId: String): Boolean = chatsRef.get().await().hasChild(chatId)
+    private suspend fun isChatExist(chatId: String): Boolean =
+        chatsRef.get().await().hasChild(chatId)
 
     override val currentUserId: String?
         get() = Firebase.auth.currentUser?.uid
@@ -48,6 +49,18 @@ class DatabaseChatManageImpl : DatabaseChatManage {
         awaitClose { chatsRef.removeEventListener(listener) }
     }
 
+    override suspend fun getChats(): List<Map<String,ChatDto>?> {
+        val dataSnapshot: DataSnapshot = membersRef.child(currentUserId!!).get().await()
+
+        return dataSnapshot
+            .children
+            .flatMap {
+                it.children.map { chat ->
+                    chat.getValue(mapOf<String, ChatDto>()::class.java)
+                }
+            }
+    }
+
     override suspend fun addChat(chat: ChatDto, member: MemberDto): String {
         val chatId: String = chatsRef.push().key ?: ""
 
@@ -63,7 +76,7 @@ class DatabaseChatManageImpl : DatabaseChatManage {
     }
 
     override suspend fun updateMemberChat(chatId: String, member: MemberDto) {
-        if(!isChatExist(chatId = chatId)) {
+        if (!isChatExist(chatId = chatId)) {
             throw IllegalArgumentException("Given chat id: $chatId not exists in database")
         }
         val chatMember: Map<String, MemberDto> = mapOf(chatId to member)

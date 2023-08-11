@@ -8,8 +8,7 @@ class MsgerApplication : Application() {
     lateinit var appContainer: AppContainer
     override fun onCreate() {
         super.onCreate()
-        appContainer = AppContainer()
-        appContainer.provideAppDatabase(this)
+        appContainer = AppContainer(this)
         androidPackageName = packageName
     }
 }

@@ -10,4 +10,6 @@ interface DatabaseChatManageRepository {
 
     suspend fun createChat(username: String, chat: Chat): String
     suspend fun joinChat(username: String, chatId: String)
+
+    suspend fun getChats(): List<Chat>
 }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-class DatabaseChatImpl : DatabaseChat {
+class RemoteDatabaseChatImpl : RemoteDatabaseChat {
 
     private val dbUrl: String = "https://msger-eb05e-default-rtdb.europe-west1.firebasedatabase.app"
 

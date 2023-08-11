@@ -5,7 +5,8 @@ import com.google.firebase.Timestamp
 
 data class ChatDto(
     val name: String? = null,
-    val created: Long = Timestamp.now().seconds
+    val created: Long = Timestamp.now().seconds,
+    val chatId: String? = null
 )
 
 fun ChatDto.toChat() = Chat(name = name ?: "", created = created)

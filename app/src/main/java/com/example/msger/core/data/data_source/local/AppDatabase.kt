@@ -5,10 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.msger.feature_chat_manage.data.data_source.local.db.ChatDao
-import com.example.msger.feature_chat_manage.data.data_source.local.entity.Chat
+import com.example.msger.feature_chat_manage.data.data_source.local.entity.ChatEntity
 
 @Database(
-    [Chat::class],
+    [ChatEntity::class],
     version = 1
 )
 abstract class AppDatabase : RoomDatabase() {
