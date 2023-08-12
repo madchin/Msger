@@ -8,3 +8,4 @@ data class Chat(
 )
 
 fun Chat.toChatDto() = ChatDto(name = name)
+

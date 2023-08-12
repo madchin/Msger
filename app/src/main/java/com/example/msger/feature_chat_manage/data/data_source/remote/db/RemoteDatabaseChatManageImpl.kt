@@ -35,8 +35,15 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
     override val chats: Flow<Result<List<ChatDto>>> = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val chatEntities = snapshot.children.map { dataSnapshot ->
-                    dataSnapshot.getValue(ChatDto::class.java) ?: ChatDto()
+                val chatEntities: List<ChatDto> = snapshot.children.flatMap {
+                    it.getValue(mapOf<String, ChatDto>()::class.java)
+                        ?.map { (chatId, chatInfo) ->
+                            ChatDto(
+                                name = chatInfo.name,
+                                created = chatInfo.created,
+                                chatId = chatId
+                            )
+                        } ?: listOf()
                 }
                 this@callbackFlow.trySend(Result.success(chatEntities))
             }
@@ -49,7 +56,7 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
         awaitClose { chatsRef.removeEventListener(listener) }
     }
 
-    override suspend fun getChats(): List<Map<String,ChatDto>?> {
+    override suspend fun getChats(): List<Map<String, ChatDto>?> {
         val dataSnapshot: DataSnapshot = membersRef.child(currentUserId!!).get().await()
 
         return dataSnapshot
