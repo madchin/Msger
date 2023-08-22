@@ -11,6 +11,9 @@ import com.example.msger.feature_chat_manage.domain.model.toChatDto
 import com.example.msger.feature_chat_manage.domain.model.toChatEntity
 import com.example.msger.feature_chat_manage.domain.repository.DatabaseChatManageRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class DatabaseChatManageRepositoryImpl(
@@ -21,27 +24,36 @@ class DatabaseChatManageRepositoryImpl(
     override val currentUserId: String?
         get() = remoteDatabase.currentUserId
 
-    override suspend fun getAllChats(): Resource<List<Chat>> {
-        val localChats = withContext(Dispatchers.IO) { localDatabase.getAllChats() }
-        val remoteChats = remoteDatabase.getAllChats()
-        if (localChats.isNotEmpty()) localChats.map { it.toChat() }
+    override fun getAllChats(): Flow<Resource<List<Chat>>> {
+        val localChats: Flow<Resource<List<Chat>>> =
+            localDatabase.getAllChats()
+                .map { Resource.Success(data = it.map { chatEntity -> chatEntity.toChat() }) }
 
-        return when (remoteChats) {
-            is Resource.Success -> Resource.Success(
-                remoteChats
-                    .data
-                    ?.filterNotNull()
-                    ?.map {
-                        it
-                            .values
-                            .map { Chat(name = it.name ?: "") }
-                    }?.flatten()
-            )
+        val remoteChats: Flow<Resource<List<Chat>>> = remoteDatabase.getAllChats().map {
+            when (it) {
+                is Resource.Success -> Resource.Success(it.data?.flatMap { chats ->
+                    chats?.values?.map { chat ->
+                        Chat(
+                            name = chat.name ?: ""
+                        )
+                    } ?: listOf()
+                })
 
-            is Resource.Error -> Resource.Error(message = remoteChats.message ?: "generic")
-            else -> Resource.Loading()
+                is Resource.Loading -> Resource.Loading()
+                is Resource.Error -> Resource.Error(message = it.message ?: "generic")
+            }
+        }
+
+
+        return combine(localChats, remoteChats) { local, remote ->
+            if (remote.data?.isNotEmpty() == false) {
+                remote
+            } else {
+                local
+            }
         }
     }
+
 
     override suspend fun createChat(username: String, chat: Chat): String {
         return withContext(Dispatchers.IO) {
@@ -63,7 +75,9 @@ class DatabaseChatManageRepositoryImpl(
     }
 
     override suspend fun deleteLocalChats() {
-        localDatabase.deleteAllChats()
+        withContext(Dispatchers.IO) {
+            localDatabase.deleteAllChats()
+        }
     }
 
 }

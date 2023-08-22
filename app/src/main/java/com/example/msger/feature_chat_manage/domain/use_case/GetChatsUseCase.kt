@@ -5,5 +5,5 @@ import com.example.msger.feature_chat_manage.domain.repository.DatabaseChatManag
 class GetChatsUseCase(
     private val dbRepository: DatabaseChatManageRepository
 ) {
-    suspend operator fun invoke() = dbRepository.getAllChats()
+    operator fun invoke() = dbRepository.getAllChats()
 }

@@ -7,8 +7,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -20,6 +22,7 @@ import com.example.msger.core.presentation.component.BodyLayout
 import com.example.msger.core.presentation.component.MsgerTopBar
 import com.example.msger.core.presentation.navigation.NavigationRoute
 import com.example.msger.core.presentation.util.ViewModelFactoryProvider
+import com.example.msger.core.util.Resource
 import com.example.msger.core.util.extension.openAndPopUp
 import com.example.msger.feature_authentication.presentation.reset_password.RecoverPasswordScreen
 import com.example.msger.feature_authentication.presentation.reset_password.ResetPasswordViewModel
@@ -31,6 +34,7 @@ import com.example.msger.feature_chat.presentation.chat.ChatScreen
 import com.example.msger.feature_chat.presentation.chat.ChatViewModel
 import com.example.msger.feature_chat.presentation.participant.ParticipantsScreen
 import com.example.msger.feature_chat.presentation.participant.ParticipantsViewModel
+import com.example.msger.feature_chat_manage.domain.model.Chat
 import com.example.msger.feature_chat_manage.presentation.chat_create.ChatCreateScreen
 import com.example.msger.feature_chat_manage.presentation.chat_create.ChatCreateViewModel
 import com.example.msger.feature_chat_manage.presentation.chat_join.ChatJoinScreen
@@ -143,7 +147,7 @@ fun MsgerApp(
             composable(route = NavigationRoute.ChatList.route) {
                 val viewModel: ChatListViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
-                val uiState = viewModel.chats
+                val uiState: Resource<List<Chat>> by viewModel.chats.collectAsStateWithLifecycle()
 
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
