@@ -1,19 +1,18 @@
 package com.example.msger.feature_chat_manage.data.data_source.remote.db
 
+import com.example.msger.core.util.Resource
 import com.example.msger.feature_chat_manage.data.data_source.remote.dto.ChatDto
 import com.example.msger.feature_chat_manage.data.data_source.remote.dto.MemberDto
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
     private val dbUrl: String = "https://msger-eb05e-default-rtdb.europe-west1.firebasedatabase.app"
@@ -32,41 +31,18 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
     override val currentUserId: String?
         get() = Firebase.auth.currentUser?.uid
 
-    override val chats: Flow<Result<List<ChatDto>>> = callbackFlow {
-        val listener = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val chatEntities: List<ChatDto> = snapshot.children.flatMap {
-                    it.getValue(mapOf<String, ChatDto>()::class.java)
-                        ?.map { (chatId, chatInfo) ->
-                            ChatDto(
-                                name = chatInfo.name,
-                                created = chatInfo.created,
-                                chatId = chatId
-                            )
-                        } ?: listOf()
-                }
-                this@callbackFlow.trySend(Result.success(chatEntities))
-            }
+    override suspend fun getAllChats(): Resource<List<Map<String, ChatDto>?>> =
+        withContext(Dispatchers.IO) {
+            val dataSnapshot: Task<DataSnapshot> = membersRef.child(currentUserId!!).get()
+            when {
+                dataSnapshot.isSuccessful -> Resource.Success(data = dataSnapshot.result.children.flatMap {
+                    it.children.map { chat -> chat.getValue(mapOf<String, ChatDto>()::class.java) }
+                })
 
-            override fun onCancelled(error: DatabaseError) {
-                this@callbackFlow.trySend(Result.failure(error.toException()))
+                dataSnapshot.isCanceled -> Resource.Error(message = dataSnapshot.exception?.message.toString())
+                else -> Resource.Loading()
             }
         }
-        chatsRef.addValueEventListener(listener)
-        awaitClose { chatsRef.removeEventListener(listener) }
-    }
-
-    override suspend fun getChats(): List<Map<String, ChatDto>?> {
-        val dataSnapshot: DataSnapshot = membersRef.child(currentUserId!!).get().await()
-
-        return dataSnapshot
-            .children
-            .flatMap {
-                it.children.map { chat ->
-                    chat.getValue(mapOf<String, ChatDto>()::class.java)
-                }
-            }
-    }
 
     override suspend fun addChat(chat: ChatDto, member: MemberDto): String {
         val chatId: String = chatsRef.push().key ?: ""

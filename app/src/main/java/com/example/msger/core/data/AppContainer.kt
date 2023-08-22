@@ -39,29 +39,46 @@ import com.example.msger.feature_onboarding.domain.use_case.IsUserSignedInUseCas
 class AppContainer(context: Context) {
     private val auth: Auth = AuthImpl()
     private val deepLinkHandler: DeepLinkHandler = DeepLinkHandlerImpl()
-    private val localDatabaseChatManage: ChatDao = AppDatabase.getInstance(context = context).chatDao()
+    private val localDatabaseChatManage: ChatDao =
+        AppDatabase.getInstance(context = context).chatDao()
     private val remoteDatabaseChatManage: RemoteDatabaseChatManage = RemoteDatabaseChatManageImpl()
     private val remoteDatabaseChat: RemoteDatabaseChat = RemoteDatabaseChatImpl()
     private val authOnboarding: AuthenticatorOnboarding = AuthenticatorOnboardingImpl()
-    private val authOnboardingRepository: AuthOnboardingRepository = AuthOnboardingRepositoryImpl(auth = authOnboarding)
-    private val databaseChatManageRepository: DatabaseChatManageRepository = DatabaseChatManageRepositoryImpl(remoteDatabase = remoteDatabaseChatManage, localDatabase = localDatabaseChatManage)
-    private val databaseChatRepository: DatabaseChatRepository = DatabaseChatRepositoryImpl(dbRepository = remoteDatabaseChat)
+    private val authOnboardingRepository: AuthOnboardingRepository =
+        AuthOnboardingRepositoryImpl(auth = authOnboarding)
+    private val databaseChatManageRepository: DatabaseChatManageRepository =
+        DatabaseChatManageRepositoryImpl(
+            remoteDatabase = remoteDatabaseChatManage,
+            localDatabase = localDatabaseChatManage
+        )
+    private val databaseChatRepository: DatabaseChatRepository =
+        DatabaseChatRepositoryImpl(dbRepository = remoteDatabaseChat)
     private val authRepository: AuthRepository = AuthRepositoryImpl(auth, deepLinkHandler)
 
     private val authChatManage: AuthChatManage = AuthChatManageImpl()
-    private val authChatManageRepository: AuthChatManageRepository = AuthChatManageRepositoryImpl(authChatManage = authChatManage)
+    private val authChatManageRepository: AuthChatManageRepository =
+        AuthChatManageRepositoryImpl(authChatManage = authChatManage)
 
-    val resetPasswordUseCase: ResetPasswordUseCase = ResetPasswordUseCase(authRepository = authRepository)
+    val resetPasswordUseCase: ResetPasswordUseCase =
+        ResetPasswordUseCase(authRepository = authRepository)
     val signInUseCase: SignInUseCase = SignInUseCase(authRepository = authRepository)
     val getEmailFromDeepLinkUseCase: GetEmailFromDeepLinkUseCase =
         GetEmailFromDeepLinkUseCase(authRepository = authRepository)
     val signUpUseCase: SignUpUseCase = SignUpUseCase(authRepository = authRepository)
-    val signOutUseCase: SignOutUseCase = SignOutUseCase(authChatManageRepository = authChatManageRepository)
-    val getChatsUseCase: GetChatsUseCase = GetChatsUseCase(dbRepository = databaseChatManageRepository)
-    val createChatUseCase: CreateChatUseCase = CreateChatUseCase(dbRepository = databaseChatManageRepository)
-    val getChatMembersUseCase: GetChatMembersUseCase = GetChatMembersUseCase(dbRepository = databaseChatRepository)
-    val isUserSignedInUseCase: IsUserSignedInUseCase = IsUserSignedInUseCase(authOnboardingRepository = authOnboardingRepository)
-    val joinChatUseCase: JoinChatUseCase = JoinChatUseCase(dbRepository = databaseChatManageRepository)
+    val signOutUseCase: SignOutUseCase = SignOutUseCase(
+        authChatManageRepository = authChatManageRepository,
+        dbRepository = databaseChatManageRepository
+    )
+    val getChatsUseCase: GetChatsUseCase =
+        GetChatsUseCase(dbRepository = databaseChatManageRepository)
+    val createChatUseCase: CreateChatUseCase =
+        CreateChatUseCase(dbRepository = databaseChatManageRepository)
+    val getChatMembersUseCase: GetChatMembersUseCase =
+        GetChatMembersUseCase(dbRepository = databaseChatRepository)
+    val isUserSignedInUseCase: IsUserSignedInUseCase =
+        IsUserSignedInUseCase(authOnboardingRepository = authOnboardingRepository)
+    val joinChatUseCase: JoinChatUseCase =
+        JoinChatUseCase(dbRepository = databaseChatManageRepository)
 
 
 }
