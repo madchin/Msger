@@ -1,6 +1,6 @@
-package com.example.msger.feature_chat.data.data_source.dto
+package com.example.msger.core.data.data_source.remote.dto
 
-import com.example.msger.feature_chat.domain.model.Member
+import com.example.msger.core.domain.model.Member
 
 data class MemberDto(
     val lastSeen: Long? = null,

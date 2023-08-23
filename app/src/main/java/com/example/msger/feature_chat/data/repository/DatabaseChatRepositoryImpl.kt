@@ -2,8 +2,8 @@ package com.example.msger.feature_chat.data.repository
 
 import com.example.msger.core.util.Resource
 import com.example.msger.feature_chat.data.data_source.db.RemoteDatabaseChat
-import com.example.msger.feature_chat.data.data_source.dto.toMember
-import com.example.msger.feature_chat.domain.model.Member
+import com.example.msger.core.data.data_source.remote.dto.toMember
+import com.example.msger.core.domain.model.Member
 import com.example.msger.feature_chat.domain.repository.DatabaseChatRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

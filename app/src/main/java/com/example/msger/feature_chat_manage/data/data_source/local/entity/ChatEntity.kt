@@ -9,8 +9,8 @@ import com.google.firebase.Timestamp
 data class ChatEntity(
     @PrimaryKey val id: Int? = null,
     val name: String? = null,
-    val created: Long? = Timestamp.now().seconds,
+    val lastSeen: Long? = Timestamp.now().seconds,
     val chatId: String? = null
 )
 
-fun ChatEntity.toChat() = Chat(name = name ?: "", created = created)
+fun ChatEntity.toChat() = Chat(name = name ?: "", lastSeen = lastSeen)

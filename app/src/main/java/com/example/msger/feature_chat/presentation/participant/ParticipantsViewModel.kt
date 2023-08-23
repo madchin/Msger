@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.msger.core.util.Resource
-import com.example.msger.feature_chat.domain.model.Member
+import com.example.msger.core.domain.model.Member
 import com.example.msger.feature_chat.domain.use_case.GetChatMembersUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

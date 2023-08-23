@@ -1,9 +1,8 @@
 package com.example.msger.feature_chat_manage.data.data_source.remote.db
 
+import com.example.msger.core.data.data_source.remote.dto.ChatDto
+import com.example.msger.core.data.data_source.remote.dto.MemberDto
 import com.example.msger.core.util.Resource
-import com.example.msger.feature_chat_manage.data.data_source.remote.dto.ChatDto
-import com.example.msger.feature_chat_manage.data.data_source.remote.dto.MemberDto
-import com.example.msger.feature_chat_manage.data.data_source.remote.dto.UserChat
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -40,14 +39,14 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
     override val currentUserId: String?
         get() = Firebase.auth.currentUser?.uid
 
-    override fun getAllChats(): Flow<Resource<List<Map<String, UserChat>?>>> = callbackFlow {
+    override fun getAllChats(): Flow<Resource<List<Map<String, MemberDto>?>>> = callbackFlow {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val currentUserChats = snapshot
                     .children
                     .filter { it.key == currentUserId }
                     .map { dataSnapshot ->
-                        dataSnapshot.getValue<Map<String, UserChat>>()
+                        dataSnapshot.getValue<Map<String, MemberDto>>()
                     }
 
                 this@callbackFlow.trySend(Resource.Success(data = currentUserChats))

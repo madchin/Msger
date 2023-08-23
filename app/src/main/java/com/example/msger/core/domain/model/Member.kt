@@ -1,4 +1,4 @@
-package com.example.msger.feature_chat.domain.model
+package com.example.msger.core.domain.model
 
 data class Member(
     val lastSeen: Long,
