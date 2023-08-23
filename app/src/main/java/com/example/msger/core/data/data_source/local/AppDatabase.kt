@@ -9,7 +9,7 @@ import com.example.msger.feature_chat_manage.data.data_source.local.entity.ChatE
 
 @Database(
     [ChatEntity::class],
-    version = 1
+    version = 2
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun chatDao(): ChatDao
@@ -27,6 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
                         AppDatabase::class.java,
                         DATABASE_NAME
                     )
+                    .fallbackToDestructiveMigration()
                     .build()
                     .also { instance = it }
             }
