@@ -21,17 +21,19 @@ class DatabaseChatManageRepositoryImpl(
     private val localDatabase: ChatDao
 ) : DatabaseChatManageRepository {
 
-    override val currentUserId: String?
-        get() = remoteDatabase.currentUserId
+    private val localChats: Flow<Resource<List<Chat>>> = localDatabase
+        .getAllChats()
+        .map {
+            when {
+                it.isEmpty() -> Resource.Loading()
+                else -> Resource.Success(data = it.map { chatEntity -> chatEntity.toChat() })
+            }
+        }
 
-    override fun getAllChats(): Flow<Resource<List<Chat>>> {
-        val localChats: Flow<Resource<List<Chat>>> =
-            localDatabase.getAllChats()
-                .map { Resource.Success(data = it.map { chatEntity -> chatEntity.toChat() }) }
-
-        val remoteChats: Flow<Resource<List<Chat>>> = remoteDatabase.getAllChats().map {
-            when (it) {
-                is Resource.Success -> Resource.Success(it.data?.flatMap { chats ->
+    private val remoteChats: Flow<Resource<List<Chat>>> = remoteDatabase.getAllChats().map {
+        when (it) {
+            is Resource.Success ->
+                Resource.Success(it.data?.flatMap { chats ->
                     chats?.values?.map { chat ->
                         Chat(
                             name = chat.name ?: ""
@@ -39,20 +41,19 @@ class DatabaseChatManageRepositoryImpl(
                     } ?: listOf()
                 })
 
-                is Resource.Loading -> Resource.Loading()
-                is Resource.Error -> Resource.Error(message = it.message ?: "generic")
-            }
-        }
 
-
-        return combine(localChats, remoteChats) { local, remote ->
-            if (remote.data?.isNotEmpty() == false) {
-                remote
-            } else {
-                local
-            }
+            is Resource.Error -> Resource.Error(message = it.message ?: "generic")
+            is Resource.Loading -> Resource.Loading()
         }
     }
+
+    override val currentUserId: String?
+        get() = remoteDatabase.currentUserId
+
+    override fun getAllChats(): Flow<Resource<List<Chat>>> =
+        combine(localChats, remoteChats) { local, remote ->
+            if (local.data?.isEmpty() == true) remote else local
+        }
 
 
     override suspend fun createChat(username: String, chat: Chat): String {

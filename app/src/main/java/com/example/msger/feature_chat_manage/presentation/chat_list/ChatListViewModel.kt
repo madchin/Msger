@@ -26,6 +26,7 @@ class ChatListViewModel(
     )
     val chats: StateFlow<Resource<List<Chat>>> = _chats
 
+
     fun signOut(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
             try {

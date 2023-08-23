@@ -9,7 +9,10 @@ data class ChatDto(
     val created: Long = Timestamp.now().seconds,
     val chatId: String? = null
 )
-
+data class UserChat(
+    val lastSeen: Double? = null,
+    val name: String? = null,
+)
 fun ChatDto.toChat() = Chat(name = name ?: "", created = created)
 
 fun ChatDto.toChatEntity() = ChatEntity(name = name, created = created, chatId = chatId)
