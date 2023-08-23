@@ -2,19 +2,12 @@ package com.example.msger.feature_chat_manage.data.data_source.remote.db
 
 import com.example.msger.core.data.data_source.remote.dto.ChatDto
 import com.example.msger.core.data.data_source.remote.dto.MemberDto
-import com.example.msger.core.util.Resource
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
@@ -36,30 +29,26 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
     private suspend fun isChatExist(chatId: String): Boolean =
         chatsRef.get().await().hasChild(chatId)
 
-    override val currentUserId: String?
-        get() = Firebase.auth.currentUser?.uid
+    override val currentUserId: String
+        get() = Firebase.auth.currentUser?.uid ?: ""
 
-    override fun getAllChats(): Flow<Resource<List<Map<String, MemberDto>?>>> = callbackFlow {
-        val listener = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val currentUserChats = snapshot
-                    .children
-                    .filter { it.key == currentUserId }
-                    .map { dataSnapshot ->
-                        dataSnapshot.getValue<Map<String, MemberDto>>()
-                    }
-
-                this@callbackFlow.trySend(Resource.Success(data = currentUserChats))
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                this@callbackFlow.trySend(Resource.Error(message = error.message))
-            }
-
+    override suspend fun getAllChats(): List<HashMap<String, MemberDto>?> {
+        if (Firebase.auth.currentUser?.uid == null) {
+            return listOf()
         }
-        membersRef.addValueEventListener(listener)
-        awaitClose { membersRef.removeEventListener(listener) }
+
+        val chatsRequest = membersRef.child(currentUserId).get().await()
+
+        val chatList = chatsRequest.children.mapNotNull {
+            val chatId = it.key ?: ""
+            val lastSeen = it.child("lastSeen").getValue<Long>() ?: 0
+            val username = it.child("name").getValue<String>() ?: ""
+
+            hashMapOf(chatId to MemberDto(name = username, lastSeen = lastSeen))
+        }
+        return chatList
     }
+
 
     override suspend fun addChat(chat: ChatDto, member: MemberDto): String {
         val chatId: String = chatsRef.push().key ?: ""
@@ -82,7 +71,7 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
         val chatMember: Map<String, MemberDto> = mapOf(chatId to member)
 
         membersRef
-            .child(currentUserId!!)
+            .child(currentUserId)
             .updateChildren(chatMember)
             .await()
     }
@@ -91,7 +80,7 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
         val chatMember: Map<String, MemberDto> = mapOf(chatId to member)
 
         membersRef
-            .child(currentUserId!!)
+            .child(currentUserId)
             .updateChildren(chatMember)
             .await()
     }

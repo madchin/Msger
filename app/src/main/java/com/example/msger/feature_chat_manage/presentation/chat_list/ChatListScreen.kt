@@ -33,8 +33,12 @@ fun HomeScreen(
             is Resource.Success -> {
                 items(uiState.data ?: listOf()) {
                     val date: String =
-                        SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).format(Date(it.lastSeen ?: 0))
-                    val supportingText = stringResource(id = R.string.chat_list_supporting_text_prefix) + date
+                        SimpleDateFormat(
+                            "MM/dd/yyyy",
+                            Locale.ENGLISH
+                        ).format(Date(it.lastSeen ?: 0))
+                    val supportingText =
+                        stringResource(id = R.string.chat_list_supporting_text_prefix) + date
                     val headlineText: String = it.name
                     ChatListItem(
                         headlineText = headlineText,

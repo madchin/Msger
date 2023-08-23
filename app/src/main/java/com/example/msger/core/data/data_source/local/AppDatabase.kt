@@ -9,7 +9,7 @@ import com.example.msger.feature_chat_manage.data.data_source.local.entity.ChatE
 
 @Database(
     [ChatEntity::class],
-    version = 2
+    version = 4
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun chatDao(): ChatDao
