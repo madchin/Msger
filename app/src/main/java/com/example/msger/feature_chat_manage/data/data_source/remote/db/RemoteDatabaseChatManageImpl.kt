@@ -29,20 +29,20 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
     private suspend fun isChatExist(chatId: String): Boolean =
         chatsRef.get().await().hasChild(chatId)
 
-    override val currentUserId: String
-        get() = Firebase.auth.currentUser?.uid ?: ""
+    override val currentUserId: String?
+        get() = Firebase.auth.currentUser?.uid
 
     override suspend fun getAllChats(): List<HashMap<String, MemberDto>?> {
-        if (Firebase.auth.currentUser?.uid == null) {
+        if (currentUserId == null) {
             return listOf()
         }
 
-        val chatsRequest = membersRef.child(currentUserId).get().await()
+        val chatsRequest = membersRef.child(currentUserId!!).get().await()
 
-        val chatList = chatsRequest.children.mapNotNull {
-            val chatId = it.key ?: ""
-            val lastSeen = it.child("lastSeen").getValue<Long>() ?: 0
-            val username = it.child("name").getValue<String>() ?: ""
+        val chatList: List<HashMap<String,MemberDto>?> = chatsRequest.children.mapNotNull {
+            val chatId: String = it.key ?: ""
+            val lastSeen: Long = it.child("lastSeen").getValue<Long>() ?: 0
+            val username: String = it.child("name").getValue<String>() ?: ""
 
             hashMapOf(chatId to MemberDto(name = username, lastSeen = lastSeen))
         }
@@ -68,10 +68,11 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
         if (!isChatExist(chatId = chatId)) {
             throw IllegalArgumentException("Given chat id: $chatId not exists in database")
         }
+
         val chatMember: Map<String, MemberDto> = mapOf(chatId to member)
 
         membersRef
-            .child(currentUserId)
+            .child(currentUserId!!)
             .updateChildren(chatMember)
             .await()
     }
@@ -80,7 +81,7 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
         val chatMember: Map<String, MemberDto> = mapOf(chatId to member)
 
         membersRef
-            .child(currentUserId)
+            .child(currentUserId!!)
             .updateChildren(chatMember)
             .await()
     }
