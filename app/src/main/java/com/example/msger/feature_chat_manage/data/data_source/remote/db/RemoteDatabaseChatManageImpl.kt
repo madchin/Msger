@@ -15,6 +15,8 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
         const val DB_URL = "https://msger-eb05e-default-rtdb.europe-west1.firebasedatabase.app"
         const val CHATS_DB_FIELD = "chats"
         const val MEMBERS_DB_FIELD = "members"
+        const val NAME_DB_FIELD = "name"
+        const val LAST_SEEN_DB_FIELD = "lastSeen"
     }
 
     private val db: FirebaseDatabase
@@ -41,8 +43,8 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
 
         val chatList: List<HashMap<String,MemberDto>?> = chatsRequest.children.mapNotNull {
             val chatId: String = it.key ?: ""
-            val lastSeen: Long = it.child("lastSeen").getValue<Long>() ?: 0
-            val username: String = it.child("name").getValue<String>() ?: ""
+            val lastSeen: Long = it.child(LAST_SEEN_DB_FIELD).getValue<Long>() ?: 0
+            val username: String = it.child(NAME_DB_FIELD).getValue<String>() ?: ""
 
             hashMapOf(chatId to MemberDto(name = username, lastSeen = lastSeen))
         }
