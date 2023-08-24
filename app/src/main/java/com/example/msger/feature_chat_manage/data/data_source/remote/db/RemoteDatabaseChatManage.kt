@@ -12,5 +12,5 @@ interface RemoteDatabaseChatManage {
     suspend fun getAllChats(): List<HashMap<String, ChatMemberDto>?>
     suspend fun addMemberChat(chatId: String, member: ChatMemberDto)
 
-    suspend fun getChat(chatId: String): Map<String, ChatDto>
+    suspend fun getChat(chatId: String): ChatDto?
 }

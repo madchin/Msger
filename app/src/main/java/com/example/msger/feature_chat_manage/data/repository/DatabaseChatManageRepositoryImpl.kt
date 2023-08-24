@@ -1,5 +1,6 @@
 package com.example.msger.feature_chat_manage.data.repository
 
+import com.example.msger.core.data.data_source.remote.dto.ChatDto
 import com.example.msger.core.data.data_source.remote.dto.ChatMemberDto
 import com.example.msger.core.data.data_source.remote.dto.mapToChatEntities
 import com.example.msger.core.data.data_source.remote.dto.mapToChats
@@ -28,10 +29,12 @@ class DatabaseChatManageRepositoryImpl(
         .map {
             when {
                 it.isEmpty() -> {
-                    val remoteChats: List<HashMap<String, ChatMemberDto>?> = remoteDatabase.getAllChats()
+                    val remoteChats: List<HashMap<String, ChatMemberDto>?> =
+                        remoteDatabase.getAllChats()
                     localDatabase.upsertChats(chats = remoteChats.mapToChatEntities())
                     Resource.Success(data = remoteChats.mapToChats())
                 }
+
                 else -> Resource.Success(data = it.map { chatEntity -> chatEntity.toChat() })
             }
         }
@@ -54,8 +57,18 @@ class DatabaseChatManageRepositoryImpl(
 
     override suspend fun joinChat(username: String, chatId: String) {
         withContext(Dispatchers.IO) {
-            remoteDatabase.updateMemberChat(chatId = chatId, member = ChatMemberDto(username = username))
-            localDatabase.upsertChat(ChatEntity(chatName = "xD", chatId = chatId, username = username))
+            remoteDatabase.updateMemberChat(
+                chatId = chatId,
+                member = ChatMemberDto(username = username)
+            )
+            val chat: ChatDto? = remoteDatabase.getChat(chatId = chatId)
+            localDatabase.upsertChat(
+                ChatEntity(
+                    chatName = chat?.name,
+                    chatId = chatId,
+                    username = username
+                )
+            )
         }
     }
 
@@ -68,7 +81,14 @@ class DatabaseChatManageRepositoryImpl(
     override suspend fun joinChatFromChatList(chatId: String) {
         withContext(Dispatchers.IO) {
             val chatToJoin: ChatEntity = localDatabase.getChat(id = chatId)
-            remoteDatabase.updateMemberChat(chatId = chatId, member = ChatMemberDto(lastSeen = Timestamp.now().seconds, username = chatToJoin.username, chatName = chatToJoin.chatName))
+            remoteDatabase.updateMemberChat(
+                chatId = chatId,
+                member = ChatMemberDto(
+                    lastSeen = Timestamp.now().seconds,
+                    username = chatToJoin.username,
+                    chatName = chatToJoin.chatName
+                )
+            )
             localDatabase.upsertChat(chatToJoin.copy(lastSeen = Timestamp.now().seconds))
         }
     }

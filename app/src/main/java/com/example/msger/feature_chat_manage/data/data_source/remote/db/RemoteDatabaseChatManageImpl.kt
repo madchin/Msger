@@ -43,13 +43,19 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
 
         val chatsRequest: DataSnapshot = membersRef.child(currentUserId!!).get().await()
 
-        val chatList: List<HashMap<String,ChatMemberDto>?> = chatsRequest.children.mapNotNull {
+        val chatList: List<HashMap<String, ChatMemberDto>?> = chatsRequest.children.mapNotNull {
             val chatId: String = it.key ?: ""
             val lastSeen: Long = it.child(LAST_SEEN_DB_FIELD).getValue<Long>() ?: 0
             val username: String = it.child(USERNAME_DB_FIELD).getValue<String>() ?: ""
             val chatName: String = it.child(CHAT_NAME_DB_FIELD).getValue<String>() ?: ""
 
-            hashMapOf(chatId to ChatMemberDto(username = username, lastSeen = lastSeen, chatName = chatName))
+            hashMapOf(
+                chatId to ChatMemberDto(
+                    username = username,
+                    lastSeen = lastSeen,
+                    chatName = chatName
+                )
+            )
         }
         return chatList
     }
@@ -61,7 +67,6 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
         if (chatId.isEmpty()) {
             throw UnsupportedOperationException("Chat id has not been generated.")
         }
-
         chatsRef.child(chatId).setValue(chat).await()
 
         addMemberChat(chatId = chatId, member = member.copy(chatName = chat.name))
@@ -73,8 +78,9 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
         if (!isChatExist(chatId = chatId)) {
             throw IllegalArgumentException("Given chat id: $chatId not exists in database")
         }
-        val chat: ChatDto? = getChat(chatId = chatId)["name"]
-        val chatMember: Map<String, ChatMemberDto> = mapOf(chatId to member.copy(chatName = chat?.name))
+        val chat: ChatDto? = getChat(chatId = chatId)
+        val chatMember: Map<String, ChatMemberDto> =
+            mapOf(chatId to member.copy(chatName = chat?.name))
 
         membersRef
             .child(currentUserId!!)
@@ -84,8 +90,10 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
     }
 
     override suspend fun addMemberChat(chatId: String, member: ChatMemberDto) {
-        val chat: ChatDto? = getChat(chatId = chatId)["name"]
-        val chatMember: Map<String, ChatMemberDto> = mapOf(chatId to member.copy(chatName = chat?.name))
+        val chat: ChatDto? = getChat(chatId = chatId)
+
+        val chatMember: Map<String, ChatMemberDto> =
+            mapOf(chatId to member.copy(chatName = chat?.name))
 
         membersRef
             .child(currentUserId!!)
@@ -93,9 +101,9 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
             .await()
     }
 
-    override suspend fun getChat(chatId: String): Map<String, ChatDto> {
+    override suspend fun getChat(chatId: String): ChatDto? {
         val chat: DataSnapshot = chatsRef.child(chatId).get().await()
 
-        return chat.getValue<Map<String,ChatDto>>() ?: mapOf()
+        return chat.getValue<ChatDto>()
     }
 }
