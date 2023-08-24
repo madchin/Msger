@@ -1,6 +1,6 @@
 package com.example.msger.feature_chat_manage.data.repository
 
-import com.example.msger.core.data.data_source.remote.dto.MemberDto
+import com.example.msger.core.data.data_source.remote.dto.ChatMemberDto
 import com.example.msger.core.data.data_source.remote.dto.mapToChatEntities
 import com.example.msger.core.data.data_source.remote.dto.mapToChats
 import com.example.msger.core.util.Resource
@@ -12,6 +12,7 @@ import com.example.msger.feature_chat_manage.domain.model.Chat
 import com.example.msger.feature_chat_manage.domain.model.toChatDto
 import com.example.msger.feature_chat_manage.domain.model.toChatEntity
 import com.example.msger.feature_chat_manage.domain.repository.DatabaseChatManageRepository
+import com.google.firebase.Timestamp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -27,7 +28,7 @@ class DatabaseChatManageRepositoryImpl(
         .map {
             when {
                 it.isEmpty() -> {
-                    val remoteChats: List<HashMap<String, MemberDto>?> = remoteDatabase.getAllChats()
+                    val remoteChats: List<HashMap<String, ChatMemberDto>?> = remoteDatabase.getAllChats()
                     localDatabase.upsertChats(chats = remoteChats.mapToChatEntities())
                     Resource.Success(data = remoteChats.mapToChats())
                 }
@@ -43,7 +44,7 @@ class DatabaseChatManageRepositoryImpl(
         return withContext(Dispatchers.IO) {
             val chatId: String = remoteDatabase.addChat(
                 chat = chat.toChatDto(),
-                member = MemberDto(name = username)
+                member = ChatMemberDto(username = username)
             )
             localDatabase.upsertChat(chat = chat.toChatEntity(chatId = chatId))
 
@@ -53,14 +54,22 @@ class DatabaseChatManageRepositoryImpl(
 
     override suspend fun joinChat(username: String, chatId: String) {
         withContext(Dispatchers.IO) {
-            remoteDatabase.updateMemberChat(chatId = chatId, member = MemberDto(name = username))
-            localDatabase.upsertChat(ChatEntity(name = "xD", chatId = chatId))
+            remoteDatabase.updateMemberChat(chatId = chatId, member = ChatMemberDto(username = username))
+            localDatabase.upsertChat(ChatEntity(chatName = "xD", chatId = chatId, username = username))
         }
     }
 
     override suspend fun deleteLocalChats() {
         withContext(Dispatchers.IO) {
             localDatabase.deleteAllChats()
+        }
+    }
+
+    override suspend fun joinChatFromChatList(chatId: String) {
+        withContext(Dispatchers.IO) {
+            val chatToJoin: ChatEntity = localDatabase.getChat(id = chatId)
+            remoteDatabase.updateMemberChat(chatId = chatId, member = ChatMemberDto(lastSeen = Timestamp.now().seconds, username = chatToJoin.username, chatName = chatToJoin.chatName))
+            localDatabase.upsertChat(chatToJoin.copy(lastSeen = Timestamp.now().seconds))
         }
     }
 

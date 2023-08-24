@@ -40,7 +40,7 @@ object ViewModelFactoryProvider {
             ChatListViewModel(
                 signOutUseCase = application.appContainer.signOutUseCase,
                 getChatsUseCase = application.appContainer.getChatsUseCase,
-                joinChatUseCase = application.appContainer.joinChatUseCase
+                joinChatFromChatListUseCase = application.appContainer.joinChatFromChatListUseCase
             )
         }
         initializer {

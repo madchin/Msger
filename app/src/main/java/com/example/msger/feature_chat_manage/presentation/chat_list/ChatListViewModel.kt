@@ -6,7 +6,7 @@ import com.example.msger.core.presentation.navigation.NavigationRoute
 import com.example.msger.core.util.Resource
 import com.example.msger.feature_chat_manage.domain.model.Chat
 import com.example.msger.feature_chat_manage.domain.use_case.GetChatsUseCase
-import com.example.msger.feature_chat_manage.domain.use_case.JoinChatUseCase
+import com.example.msger.feature_chat_manage.domain.use_case.JoinChatFromChatListUseCase
 import com.example.msger.feature_chat_manage.domain.use_case.SignOutUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class ChatListViewModel(
     private val signOutUseCase: SignOutUseCase,
-    private val joinChatUseCase: JoinChatUseCase,
+    private val joinChatFromChatListUseCase: JoinChatFromChatListUseCase,
     getChatsUseCase: GetChatsUseCase
 ) : ViewModel() {
 
@@ -38,12 +38,12 @@ class ChatListViewModel(
         }
     }
 
-    fun joinChat(openAndPopUp: (String, String) -> Unit) {
+    fun joinChat(chatId: String, openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
             try {
-
+                joinChatFromChatListUseCase(chatId)
                 openAndPopUp(
-                    NavigationRoute.Chat.withArgs(""),
+                    NavigationRoute.Chat.withArgs(chatId),
                     NavigationRoute.ChatList.route
                 )
             } catch (e: Throwable) {

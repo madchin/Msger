@@ -13,4 +13,6 @@ interface DatabaseChatManageRepository {
     fun getAllChats(): Flow<Resource<List<Chat>>>
 
     suspend fun deleteLocalChats()
+
+    suspend fun joinChatFromChatList(chatId: String)
 }
