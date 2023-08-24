@@ -49,7 +49,7 @@ class DatabaseChatManageRepositoryImpl(
                 chat = chat.toChatDto(),
                 member = ChatMemberDto(username = username)
             )
-            localDatabase.upsertChat(chat = chat.toChatEntity(chatId = chatId))
+            localDatabase.upsertChat(chat = chat.toChatEntity(chatId = chatId, username = username))
 
             chatId
         }

@@ -11,7 +11,7 @@ interface ChatDao {
     @Query("SELECT * FROM chat")
     fun getAllChats(): Flow<List<ChatEntity>>
 
-    @Query("SELECT * FROM chat WHERE id=:id")
+    @Query("SELECT * FROM chat WHERE chatId=:id")
     suspend fun getChat(id: String): ChatEntity
 
     @Upsert
