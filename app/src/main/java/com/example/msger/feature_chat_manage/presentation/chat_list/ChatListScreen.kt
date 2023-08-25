@@ -43,7 +43,12 @@ fun HomeScreen(
                     ChatListItem(
                         headlineText = headlineText,
                         supportingText = supportingText,
-                        onItemClick = { viewModel.joinChat(chatId = it.id ?: "", openAndPopUp = openAndPopUp) }
+                        onItemClick = {
+                            viewModel.joinChat(
+                                chatId = it.id ?: "",
+                                openAndPopUp = openAndPopUp
+                            )
+                        }
                     )
                 }
             }

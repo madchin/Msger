@@ -9,7 +9,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
     private companion object {
@@ -36,74 +39,77 @@ class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
     override val currentUserId: String?
         get() = Firebase.auth.currentUser?.uid
 
-    override suspend fun getAllChats(): List<HashMap<String, ChatMemberDto>?> {
-        if (currentUserId == null) {
-            return listOf()
-        }
+    override suspend fun getAllChats(): List<Map<String, ChatMemberDto>?> =
+        withContext(Dispatchers.IO) {
+            if (currentUserId == null) {
+                listOf<Map<String, ChatMemberDto>?>()
+            }
+            val chats: DataSnapshot = membersRef.child(currentUserId!!).get().asDeferred().await()
+            val chatList: List<Map<String, ChatMemberDto>?> = chats.children.mapNotNull {
+                val chatId: String = it.key ?: ""
+                val lastSeen: Long = it.child(LAST_SEEN_DB_FIELD).getValue<Long>() ?: 0
+                val username: String = it.child(USERNAME_DB_FIELD).getValue<String>() ?: ""
+                val chatName: String = it.child(CHAT_NAME_DB_FIELD).getValue<String>() ?: ""
 
-        val chatsRequest: DataSnapshot = membersRef.child(currentUserId!!).get().await()
-
-        val chatList: List<HashMap<String, ChatMemberDto>?> = chatsRequest.children.mapNotNull {
-            val chatId: String = it.key ?: ""
-            val lastSeen: Long = it.child(LAST_SEEN_DB_FIELD).getValue<Long>() ?: 0
-            val username: String = it.child(USERNAME_DB_FIELD).getValue<String>() ?: ""
-            val chatName: String = it.child(CHAT_NAME_DB_FIELD).getValue<String>() ?: ""
-
-            hashMapOf(
-                chatId to ChatMemberDto(
-                    username = username,
-                    lastSeen = lastSeen,
-                    chatName = chatName
+                mapOf(
+                    chatId to ChatMemberDto(
+                        username = username,
+                        lastSeen = lastSeen,
+                        chatName = chatName
+                    )
                 )
-            )
+            }
+            chatList
         }
-        return chatList
-    }
 
 
-    override suspend fun addChat(chat: ChatDto, member: ChatMemberDto): String {
-        val chatId: String = chatsRef.push().key ?: ""
+    override suspend fun addChat(chat: ChatDto, member: ChatMemberDto): String =
+        withContext(Dispatchers.IO) {
+            val chatId: String = chatsRef.push().key ?: ""
 
-        if (chatId.isEmpty()) {
-            throw UnsupportedOperationException("Chat id has not been generated.")
+            if (chatId.isEmpty()) {
+                throw UnsupportedOperationException("Chat id has not been generated.")
+            }
+            chatsRef.child(chatId).setValue(chat).await()
+
+            addMemberChat(chatId = chatId, member = member.copy(chatName = chat.name))
+
+            chatId
         }
-        chatsRef.child(chatId).setValue(chat).await()
-
-        addMemberChat(chatId = chatId, member = member.copy(chatName = chat.name))
-
-        return chatId
-    }
 
     override suspend fun updateMemberChat(chatId: String, member: ChatMemberDto) {
-        if (!isChatExist(chatId = chatId)) {
-            throw IllegalArgumentException("Given chat id: $chatId not exists in database")
+        withContext(Dispatchers.IO) {
+            if (!isChatExist(chatId = chatId)) {
+                throw IllegalArgumentException("Given chat id: $chatId not exists in database")
+            }
+            val chat: ChatDto? = getChat(chatId = chatId)
+            val chatMember: Map<String, ChatMemberDto> =
+                mapOf(chatId to member.copy(chatName = chat?.name))
+
+            membersRef
+                .child(currentUserId!!)
+                .updateChildren(chatMember)
+                .await()
         }
-        val chat: ChatDto? = getChat(chatId = chatId)
-        val chatMember: Map<String, ChatMemberDto> =
-            mapOf(chatId to member.copy(chatName = chat?.name))
-
-        membersRef
-            .child(currentUserId!!)
-            .updateChildren(chatMember)
-            .await()
-
     }
 
     override suspend fun addMemberChat(chatId: String, member: ChatMemberDto) {
-        val chat: ChatDto? = getChat(chatId = chatId)
+        withContext(Dispatchers.IO) {
+            val chat: ChatDto? = getChat(chatId = chatId)
 
-        val chatMember: Map<String, ChatMemberDto> =
-            mapOf(chatId to member.copy(chatName = chat?.name))
+            val chatMember: Map<String, ChatMemberDto> =
+                mapOf(chatId to member.copy(chatName = chat?.name))
 
-        membersRef
-            .child(currentUserId!!)
-            .updateChildren(chatMember)
-            .await()
+            membersRef
+                .child(currentUserId!!)
+                .updateChildren(chatMember)
+                .await()
+        }
     }
 
-    override suspend fun getChat(chatId: String): ChatDto? {
+    override suspend fun getChat(chatId: String): ChatDto? = withContext(Dispatchers.IO) {
         val chat: DataSnapshot = chatsRef.child(chatId).get().await()
 
-        return chat.getValue<ChatDto>()
+        chat.getValue<ChatDto>()
     }
 }
