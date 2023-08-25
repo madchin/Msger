@@ -38,14 +38,11 @@ class ChatListViewModel(
         }
     }
 
-    fun joinChat(chatId: String, openAndPopUp: (String, String) -> Unit) {
+    fun joinChat(chatId: String, navigateToChat: (String) -> Unit) {
         viewModelScope.launch {
             try {
                 joinChatFromChatListUseCase(chatId)
-                openAndPopUp(
-                    NavigationRoute.Chat.withArgs(chatId),
-                    NavigationRoute.ChatList.route
-                )
+                navigateToChat(NavigationRoute.Chat.withArgs(chatId))
             } catch (e: Throwable) {
 
             }

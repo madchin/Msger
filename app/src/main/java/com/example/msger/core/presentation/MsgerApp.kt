@@ -156,6 +156,7 @@ fun MsgerApp(
                     modifier = bodyLayoutModifier
                 ) {
                     HomeScreen(
+                        navigateToChat = navController::navigate,
                         openAndPopUp = navController::openAndPopUp,
                         viewModel = viewModel,
                         uiState = uiState,

@@ -20,6 +20,7 @@ import java.util.Locale
 
 @Composable
 fun HomeScreen(
+    navigateToChat: (String) -> Unit,
     openAndPopUp: (String, String) -> Unit,
     viewModel: ChatListViewModel,
     uiState: Resource<List<Chat>>,
@@ -44,10 +45,8 @@ fun HomeScreen(
                         headlineText = headlineText,
                         supportingText = supportingText,
                         onItemClick = {
-                            viewModel.joinChat(
-                                chatId = it.id ?: "",
-                                openAndPopUp = openAndPopUp
-                            )
+                            viewModel.joinChat(chatId = it.id ?: "",navigateToChat)
+
                         }
                     )
                 }
