@@ -2,6 +2,7 @@ package com.example.msger.feature_chat_manage.data.repository
 
 import com.example.msger.core.data.data_source.remote.dto.ChatDto
 import com.example.msger.core.data.data_source.remote.dto.ChatMemberDto
+import com.example.msger.core.data.data_source.remote.dto.mapToChatEntities
 import com.example.msger.core.data.data_source.remote.dto.mapToChats
 import com.example.msger.core.util.Resource
 import com.example.msger.feature_chat_manage.data.data_source.local.db.ChatDao
@@ -32,7 +33,7 @@ class DatabaseChatManageRepositoryImpl(
             // TODO("fix getting chats when network is not available / poor")
 
             val remoteChats: List<Map<String, ChatMemberDto>?> = remoteDatabase.getAllChats()
-
+            localDatabase.upsertChats(remoteChats.mapToChatEntities())
             emit(Resource.Success(remoteChats.mapToChats()))
         }
     }.flowOn(Dispatchers.IO)
