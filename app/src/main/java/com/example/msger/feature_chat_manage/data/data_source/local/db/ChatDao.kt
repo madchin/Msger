@@ -7,7 +7,7 @@ import com.example.msger.feature_chat_manage.data.data_source.local.entity.ChatE
 
 @Dao
 interface ChatDao {
-    @Query("SELECT * FROM chat")
+    @Query("SELECT * FROM chat ORDER BY lastSeen DESC")
     suspend fun getAllChats(): List<ChatEntity>
 
     @Query("SELECT * FROM chat WHERE chatId=:id")
