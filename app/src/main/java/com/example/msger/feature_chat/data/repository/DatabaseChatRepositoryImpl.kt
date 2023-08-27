@@ -33,7 +33,8 @@ class DatabaseChatRepositoryImpl(
         dbRepository.getChatMessages(chatId).map {
             when (it) {
                 is Resource.Success -> {
-                    val messages: List<Message> = it.data?.mapToMessages() ?: listOf()
+                    val messages: List<Message> = it.data?.mapToMessages()
+                        ?.sortedBy { message -> message.timestamp }  ?: listOf()
                     Resource.Success(data = messages)
                 }
 
