@@ -1,5 +1,6 @@
 package com.example.msger.core.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +31,7 @@ import com.example.msger.feature_authentication.presentation.sign_in.SignInScree
 import com.example.msger.feature_authentication.presentation.sign_in.SignInViewModel
 import com.example.msger.feature_authentication.presentation.sign_up.SignUpScreen
 import com.example.msger.feature_authentication.presentation.sign_up.SignUpViewModel
+import com.example.msger.feature_chat.domain.model.Message
 import com.example.msger.feature_chat.presentation.chat.ChatScreen
 import com.example.msger.feature_chat.presentation.chat.ChatViewModel
 import com.example.msger.feature_chat.presentation.participant.ParticipantsScreen
@@ -204,13 +206,16 @@ fun MsgerApp(
                 )
             ) {
                 val viewModel: ChatViewModel = viewModel(factory = ViewModelFactoryProvider.Factory)
-
+                val uiState: Resource<List<Message>> by viewModel.messages.collectAsStateWithLifecycle()
+                Log.d("TAG", "state is ${uiState.data}")
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
+                    errorMessage = uiState.message ?: "generic",
                     modifier = bodyLayoutModifier
                 ) {
                     ChatScreen(
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        uiState = uiState
                     )
                 }
             }

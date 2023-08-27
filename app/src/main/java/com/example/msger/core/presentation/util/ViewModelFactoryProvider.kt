@@ -51,7 +51,8 @@ object ViewModelFactoryProvider {
         }
         initializer {
             ChatViewModel(
-                this.createSavedStateHandle()
+                savedStateHandle = this.createSavedStateHandle(),
+                getChatMessagesUseCase = application.appContainer.getChatMessagesUseCase
             )
         }
         initializer {

@@ -17,6 +17,7 @@ import com.example.msger.feature_chat.data.data_source.db.RemoteDatabaseChatImpl
 import com.example.msger.feature_chat.data.repository.DatabaseChatRepositoryImpl
 import com.example.msger.feature_chat.domain.repository.DatabaseChatRepository
 import com.example.msger.feature_chat.domain.use_case.GetChatMembersUseCase
+import com.example.msger.feature_chat.domain.use_case.GetChatMessagesUseCase
 import com.example.msger.feature_chat_manage.data.data_source.local.db.ChatDao
 import com.example.msger.feature_chat_manage.data.data_source.remote.auth.AuthChatManage
 import com.example.msger.feature_chat_manage.data.data_source.remote.auth.AuthChatManageImpl
@@ -81,5 +82,5 @@ class AppContainer(context: Context) {
     val joinChatUseCase: JoinChatUseCase =
         JoinChatUseCase(dbRepository = databaseChatManageRepository)
     val joinChatFromChatListUseCase: JoinChatFromChatListUseCase = JoinChatFromChatListUseCase(dbRepository = databaseChatManageRepository)
-
+    val getChatMessagesUseCase: GetChatMessagesUseCase = GetChatMessagesUseCase(dbRepository = databaseChatRepository)
 }

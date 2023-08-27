@@ -1,5 +1,6 @@
 package com.example.msger.core.data.data_source.remote.dto
 
+import com.example.msger.core.domain.model.Member
 import com.example.msger.feature_chat_manage.data.data_source.local.entity.ChatEntity
 import com.example.msger.feature_chat_manage.domain.model.Chat
 
@@ -20,5 +21,11 @@ fun List<Map<String, ChatMemberDto>?>.mapToChatEntities(): List<ChatEntity> = th
             lastSeen = chatInfo.lastSeen,
             chatId = chatId
         )
+    } ?: listOf()
+}
+
+fun List<Map<String,ChatMemberDto>?>.mapToMembers(): List<Member> = this.flatMap {
+    it?.values?.map { chatInfo: ChatMemberDto ->
+        Member(lastSeen = chatInfo.lastSeen ?: 0, name = chatInfo.username ?: "")
     } ?: listOf()
 }
