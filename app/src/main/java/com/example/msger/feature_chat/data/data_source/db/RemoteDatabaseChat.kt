@@ -11,4 +11,5 @@ interface RemoteDatabaseChat {
 
     fun getChatMessages(chatId: String): Flow<Resource<List<Map<String, MessageDto>?>>>
 
+    suspend fun addMessage(chatId: String, content: String)
 }

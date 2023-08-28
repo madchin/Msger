@@ -9,4 +9,6 @@ interface DatabaseChatRepository {
     fun getChatMembers(chatId: String):  Flow<Resource<List<Member>>>
 
     fun getChatMessages(chatId: String): Flow<Resource<List<Message>>>
+
+    suspend fun sendMessage(chatId: String, content: String)
 }

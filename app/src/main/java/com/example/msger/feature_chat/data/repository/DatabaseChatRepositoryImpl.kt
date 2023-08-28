@@ -7,7 +7,9 @@ import com.example.msger.feature_chat.data.data_source.db.RemoteDatabaseChat
 import com.example.msger.feature_chat.data.data_source.dto.mapToMessages
 import com.example.msger.feature_chat.domain.model.Message
 import com.example.msger.feature_chat.domain.repository.DatabaseChatRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 class DatabaseChatRepositoryImpl(
@@ -27,7 +29,7 @@ class DatabaseChatRepositoryImpl(
 
                 else -> Resource.Loading()
             }
-        }
+        }.flowOn(Dispatchers.IO)
 
     override fun getChatMessages(chatId: String): Flow<Resource<List<Message>>> =
         dbRepository.getChatMessages(chatId).map {
@@ -44,5 +46,9 @@ class DatabaseChatRepositoryImpl(
 
                 else -> Resource.Loading()
             }
-        }
+        }.flowOn(Dispatchers.IO)
+
+    override suspend fun sendMessage(chatId: String, content: String) {
+        dbRepository.addMessage(chatId = chatId, content = content)
+    }
 }
