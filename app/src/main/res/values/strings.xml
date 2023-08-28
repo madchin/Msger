@@ -21,4 +21,5 @@
     <string name="chat_id">Chat ID</string>
     <string name="enter_chat_label">Enter chat</string>
     <string name="chat_list_supporting_text_prefix">Last seen:</string>
+    <string name="send_chat_message">Send message</string>
 </resources>
