@@ -1,7 +1,6 @@
 package com.example.msger.feature_chat.presentation.chat
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -22,33 +21,32 @@ fun ChatScreen(viewModel: ChatViewModel, uiState: Resource<List<Message>>) {
     val supportText: Int =
         if (viewModel.isInputValid) R.string.send_chat_message else R.string.input_required
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
-    
-    Column(modifier = Modifier.fillMaxSize()) {
+
+    Column {
         when (uiState) {
             is Resource.Success -> {
                 val lastElementIndex: Int =
                     if (uiState.data?.isNotEmpty() == true) uiState.data.lastIndex else 0
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.weight(1f),
                     state = rememberLazyListState(initialFirstVisibleItemIndex = lastElementIndex).also {
                         coroutineScope.launch {
                             it.animateScrollToItem(lastElementIndex)
                         }
-                    }) {
+                    }
+                ) {
                     items(uiState.data ?: listOf(), key = { it.content + it.timestamp }) {
                         ChatMessage(message = it)
                     }
 
                 }
-                Column(modifier = Modifier.weight(1f)) {
-                    InputChatMessage(
-                        isError = !viewModel.isInputValid,
-                        value = viewModel.inputValue,
-                        onDonePress = viewModel::sendMessage,
-                        onValueChange = viewModel::onInputChange,
-                        supportText = supportText,
-                    )
-                }
+                InputChatMessage(
+                    isError = !viewModel.isInputValid,
+                    value = viewModel.inputValue,
+                    onDonePress = viewModel::sendMessage,
+                    onValueChange = viewModel::onInputChange,
+                    supportText = supportText,
+                )
             }
 
             is Resource.Error -> {}

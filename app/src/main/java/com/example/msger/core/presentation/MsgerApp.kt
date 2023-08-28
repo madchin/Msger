@@ -1,6 +1,5 @@
 package com.example.msger.core.presentation
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -207,7 +206,7 @@ fun MsgerApp(
             ) {
                 val viewModel: ChatViewModel = viewModel(factory = ViewModelFactoryProvider.Factory)
                 val uiState: Resource<List<Message>> by viewModel.messages.collectAsStateWithLifecycle()
-                Log.d("TAG", "state is ${uiState.data}")
+
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
                     errorMessage = uiState.message ?: "generic",
