@@ -1,6 +1,5 @@
 package com.example.msger.feature_chat_manage.data.repository
 
-import com.example.msger.core.data.data_source.remote.dto.ChatDto
 import com.example.msger.core.data.data_source.remote.dto.ChatMemberDto
 import com.example.msger.core.data.data_source.remote.dto.mapToChatEntities
 import com.example.msger.core.util.Resource
@@ -15,6 +14,7 @@ import com.example.msger.feature_chat_manage.domain.model.toChatEntity
 import com.example.msger.feature_chat_manage.domain.repository.DatabaseChatManageRepository
 import com.google.firebase.Timestamp
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -25,18 +25,24 @@ class DatabaseChatManageRepositoryImpl(
 ) : DatabaseChatManageRepository {
 
     override fun getAllChats(): Flow<Resource<List<Chat>>> = flow {
-        val localChats: List<ChatEntity> = localDatabase.getAllChats()
+        while (true) {
+            val localChats: List<ChatEntity> = localDatabase.getAllChats()
 
-        if (localChats.isNotEmpty()) {
-            emit(Resource.Success(localChats.map { chatEntity -> chatEntity.toChat() }))
-        } else {
-            // TODO("fix getting chats when network is not available / poor")
-
-            val remoteChats: List<Map<String, ChatMemberDto>?> = remoteDatabase.getAllChats()
-            localDatabase.upsertChats(remoteChats.mapToChatEntities())
-            emit(Resource.Success(localChats.map { chatEntity -> chatEntity.toChat() }))
+            if (localChats.isNotEmpty()) {
+                emit(
+                    Resource.Success(
+                        localDatabase.getAllChats().map { chatEntity -> chatEntity.toChat() })
+                )
+            } else {
+                // TODO("fix getting chats when network is not available / poor")
+                val remoteChats: List<Map<String, ChatMemberDto>?> = remoteDatabase.getAllChats()
+                localDatabase.upsertChats(remoteChats.mapToChatEntities())
+                emit(Resource.Success(localChats.map { chatEntity -> chatEntity.toChat() }))
+            }
+            delay(1000)
         }
-    }.flowOn(Dispatchers.IO)
+    }
+        .flowOn(Dispatchers.IO)
 
     override val currentUserId: String?
         get() = remoteDatabase.currentUserId
@@ -57,12 +63,10 @@ class DatabaseChatManageRepositoryImpl(
             chatId = chatId,
             member = ChatMemberDto(username = username)
         )
-        val chat: ChatDto? = remoteDatabase.getChat(chatId = chatId)
         localDatabase.upsertChat(
             ChatEntity(
-                chatName = chat?.name,
                 chatId = chatId,
-                username = username
+                username = username,
             )
         )
     }
