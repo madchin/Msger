@@ -33,7 +33,7 @@ fun ChatScreen(viewModel: ChatViewModel, uiState: Resource<List<Message>>) {
                     modifier = Modifier.weight(1f),
                     state = lazyListState
                 ) {
-                    items(uiState.data ?: listOf(), key = { it.content + it.timestamp }) {
+                    items(uiState.data ?: listOf(), key = { it.key }) {
                         ChatMessage(message = it)
                     }
 
