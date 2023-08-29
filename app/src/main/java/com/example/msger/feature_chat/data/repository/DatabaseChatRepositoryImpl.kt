@@ -1,9 +1,11 @@
 package com.example.msger.feature_chat.data.repository
 
+import android.util.Log
 import com.example.msger.core.data.data_source.remote.dto.mapToMembers
 import com.example.msger.core.domain.model.Member
 import com.example.msger.core.util.Resource
 import com.example.msger.feature_chat.data.data_source.db.RemoteDatabaseChat
+import com.example.msger.feature_chat.data.data_source.db.RemoteDatabaseChatImpl
 import com.example.msger.feature_chat.data.data_source.dto.mapToMessages
 import com.example.msger.feature_chat.domain.model.Message
 import com.example.msger.feature_chat.domain.repository.DatabaseChatRepository
@@ -13,7 +15,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 class DatabaseChatRepositoryImpl(
-    private val dbRepository: RemoteDatabaseChat
+    private val dbRepository: RemoteDatabaseChat = RemoteDatabaseChatImpl()
 ) : DatabaseChatRepository {
     override fun getChatMembers(chatId: String): Flow<Resource<List<Member>>> =
         dbRepository.getChatMembers(chatId).map {
@@ -35,6 +37,7 @@ class DatabaseChatRepositoryImpl(
         dbRepository.getChatMessages(chatId).map {
             when (it) {
                 is Resource.Success -> {
+                    Log.d("TAG", "chat id in repository is $chatId")
                     val messages: List<Message> = it.data?.mapToMessages()
                         ?.sortedBy { message -> message.timestamp }  ?: listOf()
                     Resource.Success(data = messages)

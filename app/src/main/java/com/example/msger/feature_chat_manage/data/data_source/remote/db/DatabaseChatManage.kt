@@ -3,7 +3,7 @@ package com.example.msger.feature_chat_manage.data.data_source.remote.db
 import com.example.msger.core.data.data_source.remote.dto.ChatDto
 import com.example.msger.core.data.data_source.remote.dto.ChatMemberDto
 
-interface RemoteDatabaseChatManage {
+interface DatabaseChatManage {
 
     val currentUserId: String?
     suspend fun addChat(chat: ChatDto, member: ChatMemberDto): String

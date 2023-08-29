@@ -22,44 +22,44 @@ val CreationExtras.application: MsgerApplication
 object ViewModelFactoryProvider {
     val Factory = viewModelFactory {
         initializer {
-            ResetPasswordViewModel(application.appContainer.resetPasswordUseCase)
+            ResetPasswordViewModel(application.appContainer.authenticationUseCases.resetPasswordUseCase)
         }
         initializer {
             SignInViewModel(
-                application.appContainer.getEmailFromDeepLinkUseCase,
-                application.appContainer.signInUseCase
+                application.appContainer.authenticationUseCases.getEmailFromDeepLinkUseCase,
+                application.appContainer.authenticationUseCases.signInUseCase
             )
         }
         initializer {
-            SignUpViewModel(application.appContainer.signUpUseCase)
+            SignUpViewModel(application.appContainer.authenticationUseCases.signUpUseCase)
         }
         initializer {
-            SplashScreenViewModel(application.appContainer.isUserSignedInUseCase)
+            SplashScreenViewModel(application.appContainer.onboardingUseCasesWrapper.isUserSignedInUseCase)
         }
         initializer {
             ChatListViewModel(
-                signOutUseCase = application.appContainer.signOutUseCase,
-                getChatsUseCase = application.appContainer.getChatsUseCase,
-                joinChatFromChatListUseCase = application.appContainer.joinChatFromChatListUseCase
+                signOutUseCase = application.appContainer.chatManageUseCasesWrapper.signOutUseCase,
+                getChatsUseCase = application.appContainer.chatManageUseCasesWrapper.getChatsUseCase,
+                joinChatFromChatListUseCase = application.appContainer.chatManageUseCasesWrapper.joinChatFromChatListUseCase
             )
         }
         initializer {
-            ChatCreateViewModel(application.appContainer.createChatUseCase)
+            ChatCreateViewModel(application.appContainer.chatManageUseCasesWrapper.createChatUseCase)
         }
         initializer {
-            ChatJoinViewModel(application.appContainer.joinChatUseCase)
+            ChatJoinViewModel(application.appContainer.chatManageUseCasesWrapper.joinChatUseCase)
         }
         initializer {
             ChatViewModel(
                 savedStateHandle = this.createSavedStateHandle(),
-                getChatMessagesUseCase = application.appContainer.getChatMessagesUseCase,
-                sendMessageUseCase = application.appContainer.sendMessageUseCase
+                getChatMessagesUseCase = application.appContainer.chatUseCasesWrapper.getChatMessagesUseCase,
+                sendMessageUseCase = application.appContainer.chatUseCasesWrapper.sendMessageUseCase
             )
         }
         initializer {
             ParticipantsViewModel(
                 this.createSavedStateHandle(),
-                application.appContainer.getChatMembersUseCase
+                application.appContainer.chatUseCasesWrapper.getChatMembersUseCase
             )
         }
     }

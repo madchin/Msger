@@ -1,5 +1,6 @@
 package com.example.msger.feature_chat.presentation.chat
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,6 +24,9 @@ class ChatViewModel(
 ) : ViewModel() {
 
     val chatId: String = checkNotNull(savedStateHandle["chatId"])
+    init {
+        Log.d("TAG", "chat is $chatId")
+    }
     private val _messages: StateFlow<Resource<List<Message>>> =
         getChatMessagesUseCase(chatId = chatId).stateIn(
             scope = viewModelScope,
@@ -42,7 +46,7 @@ class ChatViewModel(
 
     fun sendMessage() {
         viewModelScope.launch {
-            if (inputValue.isNotBlank()) {
+            if (isChatMessageValid(message = inputValue)) {
                 sendMessageUseCase(chatId = chatId, content = inputValue)
                 inputValue = ""
             }

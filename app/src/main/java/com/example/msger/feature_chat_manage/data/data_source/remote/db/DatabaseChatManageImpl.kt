@@ -14,7 +14,7 @@ import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class RemoteDatabaseChatManageImpl : RemoteDatabaseChatManage {
+class DatabaseChatManageImpl : DatabaseChatManage {
     private companion object {
         const val DB_URL = "https://msger-eb05e-default-rtdb.europe-west1.firebasedatabase.app"
         const val CHATS_DB_FIELD = "chats"

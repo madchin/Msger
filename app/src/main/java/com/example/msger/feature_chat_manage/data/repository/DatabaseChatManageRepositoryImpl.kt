@@ -7,7 +7,8 @@ import com.example.msger.core.util.Resource
 import com.example.msger.feature_chat_manage.data.data_source.local.db.ChatDao
 import com.example.msger.feature_chat_manage.data.data_source.local.entity.ChatEntity
 import com.example.msger.feature_chat_manage.data.data_source.local.entity.toChat
-import com.example.msger.feature_chat_manage.data.data_source.remote.db.RemoteDatabaseChatManage
+import com.example.msger.feature_chat_manage.data.data_source.remote.db.DatabaseChatManage
+import com.example.msger.feature_chat_manage.data.data_source.remote.db.DatabaseChatManageImpl
 import com.example.msger.feature_chat_manage.domain.model.Chat
 import com.example.msger.feature_chat_manage.domain.model.toChatDto
 import com.example.msger.feature_chat_manage.domain.model.toChatEntity
@@ -19,7 +20,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class DatabaseChatManageRepositoryImpl(
-    private val remoteDatabase: RemoteDatabaseChatManage,
+    private val remoteDatabase: DatabaseChatManage = DatabaseChatManageImpl(),
     private val localDatabase: ChatDao
 ) : DatabaseChatManageRepository {
 

@@ -6,11 +6,11 @@ import kotlinx.coroutines.coroutineScope
 
 
 class SignOutUseCase(
-    private val authChatManageRepository: AuthChatManageRepository,
+    private val authRepository: AuthChatManageRepository,
     private val dbRepository: DatabaseChatManageRepository
-){
+) {
     suspend operator fun invoke() {
-        authChatManageRepository.signOut()
+        authRepository.signOut()
         coroutineScope {
             dbRepository.deleteLocalChats()
         }

@@ -3,7 +3,7 @@ package com.example.msger.feature_onboarding.domain.use_case
 import com.example.msger.feature_onboarding.domain.repository.AuthOnboardingRepository
 
 class IsUserSignedInUseCase(
-    private val authOnboardingRepository: AuthOnboardingRepository
+    private val authRepository: AuthOnboardingRepository
 ) {
-    operator fun invoke() = authOnboardingRepository.isSignedIn
+    operator fun invoke() = authRepository.isSignedIn
 }

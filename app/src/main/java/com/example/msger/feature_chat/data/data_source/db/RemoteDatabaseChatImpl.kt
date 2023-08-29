@@ -1,5 +1,6 @@
 package com.example.msger.feature_chat.data.data_source.db
 
+import android.util.Log
 import com.example.msger.core.data.data_source.remote.dto.ChatMemberDto
 import com.example.msger.core.util.Resource
 import com.example.msger.core.util.exception.GenericException
@@ -76,6 +77,7 @@ class RemoteDatabaseChatImpl : RemoteDatabaseChat {
                     this@callbackFlow.trySend(Resource.Error(message = error.message))
                 }
             }
+            Log.d("TAG", "chat id in data source is $chatId")
             messagesRef.addValueEventListener(listener)
             awaitClose { messagesRef.removeEventListener(listener) }
         }
