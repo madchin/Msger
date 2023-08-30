@@ -1,5 +1,6 @@
 package com.example.msger.feature_chat_manage.data.repository
 
+import com.example.msger.core.data.data_source.remote.dto.ChatDto
 import com.example.msger.core.data.data_source.remote.dto.ChatMemberDto
 import com.example.msger.core.data.data_source.remote.dto.mapToChatEntities
 import com.example.msger.core.util.Resource
@@ -59,14 +60,16 @@ class DatabaseChatManageRepositoryImpl(
     }
 
     override suspend fun joinChat(username: String, chatId: String) {
-        remoteDatabase.updateMemberChat(
+        val chatDto: ChatDto? = remoteDatabase.updateMemberChat(
             chatId = chatId,
             member = ChatMemberDto(username = username)
         )
+
         localDatabase.upsertChat(
             ChatEntity(
                 chatId = chatId,
                 username = username,
+                chatName = chatDto?.name
             )
         )
     }

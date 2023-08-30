@@ -44,7 +44,8 @@ class DatabaseChatManageImpl : DatabaseChatManage {
             if (currentUserId == null) {
                 return@withContext emptyList()
             }
-            val chats: DataSnapshot = membersRef.child(currentUserId ?: "").get().asDeferred().await()
+            val chats: DataSnapshot =
+                membersRef.child(currentUserId ?: "").get().asDeferred().await()
             val chatList: List<Map<String, ChatMemberDto>?> = chats.children.mapNotNull {
                 val chatId: String = it.key ?: ""
                 val lastSeen: Long = it.child(LAST_SEEN_DB_FIELD).getValue<Long>() ?: 0
@@ -77,7 +78,7 @@ class DatabaseChatManageImpl : DatabaseChatManage {
             chatId
         }
 
-    override suspend fun updateMemberChat(chatId: String, member: ChatMemberDto) {
+    override suspend fun updateMemberChat(chatId: String, member: ChatMemberDto): ChatDto? =
         withContext(Dispatchers.IO) {
             if (!isChatExist(chatId = chatId)) {
                 throw IllegalArgumentException("Given chat id: $chatId not exists in database")
@@ -90,8 +91,10 @@ class DatabaseChatManageImpl : DatabaseChatManage {
                 .child(currentUserId!!)
                 .updateChildren(chatMember)
                 .await()
+
+            return@withContext chat
         }
-    }
+
 
     override suspend fun addMemberChat(chatId: String, member: ChatMemberDto) {
         withContext(Dispatchers.IO) {
