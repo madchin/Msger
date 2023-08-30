@@ -19,6 +19,7 @@ fun List<Map<String, ChatMemberDto>?>.mapToChatEntities(): List<ChatEntity> = th
         ChatEntity(
             chatName = chatInfo.chatName ?: "",
             lastSeen = chatInfo.lastSeen,
+            username = chatInfo.username,
             chatId = chatId
         )
     } ?: listOf()
