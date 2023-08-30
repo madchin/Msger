@@ -42,9 +42,9 @@ class DatabaseChatManageImpl : DatabaseChatManage {
     override suspend fun getAllChats(): List<Map<String, ChatMemberDto>?> =
         withContext(Dispatchers.IO) {
             if (currentUserId == null) {
-                listOf<Map<String, ChatMemberDto>?>()
+                return@withContext emptyList()
             }
-            val chats: DataSnapshot = membersRef.child(currentUserId!!).get().asDeferred().await()
+            val chats: DataSnapshot = membersRef.child(currentUserId ?: "").get().asDeferred().await()
             val chatList: List<Map<String, ChatMemberDto>?> = chats.children.mapNotNull {
                 val chatId: String = it.key ?: ""
                 val lastSeen: Long = it.child(LAST_SEEN_DB_FIELD).getValue<Long>() ?: 0
