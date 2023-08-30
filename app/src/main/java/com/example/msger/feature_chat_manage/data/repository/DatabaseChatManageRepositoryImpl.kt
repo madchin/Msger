@@ -37,7 +37,7 @@ class DatabaseChatManageRepositoryImpl(
             } else {
                 // TODO("fix getting chats when network is not available / poor")
                 val remoteChats: List<Map<String, ChatMemberDto>?> = remoteDatabase.getAllChats()
-                localDatabase.upsertChats(remoteChats.mapToChatEntities())
+                localDatabase.insertChats(remoteChats.mapToChatEntities())
                 emit(Resource.Success(localChats.map { chatEntity -> chatEntity.toChat() }))
             }
             delay(1000)
@@ -54,7 +54,7 @@ class DatabaseChatManageRepositoryImpl(
             chat = chat.toChatDto(),
             member = ChatMemberDto(username = username)
         )
-        localDatabase.upsertChat(chat = chat.toChatEntity(chatId = chatId, username = username))
+        localDatabase.insertChat(chat = chat.toChatEntity(chatId = chatId, username = username))
 
         return chatId
     }
@@ -65,11 +65,12 @@ class DatabaseChatManageRepositoryImpl(
             member = ChatMemberDto(username = username)
         )
 
-        localDatabase.upsertChat(
+        localDatabase.insertChat(
             ChatEntity(
                 chatId = chatId,
                 username = username,
-                chatName = chatDto?.name
+                chatName = chatDto?.name,
+                lastSeen = Timestamp.now().seconds
             )
         )
     }
@@ -85,7 +86,7 @@ class DatabaseChatManageRepositoryImpl(
                 chatName = chatToJoin.chatName
             )
         )
-        localDatabase.upsertChat(chatToJoin.copy(lastSeen = Timestamp.now().seconds))
+        localDatabase.insertChat(chatToJoin.copy(lastSeen = Timestamp.now().seconds))
     }
 
 }
