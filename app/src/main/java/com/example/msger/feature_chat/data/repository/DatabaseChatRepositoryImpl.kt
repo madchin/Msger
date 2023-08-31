@@ -1,6 +1,6 @@
 package com.example.msger.feature_chat.data.repository
 
-import com.example.msger.core.data.data_source.remote.dto.mapToMembers
+import com.example.msger.core.data.data_source.remote.dto.toMember
 import com.example.msger.core.domain.model.Member
 import com.example.msger.core.util.Resource
 import com.example.msger.feature_chat.data.data_source.db.RemoteDatabaseChat
@@ -20,7 +20,9 @@ class DatabaseChatRepositoryImpl(
         dbRepository.getChatMembers(chatId).map {
             when (it) {
                 is Resource.Success -> {
-                    val chatMembers: List<Member> = it.data?.mapToMembers() ?: listOf()
+                    val chatMembers: List<Member> = it.data?.map { chatMemberDto ->
+                        chatMemberDto?.toMember() ?: Member(lastSeen = 0, name = "")
+                    } ?: emptyList()
                     Resource.Success(data = chatMembers)
                 }
 

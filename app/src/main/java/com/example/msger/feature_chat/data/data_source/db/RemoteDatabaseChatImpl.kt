@@ -39,16 +39,17 @@ class RemoteDatabaseChatImpl : RemoteDatabaseChat {
     private val currentUserId: String?
         get() = Firebase.auth.currentUser?.uid
 
-    override fun getChatMembers(chatId: String): Flow<Resource<List<Map<String, ChatMemberDto>?>>> =
+    override fun getChatMembers(chatId: String): Flow<Resource<List<ChatMemberDto?>>> =
         callbackFlow {
             val listener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val chatMembers: List<Map<String, ChatMemberDto>?> = snapshot
+                    val chatMembers: List<ChatMemberDto?> = snapshot
+                        .child(currentUserId!!)
                         .children
                         .filter { it.key == chatId }
                         .map { dataSnapshot ->
                             dataSnapshot
-                                .getValue<Map<String, ChatMemberDto>>()
+                                .getValue<ChatMemberDto>()
                         }
 
                     this@callbackFlow.trySend(Resource.Success(data = chatMembers))

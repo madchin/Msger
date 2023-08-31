@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.msger.core.domain.model.Member
 import com.example.msger.core.presentation.component.BodyLayout
 import com.example.msger.core.presentation.component.MsgerTopBar
 import com.example.msger.core.presentation.navigation.NavigationRoute
@@ -226,12 +227,13 @@ fun MsgerApp(
             ) {
                 val viewModel: ParticipantsViewModel =
                     viewModel(factory = ViewModelFactoryProvider.Factory)
+                val uiState: Resource<List<Member>> by viewModel.uiState.collectAsStateWithLifecycle()
                 BodyLayout(
                     shouldShowSnackbar = shouldSnackbarBeShown(route),
                     modifier = bodyLayoutModifier
                 ) {
                     ParticipantsScreen(
-                        viewModel = viewModel
+                        uiState = uiState
                     )
                 }
             }

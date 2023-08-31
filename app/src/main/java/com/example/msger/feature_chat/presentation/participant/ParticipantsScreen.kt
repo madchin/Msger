@@ -1,24 +1,23 @@
 package com.example.msger.feature_chat.presentation.participant
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.msger.core.util.Resource
 import com.example.msger.core.domain.model.Member
+import com.example.msger.core.util.Resource
 
 @Composable
 fun ParticipantsScreen(
-    viewModel: ParticipantsViewModel
+    uiState: Resource<List<Member>>
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val uiState: Resource<List<Member>> by viewModel.uiState.collectAsStateWithLifecycle()
+        Log.d("TAG", "data is ${uiState.data}")
         uiState.data?.forEach {
             Text(text = it.name)
             Text(text = it.lastSeen.toString())
