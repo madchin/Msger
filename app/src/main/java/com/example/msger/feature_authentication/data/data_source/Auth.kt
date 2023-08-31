@@ -10,6 +10,5 @@ interface Auth {
     suspend fun signUp(email: String, password: String)
     suspend fun signIn(email: String, password: String)
     suspend fun resetPassword(email: String)
-    fun signOut()
 
 }

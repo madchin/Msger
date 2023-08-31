@@ -30,8 +30,6 @@ class AuthRepositoryImpl(
         auth.signIn(email, password)
     }
 
-    override fun signOut() = auth.signOut()
-
     override suspend fun resetPassword(email: String) {
         auth.resetPassword(email)
     }

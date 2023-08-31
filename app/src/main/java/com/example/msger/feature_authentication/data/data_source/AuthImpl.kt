@@ -6,10 +6,12 @@ import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class AuthImpl : Auth {
     private val auth: FirebaseAuth
@@ -30,14 +32,13 @@ class AuthImpl : Auth {
         email: String,
         password: String
     ) {
-        auth.createUserWithEmailAndPassword(email.trim(), password).await()
+        withContext(Dispatchers.IO) { auth.createUserWithEmailAndPassword(email.trim(), password).await() }
     }
 
     override suspend fun signIn(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email.trim(), password).await()
+        withContext(Dispatchers.IO) { auth.signInWithEmailAndPassword(email.trim(), password).await() }
     }
 
-    override fun signOut() = auth.signOut()
 
     override suspend fun resetPassword(email: String) {
         val url = "$DEEP_LINK_SCHEME$DEEP_LINK_HOST/change-password?email=$email"
@@ -47,7 +48,7 @@ class AuthImpl : Auth {
             .setAndroidPackageName(androidPackageName, false, null)
             .build()
 
-        auth.sendPasswordResetEmail(email.trim(), actionCodeSettings).await()
+        withContext(Dispatchers.IO) { auth.sendPasswordResetEmail(email.trim(), actionCodeSettings).await() }
     }
 
     companion object {

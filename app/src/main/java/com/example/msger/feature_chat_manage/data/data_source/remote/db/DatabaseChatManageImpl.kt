@@ -10,7 +10,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
@@ -45,7 +44,7 @@ class DatabaseChatManageImpl : DatabaseChatManage {
                 return@withContext emptyList()
             }
             val chats: DataSnapshot =
-                membersRef.child(currentUserId ?: "").get().asDeferred().await()
+                membersRef.child(currentUserId ?: "").get().await()
             val chatList: List<Map<String, ChatMemberDto>?> = chats.children.mapNotNull {
                 val chatId: String = it.key ?: ""
                 val lastSeen: Long = it.child(LAST_SEEN_DB_FIELD).getValue<Long>() ?: 0

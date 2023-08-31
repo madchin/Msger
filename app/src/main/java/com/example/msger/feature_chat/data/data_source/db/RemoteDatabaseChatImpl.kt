@@ -14,10 +14,12 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class RemoteDatabaseChatImpl : RemoteDatabaseChat {
     private companion object {
@@ -84,19 +86,22 @@ class RemoteDatabaseChatImpl : RemoteDatabaseChat {
         }
 
     override suspend fun addMessage(chatId: String, content: String) {
-        if (currentUserId == null) throw UserNotAuthorizedException()
-        suspend fun getMessageSender(): String =
-            membersRef.child(currentUserId!!).child(chatId).child(USERNAME_DB_FIELD).get().await()
-                .getValue<String>() ?: ""
+        withContext(Dispatchers.IO) {
+            if (currentUserId == null) throw UserNotAuthorizedException()
+            suspend fun getMessageSender(): String =
+                membersRef.child(currentUserId!!).child(chatId).child(USERNAME_DB_FIELD).get()
+                    .await()
+                    .getValue<String>() ?: ""
 
-        val sender: String = getMessageSender()
-        val messageId: String = messagesRef.push().key ?: ""
-        val message = MessageDto(content = content, sender = sender)
+            val sender: String = getMessageSender()
+            val messageId: String = messagesRef.push().key ?: ""
+            val message = MessageDto(content = content, sender = sender)
 
-        try {
-            messagesRef.child(chatId).child(messageId).setValue(message)
-        } catch (e: Throwable) {
-            throw GenericException()
+            try {
+                messagesRef.child(chatId).child(messageId).setValue(message)
+            } catch (e: Throwable) {
+                throw GenericException()
+            }
         }
     }
 }
