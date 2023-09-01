@@ -10,8 +10,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.compose.MsgerTheme
 import com.example.msger.core.presentation.MsgerApp
-import com.example.msger.ui.theme.MsgerTheme
 
 
 class MainActivity : ComponentActivity() {
