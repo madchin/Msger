@@ -35,8 +35,8 @@ class DatabaseChatManageRepositoryImpl(
                         localDatabase.getAllChats().map { chatEntity -> chatEntity.toChat() })
                 )
             } else {
-                // TODO("fix getting chats when network is not available / poor")
                 val remoteChats: List<Map<String, ChatMemberDto>?> = remoteDatabase.getAllChats()
+
                 localDatabase.insertChats(remoteChats.mapToChatEntities())
                 emit(Resource.Success(localChats.map { chatEntity -> chatEntity.toChat() }))
             }
@@ -54,22 +54,29 @@ class DatabaseChatManageRepositoryImpl(
             chat = chat.toChatDto(),
             member = ChatMemberDto(username = username)
         )
+        remoteDatabase.addMember(
+            chatId = chatId,
+            member = ChatMemberDto(username = username, chatName = chat.name)
+        )
         localDatabase.insertChat(chat = chat.toChatEntity(chatId = chatId, username = username))
 
         return chatId
     }
 
     override suspend fun joinChat(username: String, chatId: String) {
-        val chatDto: ChatDto? = remoteDatabase.updateMemberChat(
+
+        val chatDto: ChatDto = remoteDatabase.updateMember(
             chatId = chatId,
             member = ChatMemberDto(username = username)
-        )
+        ) ?: throw NoSuchFieldException("Unable to join chat because chat not exists")
+
+        remoteDatabase.updateChat(chat = chatDto)
 
         localDatabase.insertChat(
             ChatEntity(
                 chatId = chatId,
                 username = username,
-                chatName = chatDto?.name,
+                chatName = chatDto.name,
                 lastSeen = Timestamp.now().seconds
             )
         )
@@ -78,7 +85,7 @@ class DatabaseChatManageRepositoryImpl(
     override suspend fun deleteLocalChats() = localDatabase.deleteAllChats()
     override suspend fun joinChatFromChatList(chatId: String) {
         val chatToJoin: ChatEntity = localDatabase.getChat(id = chatId)
-        remoteDatabase.updateMemberChat(
+        remoteDatabase.updateMember(
             chatId = chatId,
             member = ChatMemberDto(
                 lastSeen = Timestamp.now().seconds,
