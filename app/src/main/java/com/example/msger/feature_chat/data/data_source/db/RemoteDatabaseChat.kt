@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface RemoteDatabaseChat {
 
-    fun getChatMembers(chatId: String): Flow<Resource<List<ChatMemberDto?>>>
+    suspend fun getChatMemberInfo(chatId: String, userUid: String): ChatMemberDto?
+
+    fun getChatMembersUid(chatId: String): Flow<List<String>>
 
     fun getChatMessages(chatId: String): Flow<Resource<List<Map<String, MessageDto>?>>>
 

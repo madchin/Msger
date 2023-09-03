@@ -27,6 +27,7 @@ class RemoteDatabaseChatImpl : RemoteDatabaseChat {
         const val USERNAME_DB_FIELD = "username"
         const val MEMBERS_DB_FIELD = "members"
         const val MESSAGES_DB_FIELD = "messages"
+        const val CHATS_DB_FIELD = "chats"
     }
 
     private val db: FirebaseDatabase
@@ -35,34 +36,44 @@ class RemoteDatabaseChatImpl : RemoteDatabaseChat {
     private val membersRef: DatabaseReference
         get() = db.getReference(MEMBERS_DB_FIELD)
 
+    private val chatsRef: DatabaseReference
+        get() = db.getReference(CHATS_DB_FIELD)
+
     private val messagesRef: DatabaseReference
         get() = db.getReference(MESSAGES_DB_FIELD)
 
     private val currentUserId: String?
         get() = Firebase.auth.currentUser?.uid
 
-    override fun getChatMembers(chatId: String): Flow<Resource<List<ChatMemberDto?>>> =
+
+    override suspend fun getChatMemberInfo(chatId: String, userUid: String): ChatMemberDto? {
+        val snapshot: DataSnapshot = membersRef
+            .child(userUid)
+            .child(chatId)
+            .get()
+            .await()
+
+        return snapshot.getValue<ChatMemberDto>()
+    }
+
+    override fun getChatMembersUid(chatId: String): Flow<List<String>> =
         callbackFlow {
             val listener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val chatMembers: List<ChatMemberDto?> = snapshot
-                        .child(currentUserId!!)
-                        .children
-                        .filter { it.key == chatId }
-                        .map { dataSnapshot ->
-                            dataSnapshot
-                                .getValue<ChatMemberDto>()
-                        }
+                    val chatMembersUid: List<String> = snapshot
+                        .child(chatId)
+                        .child(MEMBERS_DB_FIELD)
+                        .getValue<List<String>>() ?: emptyList()
 
-                    this@callbackFlow.trySend(Resource.Success(data = chatMembers))
+                    this@callbackFlow.trySend(chatMembersUid)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    this@callbackFlow.trySend(Resource.Error(message = error.message))
+                    this@callbackFlow.trySend(emptyList())
                 }
             }
-            membersRef.addValueEventListener(listener)
-            awaitClose { membersRef.removeEventListener(listener) }
+            chatsRef.addValueEventListener(listener)
+            awaitClose { chatsRef.removeEventListener(listener) }
         }
 
     override fun getChatMessages(chatId: String): Flow<Resource<List<Map<String, MessageDto>?>>> =
