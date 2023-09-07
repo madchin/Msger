@@ -1,4 +1,4 @@
-package com.example.msger.feature_authentication.data.data_source
+package com.example.msger.core.data.data_source.remote.auth
 
 import com.example.msger.feature_authentication.domain.model.User
 import kotlinx.coroutines.flow.Flow
@@ -10,5 +10,7 @@ interface Auth {
     suspend fun signUp(email: String, password: String)
     suspend fun signIn(email: String, password: String)
     suspend fun resetPassword(email: String)
+
+    suspend fun signOut()
 
 }

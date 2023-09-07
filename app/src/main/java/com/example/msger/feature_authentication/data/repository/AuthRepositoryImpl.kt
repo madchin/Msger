@@ -1,7 +1,7 @@
 package com.example.msger.feature_authentication.data.repository
 
-import com.example.msger.feature_authentication.data.data_source.Auth
-import com.example.msger.feature_authentication.data.data_source.AuthImpl
+import com.example.msger.core.data.data_source.remote.auth.Auth
+import com.example.msger.core.data.data_source.remote.auth.AuthImpl
 import com.example.msger.feature_authentication.data.data_source.DeepLinkHandler
 import com.example.msger.feature_authentication.data.data_source.DeepLinkHandlerImpl
 import com.example.msger.feature_authentication.domain.model.User

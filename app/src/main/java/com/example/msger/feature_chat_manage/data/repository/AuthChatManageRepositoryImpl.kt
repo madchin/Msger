@@ -1,13 +1,13 @@
 package com.example.msger.feature_chat_manage.data.repository
 
-import com.example.msger.feature_chat_manage.data.data_source.remote.auth.AuthChatManage
-import com.example.msger.feature_chat_manage.data.data_source.remote.auth.AuthChatManageImpl
+import com.example.msger.core.data.data_source.remote.auth.Auth
+import com.example.msger.core.data.data_source.remote.auth.AuthImpl
 import com.example.msger.feature_chat_manage.domain.repository.AuthChatManageRepository
 
 class AuthChatManageRepositoryImpl(
-    private val authChatManage: AuthChatManage = AuthChatManageImpl()
+    private val auth: Auth = AuthImpl()
     ) : AuthChatManageRepository {
-    override fun signOut() {
-        authChatManage.signOut()
+    override suspend fun signOut() {
+        auth.signOut()
     }
 }

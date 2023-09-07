@@ -1,4 +1,4 @@
-package com.example.msger.feature_authentication.data.data_source
+package com.example.msger.core.data.data_source.remote.auth
 
 import com.example.msger.core.data.androidPackageName
 import com.example.msger.feature_authentication.domain.model.User
@@ -51,6 +51,9 @@ class AuthImpl : Auth {
         withContext(Dispatchers.IO) { auth.sendPasswordResetEmail(email.trim(), actionCodeSettings).await() }
     }
 
+    override suspend fun signOut() {
+        withContext(Dispatchers.IO) { auth.signOut() }
+    }
     companion object {
         private const val DEEP_LINK_SCHEME = "https://"
         private const val DEEP_LINK_HOST = "msger.example.com"
