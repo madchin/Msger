@@ -1,11 +1,12 @@
 package com.example.msger.feature_authentication.domain.use_case
 
-import com.example.msger.feature_authentication.domain.repository.AuthRepository
+import com.example.msger.feature_authentication.domain.service.AuthService
+import com.example.msger.feature_authentication.domain.model.UserDto
+import com.example.msger.feature_authentication.domain.model.UserSession
 
 class SignInUseCase(
-    private val authRepository: AuthRepository
+    private val authService: AuthService
 ) {
-    suspend operator fun invoke(email: String, password: String) {
-        authRepository.signIn(email = email, password = password)
-    }
+    suspend operator fun invoke(user: UserDto): UserSession = authService.signIn(user)
+
 }

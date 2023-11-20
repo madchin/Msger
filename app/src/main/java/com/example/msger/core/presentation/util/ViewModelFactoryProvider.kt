@@ -6,7 +6,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.msger.core.data.MsgerApplication
-import com.example.msger.feature_authentication.presentation.reset_password.ResetPasswordViewModel
 import com.example.msger.feature_authentication.presentation.sign_in.SignInViewModel
 import com.example.msger.feature_authentication.presentation.sign_up.SignUpViewModel
 import com.example.msger.feature_onboarding.presentation.SplashScreenViewModel
@@ -22,11 +21,7 @@ val CreationExtras.application: MsgerApplication
 object ViewModelFactoryProvider {
     val Factory = viewModelFactory {
         initializer {
-            ResetPasswordViewModel(application.appContainer.authenticationUseCases.resetPasswordUseCase)
-        }
-        initializer {
             SignInViewModel(
-                application.appContainer.authenticationUseCases.getEmailFromDeepLinkUseCase,
                 application.appContainer.authenticationUseCases.signInUseCase
             )
         }

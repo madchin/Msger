@@ -25,8 +25,6 @@ import com.example.msger.core.presentation.navigation.NavigationRoute
 import com.example.msger.core.presentation.util.ViewModelFactoryProvider
 import com.example.msger.core.util.Resource
 import com.example.msger.core.util.extension.openAndPopUp
-import com.example.msger.feature_authentication.presentation.reset_password.RecoverPasswordScreen
-import com.example.msger.feature_authentication.presentation.reset_password.ResetPasswordViewModel
 import com.example.msger.feature_authentication.presentation.sign_in.SignInScreen
 import com.example.msger.feature_authentication.presentation.sign_in.SignInViewModel
 import com.example.msger.feature_authentication.presentation.sign_up.SignUpScreen
@@ -125,23 +123,6 @@ fun MsgerApp(
                         openAndPopUp = navController::openAndPopUp,
                         navigateToSignUp = { navController.navigate(NavigationRoute.SignUp.route) },
                         navigateToForgottenPassword = { navController.navigate(NavigationRoute.ResetPassword.route) }
-                    )
-                }
-            }
-
-            composable(route = NavigationRoute.ResetPassword.route) {
-                val viewModel: ResetPasswordViewModel =
-                    viewModel(factory = ViewModelFactoryProvider.Factory)
-
-                BodyLayout(
-                    shouldShowSnackbar = shouldSnackbarBeShown(route),
-                    snackbarHostState = snackbarHostState,
-                    errorMessage = viewModel.responseError,
-                    modifier = bodyLayoutModifier
-                ) {
-                    RecoverPasswordScreen(
-                        navigateToSignIn = { navController.navigate(NavigationRoute.SignIn.route) },
-                        viewModel = viewModel
                     )
                 }
             }

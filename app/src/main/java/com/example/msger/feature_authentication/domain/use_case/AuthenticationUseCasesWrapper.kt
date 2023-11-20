@@ -1,13 +1,10 @@
 package com.example.msger.feature_authentication.domain.use_case
 
-import com.example.msger.feature_authentication.data.repository.AuthRepositoryImpl
-import com.example.msger.feature_authentication.domain.repository.AuthRepository
+import com.example.msger.feature_authentication.domain.service.AuthService
 
 class AuthenticationUseCasesWrapper(
-    authRepository: AuthRepository = AuthRepositoryImpl()
+    authService: AuthService
 ) {
-    val getEmailFromDeepLinkUseCase = GetEmailFromDeepLinkUseCase(authRepository = authRepository)
-    val resetPasswordUseCase = ResetPasswordUseCase(authRepository = authRepository)
-    val signInUseCase = SignInUseCase(authRepository = authRepository)
-    val signUpUseCase = SignUpUseCase(authRepository = authRepository)
+    val signInUseCase = SignInUseCase(authService = authService)
+    val signUpUseCase = SignUpUseCase(authService = authService)
 }

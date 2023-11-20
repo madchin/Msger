@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.msger.core.presentation.navigation.NavigationRoute
+import com.example.msger.feature_authentication.domain.model.UserDto
 import com.example.msger.feature_authentication.domain.use_case.SignUpUseCase
 import com.example.msger.feature_authentication.presentation.util.isConfirmPasswordValid
 import com.example.msger.feature_authentication.presentation.util.isEmailValid
@@ -54,7 +55,7 @@ class SignUpViewModel(
 
             isLoading = true
             try {
-                signUpUseCase(email = email, password = password)
+                signUpUseCase(UserDto(email = email, password = password))
                 isLoading = false
                 openAndPopUp(NavigationRoute.ChatList.route, NavigationRoute.SignUp.route)
             } catch (e: Throwable) {
