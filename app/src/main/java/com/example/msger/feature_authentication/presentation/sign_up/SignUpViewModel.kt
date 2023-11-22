@@ -43,7 +43,6 @@ class SignUpViewModel(
 
     fun signUpUser(openAndPopUp: (String, String) -> Unit) {
         viewModelScope.launch {
-
             isEmailValid = isEmailValid(email = email)
             isPasswordValid = isPasswordValid(password = password)
             isConfirmPasswordValid =
@@ -56,8 +55,8 @@ class SignUpViewModel(
             isLoading = true
             try {
                 signUpUseCase(UserDto(email = email, password = password))
-                isLoading = false
                 openAndPopUp(NavigationRoute.ChatList.route, NavigationRoute.SignUp.route)
+                isLoading = false
             } catch (e: Throwable) {
                 isLoading = false
                 responseError = e.message.toString()

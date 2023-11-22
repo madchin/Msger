@@ -12,10 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.msger.core.presentation.component.ButtonLoader
-import com.example.msger.feature_authentication.presentation.util.component.InputEmail
 import com.example.msger.feature_authentication.presentation.util.component.InputPassword
 import com.example.msger.feature_authentication.presentation.util.emailInputSupportText
 import com.example.msger.feature_authentication.presentation.util.passwordInputSupportText
+import com.example.msger.feature_chat_manage.presentation.util.component.InputUsername
 
 @Composable
 fun SignInScreen(
@@ -33,7 +33,7 @@ fun SignInScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        InputEmail(
+        InputUsername(
             isError = !viewModel.isEmailValid,
             value = viewModel.email,
             onValueChange = viewModel::onEmailValueChange,

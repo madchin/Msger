@@ -8,6 +8,12 @@ fun passwordInputSupportText(password: String): Int = when {
     else -> R.string.input_required
 }
 
+fun usernameInputSupportText(username: String) = when {
+    username.isNotEmpty() && username.isBlank() -> R.string.input_blank_validation
+    username.isNotEmpty() && !isUsernameLengthValid(username) -> R.string.username_input_length_validation
+    else -> R.string.input_required
+}
+
 fun confirmPasswordInputSupportText(password: String, confirmPassword: String): Int =
     if (isConfirmPasswordValid(password = password, confirmPassword = confirmPassword)) R.string.input_required
     else R.string.confirm_password_validation

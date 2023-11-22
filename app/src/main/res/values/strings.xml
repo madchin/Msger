@@ -8,6 +8,7 @@
     <string name="input_show_value">Show input value</string>
     <string name="input_blank_validation">Input can\'t be blank</string>
     <string name="password_input_length_validation">Password needs at least 12 characters</string>
+    <string name="username_input_length_validation">Username needs at least 12 characters</string>
     <string name="email_input_format_validation">Email format is invalid</string>
     <string name="input_required">* Required</string>
     <string name="confirm_password_validation">Confirm password doesn\'t match password</string>

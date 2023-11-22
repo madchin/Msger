@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.ImeAction
 import com.example.msger.R
+import com.example.msger.core.presentation.component.ButtonLoader
 import com.example.msger.feature_authentication.presentation.util.component.InputEmail
 import com.example.msger.feature_authentication.presentation.util.component.InputPassword
 import com.example.msger.feature_authentication.presentation.util.confirmPasswordInputSupportText
 import com.example.msger.feature_authentication.presentation.util.emailInputSupportText
 import com.example.msger.feature_authentication.presentation.util.passwordInputSupportText
-import com.example.msger.core.presentation.component.ButtonLoader
 
 @Composable
 fun SignUpScreen(

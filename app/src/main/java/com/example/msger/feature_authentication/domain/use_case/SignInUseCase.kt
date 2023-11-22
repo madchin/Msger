@@ -1,12 +1,19 @@
 package com.example.msger.feature_authentication.domain.use_case
 
-import com.example.msger.feature_authentication.domain.service.AuthService
+import com.example.msger.core.util.ApiResponse
+import com.example.msger.core.util.config.toApiResponse
 import com.example.msger.feature_authentication.domain.model.UserDto
 import com.example.msger.feature_authentication.domain.model.UserSession
+import com.example.msger.feature_authentication.domain.service.AuthService
+import retrofit2.Response
 
 class SignInUseCase(
     private val authService: AuthService
 ) {
-    suspend operator fun invoke(user: UserDto): UserSession = authService.signIn(user)
-
+    suspend operator fun invoke(user: UserDto): ApiResponse<UserSession> =
+        try {
+            authService.signIn(user).let(Response<UserSession>::toApiResponse)
+        } catch (e: Exception) {
+            ApiResponse.Error()
+        }
 }
